@@ -1,0 +1,566 @@
+// Imports
+@import "./variables";
+@import "./animations";
+
+// Your styling goes here
+
+.chatContainer {
+	width: 100%;
+	height: 100%;
+	background-color: $color2;
+	position: fixed;
+	font-family: $font1;
+	overflow-y: scroll;
+	transition: all 300ms ease;
+	padding-bottom: 170px;
+	scroll-behavior: smooth;
+
+	&__topbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0px 20px 0px 20px;
+		height: 100px;
+	}
+
+	&__chatOptions {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		margin-right: -20px;
+		position: relative;
+		button {
+			user-select: none;
+			all: unset;
+			font-family: $font1;
+			height: 40px;
+			background: rgba(255, 255, 255, 0.1);
+			width: 70px;
+			border-radius: 12px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			color: $color0;
+			&:active {
+				opacity: 0.4;
+			}
+			div {
+				margin-top: unset !important;
+				margin-left: unset !important;
+				width: unset !important;
+				height: unset !important;
+				user-select: none;
+			}
+		}
+		button:nth-child(1) {
+			margin-right: -5px;
+		}
+		button:nth-child(2) {
+			cursor: unset !important;
+		}
+	}
+
+	&__rulesView {
+		position: absolute;
+		top: 65px;
+		left: 0px;
+		height: 100%;
+		width: 100vw;
+		margin: auto;
+		backdrop-filter: blur(1.5px);
+		z-index: 300;
+		padding: 15px;
+	}
+
+	&__rulesScreen {
+		background-color: $color0;
+		filter: drop-shadow(0px 4px 24px rgba(255, 255, 255, 0.35));
+		width: 98%;
+		margin: auto;
+		height: 75%;
+		border-radius: 10px;
+		padding: 20px;
+		overflow-y: scroll;
+	}
+
+	&__rulesUpArrow {
+		width: 0;
+		height: 0;
+		border-left: 10px solid transparent;
+		border-right: 10px solid transparent;
+		border-bottom: 10px solid $color0;
+		margin-left: 63%;
+	}
+
+	&__rulesTitle {
+		font-size: 0.75rem;
+		b {
+			color: $color1;
+		}
+	}
+
+	&__keywordContainer {
+		display: flex;
+		width: 100%;
+		flex-wrap: wrap;
+		margin-top: 10px;
+		overflow-y: scroll;
+		&::-webkit-scrollbar {
+			display: none;
+			width: 0px;
+			height: 0px;
+		}
+	}
+
+	&__keyword {
+		padding: 5px 10px 5px 10px;
+		height: max-content;
+		background-color: $color2;
+		width: max-content;
+		margin-right: 5px;
+		margin-bottom: 5px;
+		border-radius: 8px;
+		color: $color0;
+		font-size: 0.8rem;
+		user-select: none;
+		white-space: nowrap;
+		&:active {
+			opacity: 0.6;
+		}
+	}
+
+	&__keywordInput {
+		padding: 0px 10px 0px 10px;
+		border: 1px solid $color2;
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
+		input {
+			all: unset;
+			height: 40px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-size: 0.8rem;
+			width: 60%;
+		}
+		div {
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			width: 40%;
+			color: $color7;
+			user-select: none;
+			&:active {
+				opacity: 0.7;
+			}
+		}
+	}
+
+	&__controls {
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+	}
+
+	&__smartReply {
+		background: $color6;
+		height: 50px;
+		display: flex;
+		align-items: center;
+		overflow-y: scroll;
+		&::-webkit-scrollbar {
+			display: none;
+			width: 0px;
+			height: 0px;
+		}
+	}
+
+	&__smartReplyItem {
+		width: max-content;
+		padding: 5px 10px 5px 10px;
+		border-radius: 20px;
+		font-size: 0.8rem;
+		border: 1px solid $color4;
+		color: $color4;
+		cursor: none;
+		user-select: none;
+		white-space: nowrap;
+		margin-right: 5px;
+		margin-left: 5px;
+		box-shadow: 0px 4px 34px 5px rgba(255, 255, 255, 0.25);
+		&:active {
+			opacity: 0.3;
+		}
+	}
+
+	&__skipNewReally {
+		display: flex;
+		justify-content: center !important;
+		align-items: center;
+		background: rgba(255, 255, 255, 0.8);
+		user-select: none;
+		height: 100%;
+		padding-right: 20px;
+		padding-left: 20px;
+		margin-right: 20px;
+		font-weight: 600;
+		transition: all 300ms ease;
+		&:active {
+			box-shadow: inset 0px 0px 0px 1px $color0;
+			background-color: $color2;
+			color: $color0;
+		}
+	}
+
+	&__newSessionScreen {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: calc(100% - 112px);
+		backdrop-filter: blur(1.5px);
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+	}
+
+	&__newSessionOptions {
+		background-color: $color0;
+		height: 95%;
+		margin-top: 5%;
+		width: 95%;
+		margin-left: auto;
+		margin-right: auto;
+		border-radius: 10px;
+		overflow-y: scroll;
+		padding: 15px;
+		position: relative;
+	}
+
+	&__newAd {
+		width: 100%;
+		height: 100px;
+		border: 2px solid $color2;
+		padding: 10px;
+		font-size: 0.8rem;
+	}
+
+	&__newTabs {
+		display: flex;
+		margin-top: 5px;
+		overflow-x: scroll;
+		&::-webkit-scrollbar {
+			display: none;
+			width: 0px;
+			height: 0px;
+		}
+		div {
+			padding: 5px 10px 5px 10px;
+			color: $color6;
+			margin-right: 5px;
+			user-select: none;
+			border: 2px solid $color6;
+			font-size: 0.9rem;
+			white-space: nowrap;
+			&:active {
+				opacity: 0.6;
+			}
+		}
+	}
+
+	&__settingsTitle {
+		margin-top: 20px;
+		color: $color6;
+		font-size: 1.2rem;
+		font-weight: 600;
+	}
+
+	&__settingsSubTitle {
+		font-size: 0.8rem;
+	}
+
+	&__startSession {
+		margin-top: 20px;
+		position: relative;
+		div {
+			margin-bottom: 5px;
+			font-size: 0.8rem;
+		}
+		button {
+			all: unset;
+			width: 100%;
+			height: 50px;
+			border-radius: 5px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-weight: 600;
+			color: $color0;
+			background-color: $color1;
+			&:active {
+				opacity: 0.5;
+			}
+		}
+	}
+
+	&__tryingToFindText {
+		font-size: 0.8rem;
+		margin-top: 5px;
+		text-align: end;
+	}
+
+	&__settingsTabView {
+		display: flex;
+		margin-top: 10px;
+		div {
+			background-color: $color0;
+			border: 2px solid $color1;
+			padding: 5px 10px 5px 10px;
+			margin-right: 5px;
+		}
+	}
+
+	&__commonInterestsContainer {
+		border: 2px solid $color1;
+		width: 100%;
+		height: max-content;
+		margin-top: 10px;
+		display: flex;
+		align-items: flex-start;
+		padding: 5px;
+		flex-wrap: wrap;
+		&::-webkit-scrollbar {
+			display: none;
+			width: 0px;
+			height: 0px;
+		}
+		input {
+			all: unset;
+			color: $color2;
+			height: 100%;
+			width: max-content;
+			display: flex;
+			height: 40px;
+			align-items: center;
+			padding-left: 10px;
+		}
+		div {
+			background-color: $color8;
+			padding: 5px 10px 5px 10px;
+			margin-right: 5px;
+			margin-bottom: 5px;
+			color: $color0;
+			white-space: nowrap;
+			font-size: 0.9rem;
+			&:active {
+				opacity: 0.5;
+			}
+			b {
+				margin-left: 5px;
+				color: $color4;
+			}
+		}
+	}
+
+	&__previewImageDiv {
+		width: 100%;
+	}
+
+	&__arrowDown {
+		width: 0;
+		height: 0;
+		border-left: 10px solid transparent;
+		border-right: 10px solid transparent;
+		border-top: 10px solid $color0;
+		margin-right: 77%;
+	}
+
+	&__input {
+		background: $color6;
+		border-top: 0.3px solid #ffffff;
+		display: flex;
+		align-items: center;
+		justify-content: space-around;
+		padding-top: 15px;
+		padding-bottom: 15px;
+		width: 100%;
+		overflow-x: scroll;
+		div {
+			width: 60px;
+			display: flex;
+			align-items: flex-start;
+			justify-content: center;
+			img:active {
+				opacity: 0.3;
+			}
+		}
+	}
+
+	&__inputImageSelector {
+		position: relative;
+		overflow: hidden;
+		display: inline-block;
+	}
+
+	&__inputImageSelector input[type="file"] {
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		opacity: 0;
+	}
+
+	&__textarea {
+		all: unset;
+		font-family: $font1;
+		display: flex;
+		align-items: center;
+		width: 70%;
+		color: $color0;
+		padding-top: 2px;
+		padding-left: 20px;
+		font-weight: 500;
+		word-wrap: break-word;
+		word-break: break-all;
+		overflow-wrap: break-word;
+		&::placeholder {
+			color: $color0;
+		}
+		&::-webkit-scrollbar {
+			display: none;
+			width: 0px;
+			height: 0px;
+		}
+	}
+
+	&__chatAd {
+		height: 50px;
+		display: flex;
+		align-items: center;
+		padding-left: 10px;
+		color: $color4;
+		font-size: 0.8rem;
+		font-weight: 400;
+		background: $color2;
+		background: linear-gradient(180deg, rgba(46, 45, 80, 0) -129.07%, #2e2d50 100%);
+	}
+
+	&__adAction {
+		margin-left: 10px;
+		text-decoration: underline;
+		color: $color1;
+	}
+
+	&__msgContainer {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		overflow: hidden;
+		position: relative;
+		padding-left: 10px;
+		padding-right: 10px;
+		transition: all 600ms ease;
+	}
+
+	&__receivedMsgContainer {
+		width: max-content;
+		max-width: 80%;
+		background: rgba(255, 255, 255, 0.1);
+		border-radius: 0px 10px 10px 10px;
+		padding: 10px;
+		margin-top: 5px;
+		margin-bottom: 10px;
+	}
+
+	&__typingContainer {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		background: rgba(255, 255, 255, 0.1);
+		width: max-content;
+		border-radius: 0px 10px 10px 10px;
+		padding: 10px;
+		margin-left: 10px;
+		div {
+			width: 15px;
+			height: 15px;
+			background-color: $color4;
+			margin-right: 5px;
+			border-radius: 20px;
+		}
+		div:nth-child(1) {
+			animation: typingLoader 3000ms ease 1000ms infinite;
+		}
+		div:nth-child(2) {
+			animation: typingLoader 2000ms ease 2000ms infinite;
+		}
+		div:nth-child(3) {
+			animation: typingLoader 2000ms ease-in-out 3000ms infinite;
+		}
+	}
+
+	&__sentMsgContainer {
+		width: max-content;
+		max-width: 80%;
+		background-color: $color1;
+		border-radius: 10px 0px 10px 10px;
+		padding: 10px;
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+
+	&__receivedMsg {
+		color: $color0;
+		word-break: break-word;
+		font-size: 0.9rem;
+		img {
+			width: 100%;
+		}
+	}
+
+	&__receivedMsgName {
+		font-size: 0.7rem;
+		margin-top: 5px;
+		color: rgba(250, 243, 227, 0.6);
+	}
+
+	&__identityBox {
+		margin-top: 15px;
+		width: 100%;
+		height: 90px;
+		border-radius: 7px;
+		background-color: #2e2d50;
+		position: relative;
+		padding: 10px 20px 10px 20px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		color: $color0;
+	}
+
+	&__detectedGender {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		div:nth-child(1) {
+			width: 85%;
+		}
+		div:nth-child(2) {
+			width: 15%;
+		}
+	}
+
+	&__identityBox input[type="file"] {
+		all: unset;
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		opacity: 0;
+		width: 100%;
+		height: 100%;
+	}
+}

@@ -1,0 +1,77 @@
+// Imports
+@import "./variables";
+
+// You can write you animation keyframes here ...
+@keyframes skewer {
+	0% {
+		transform: rotate3d(0);
+	}
+	33% {
+		transform: rotate3d(1, 1, 1, 45deg);
+	}
+	66% {
+		transform: rotate3d(0, 1, 0.5, 3.142rad);
+	}
+	99% {
+		transform: rotate3d(0);
+	}
+}
+
+@keyframes swipeFromLeft {
+	0% {
+		width: 0px;
+	}
+	100% {
+		width: 100%;
+	}
+}
+
+@keyframes swipeFromRight {
+	0% {
+		width: 100%;
+	}
+	100% {
+		width: 0px;
+	}
+}
+
+@keyframes zoomOut {
+	0% {
+		transform: scale(1.2);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+@keyframes typingLoader {
+	0% {
+		transform: scale(0.9);
+	}
+	50% {
+		transform: scale(1.2);
+	}
+	100% {
+		transform: scale(0.9);
+	}
+}
+
+@keyframes widenScreenFromTop {
+	0% {
+		height: 0%;
+	}
+	100% {
+		height: 75%;
+	}
+}
+
+@keyframes alert {
+	0% {
+		color: $color1;
+		font-weight: 200;
+	}
+	100% {
+		color: $color4;
+		font-weight: 700;
+	}
+}
