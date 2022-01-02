@@ -6,7 +6,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 
-// Icons!
+// Icons !
 import SiteLogoNormal from "../Resources/SiteLogo.svg";
 import SiteLogoWhite from "../Resources/SiteLogoWhite.svg";
 import Polygon1 from "../Resources/Polygon1.svg";
