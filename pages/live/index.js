@@ -55,11 +55,11 @@ function Index() {
 	const socketRef = useRef();
 	const userFoundRef = useRef();
 
-	useEffect(() => {
+	useUpdateEffect(() => {
 		console.log("My ID :: ", state.mySocketId);
 	}, [state.mySocketId]);
 
-	useEffect(() => {
+	useUpdateEffect(() => {
 		if (state.pairedUserData) console.log("user found with socketId  :: ", state.pairedUserData?.pairedPersonData.socketId);
 	}, [state.userFoundFlag]);
 
@@ -158,7 +158,7 @@ function Index() {
 		socketRef.current.on(CLIENT_PAIRED, (data) => {
 			setState((prevState) => ({ ...prevState, userFoundFlag: true, pairedUserData: data }));
 			userFoundRef.current = true;
-			console.log("Search finished, user found for live chat :: ", data, socketRef);
+			//console.log("Search finished, user found for live chat :: ", data, socketRef);
 		});
 
 		socketRef.current.on(SEND_MESSAGE, (data) => {
@@ -190,7 +190,7 @@ function Index() {
 		elemsArray = Array.from(elemsArray);
 		let scrollElem = elemsArray[elemsArray.length - 1];
 
-		console.log(state.chatMessagesArray);
+		//console.log(state.chatMessagesArray);
 
 		// On mobile scroll to fix scrollIntoView we call it in setTimeOut when default keyboard is closed
 		setTimeout(() => {
@@ -211,7 +211,6 @@ function Index() {
 	}, 500);
 
 	const handleToggleMode = (e) => {
-		console.log(setState);
 		setState((prevState) => ({ ...prevState, isDarkMode: !state.isDarkMode }));
 	};
 
@@ -314,7 +313,6 @@ function Index() {
 
 	const handleSettingsTabChange = (index) => {
 		let myGender = localStorage.getItem("gender");
-		console.log("myGender :: ", myGender);
 		if (myGender !== null) setState((prevState) => ({ ...prevState, settingsTabIndex: index, isMyGenderSpecified: true }));
 		else setState((prevState) => ({ ...prevState, isMyGenderSpecified: false }));
 	};
@@ -342,7 +340,6 @@ function Index() {
 			// The compression process is asynchronous,
 			// which means you have to access the `result` in the `success` hook function.
 			success(result) {
-				console.log("compressed file result :: ", result);
 				let time = new Date();
 				var reader = new FileReader();
 				reader.readAsDataURL(result);

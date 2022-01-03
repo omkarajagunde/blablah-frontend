@@ -401,6 +401,10 @@
 		position: relative;
 		overflow: hidden;
 		display: inline-block;
+
+		span {
+			pointer-events: none;
+		}
 	}
 
 	&__inputImageSelector input[type="file"] {
