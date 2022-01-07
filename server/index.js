@@ -50,7 +50,7 @@ app.prepare().then(() => {
 	const io = new Server(httpServer, {
 		path: "/live",
 		cors: {
-			origin: process.env.NEXT_PUBLIC_SERVER_URL,
+			origin: "*",
 			methods: ["GET", "POST"],
 			credentials: true,
 		},
@@ -64,7 +64,7 @@ app.prepare().then(() => {
 	expressServer.use(cookieParser());
 	expressServer.use(
 		cors({
-			origin: [process.env.NEXT_PUBLIC_SERVER_URL],
+			origin: ["*"],
 		})
 	);
 
