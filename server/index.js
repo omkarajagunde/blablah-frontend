@@ -50,7 +50,7 @@ app.prepare().then(() => {
 	const io = new Server(httpServer, {
 		path: "/live",
 		cors: {
-			origin: "http://localhost:3000",
+			origin: process.env.NEXT_PUBLIC_SERVER_URL,
 			methods: ["GET", "POST"],
 			credentials: true,
 		},
