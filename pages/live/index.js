@@ -26,6 +26,7 @@ const CLIENT_PAIRED = "CLIENT_PAIRED";
 const PEER_STARTED_TYPING = "PEER_STARTED_TYPING";
 const PEER_STOPPED_TYPING = "PEER_STOPPED_TYPING";
 const SEND_MESSAGE = "SEND_MESSAGE";
+const WILLFUL_END_SESSION = "WILLFUL_END_SESSION";
 
 function Index() {
 	const dispatch = useDispatch();
@@ -36,6 +37,7 @@ function Index() {
 		isSenderTyping: false,
 		isRulesViewOpen: false,
 		isMyGenderSpecified: false,
+		isChatEnded: false,
 		isUserImageCaptured: false,
 		detectedGenderData: null,
 		userFoundFlag: false,
@@ -108,6 +110,17 @@ function Index() {
 				},
 			});
 		}
+
+		if (eve === WILLFUL_END_SESSION) {
+			socketRef.current.emit(WILLFUL_END_SESSION, {
+				socketId: socketRef.current.id,
+				action: WILLFUL_END_SESSION,
+				actionData: {
+					username: state.username,
+					pairedPersonSocketId: state.pairedUserData.pairedPersonData.socketId,
+				},
+			});
+		}
 	};
 
 	// This useEffect is like a loop that trys to automatically reconnect if the pair was not found
@@ -171,6 +184,10 @@ function Index() {
 
 		socketRef.current.on(PEER_STOPPED_TYPING, (data) => {
 			setState((prevState) => ({ ...prevState, isSenderTyping: data.typing }));
+		});
+
+		socketRef.current.on(WILLFUL_END_SESSION, (data) => {
+			setState((prevState) => ({ ...prevState, isNewSessionStatus: "New", isChatEnded: true, isChatEndedWith: data.username || data.socketId }));
 		});
 
 		socketRef.current.on("error", (data) => {
@@ -303,6 +320,7 @@ function Index() {
 		}
 		if (state.isNewSessionStatus === "Skip") setState((prevState) => ({ ...prevState, isNewSessionStatus: "Really" }));
 		if (state.isNewSessionStatus === "Really") {
+			handleSocketEvent(WILLFUL_END_SESSION, null);
 			setState((prevState) => ({ ...prevState, isNewSessionStatus: "New", userSearchTryingCount: 0, userFoundFlag: false, chatMessagesArray: [] }));
 		}
 	};
@@ -434,6 +452,8 @@ function Index() {
 		if (state.tabIndex === 0) {
 			return (
 				<div className={styles.chatContainer__settings}>
+					{state.isChatEnded && <div>Chat ended with {state?.pairedUserData?.pairedPersonData?.socketId}</div>}
+
 					<div className={styles.chatContainer__settingsTitle}>Connect With</div>
 					<div className={styles.chatContainer__settingsSubTitle} style={{ animation: !state.isMyGenderSpecified ? "alert 1s ease" : null }}>
 						To use this confirm your gender by <b onClick={() => handleTabChange(2)}>clicking here</b>
