@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "node ./server/index.js",
     "build": "next build",
-    "start": "next start",
+    "start": "nodemon --max-old-space-size=4096 ./server/index.js",
+    "prod": "node --max-old-space-size=4096 ./server/index.js",
     "lint": "next lint"
   },
   "dependencies": {
@@ -22,21 +23,25 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.2",
+    "express-ip": "^1.0.4",
     "face-api.js": "^0.22.2",
+    "ioredis": "^4.28.3",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
+    "mic-recorder-to-mp3": "^2.2.2",
     "mongoose": "^5.12.0",
     "nanoid": "^3.1.22",
     "next": "latest",
     "next-compose-plugins": "^2.2.1",
     "next-images": "^1.7.0",
+    "nodemon": "^2.0.15",
     "pm2": "^5.1.2",
     "react": "17.0.2",
-    "react-dark-mode-toggle": "^0.2.0",
     "react-dom": "17.0.2",
     "react-ga": "^3.3.0",
     "react-redux": "^7.2.0",
     "react-textarea-autosize": "^8.3.3",
+    "redis": "^4.0.2",
     "redux": "4.0.5",
     "redux-devtools-extension": "^2.13.9",
     "redux-persist": "6.0.0",
@@ -47,7 +52,8 @@
     "socket.io-client": "^4.4.0",
     "swagger-jsdoc": "^7.0.0-rc.6",
     "swagger-ui-express": "^4.1.6",
-    "throttle-debounce": "^3.0.1"
+    "throttle-debounce": "^3.0.1",
+    "watermarkjs": "^2.1.1"
   },
   "devDependencies": {
     "eslint": "7",

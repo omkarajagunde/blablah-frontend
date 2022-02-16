@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 // Icons !
-import SiteLogoNormal from "../Resources/SiteLogo.svg";
+import SiteLogoBlack from "../Resources/SiteLogoBlack.svg";
 import SiteLogoWhite from "../Resources/SiteLogoWhite.svg";
 import Polygon1 from "../Resources/Polygon1.svg";
 import Polygon2 from "../Resources/Polygon2.svg";
@@ -51,7 +51,7 @@ export default function Home() {
 		<div className={styles.mainContainer_leftSection}>
 			<div className={styles.mainContainer_siteLogoNavBar}>
 				<div className={styles.mainContainer_siteLogo}>
-					<Image src={state.isNavOpen ? SiteLogoWhite.src : SiteLogoNormal.src} alt="blabla-siteLogo.png" width={state.isMobileView ? 140 : 200} height={state.isMobileView ? 80 : 80} />
+					<Image src={state.isNavOpen ? SiteLogoWhite.src : SiteLogoBlack.src} alt="blabla-siteLogo.png" width={state.isMobileView ? 140 : 200} height={state.isMobileView ? 80 : 80} />
 				</div>
 				{state.isMobileView && (
 					<div className={state.isNavOpen ? styles.mainContainer_siteNavigationWhite : styles.mainContainer_siteNavigationBlue} onClick={handleNavigationToggle}>

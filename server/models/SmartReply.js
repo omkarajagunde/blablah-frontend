@@ -2,21 +2,17 @@ const mongoose = require("mongoose");
 const joi = require("@hapi/joi");
 
 const SmartReplySchema = new mongoose.Schema({
-	replies: {
-		type: Array,
+	text: {
+		type: String,
+	},
+	addedAt: {
+		type: Date,
+		default: Date.now,
 	},
 });
 
 const smartReplyValidationSchema = joi.object({
-	replies: joi
-		.array()
-		.items({
-			// warning validations
-			text: joi.string().min(3).max(200).required(),
-			addedAt: joi.string().min(1).required(),
-		})
-		.required()
-		.allow(null, ""),
+	text: joi.string().min(2).required(),
 });
 
 const smartReplyValidation = (body) => {
@@ -24,4 +20,4 @@ const smartReplyValidation = (body) => {
 	return error;
 };
 
-module.exports = { user: mongoose.model("SmartReply", SmartReplySchema), smartReplyValidation };
+module.exports = { replySchema: mongoose.model("SmartReply", SmartReplySchema), smartReplyValidation };

@@ -20,7 +20,18 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 0px 20px 0px 20px;
-		height: 100px;
+		height: 70px;
+	}
+
+	&__metadata {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 50px;
+		text-align: center;
+		color: $color4;
+		opacity: 0.5;
+		font-size: 0.8rem;
 	}
 
 	&__chatOptions {
@@ -53,7 +64,7 @@
 			}
 		}
 		button:nth-child(1) {
-			margin-right: -5px;
+			margin-right: 12px;
 		}
 		button:nth-child(2) {
 			cursor: unset !important;
@@ -89,7 +100,7 @@
 		border-left: 10px solid transparent;
 		border-right: 10px solid transparent;
 		border-bottom: 10px solid $color0;
-		margin-left: 63%;
+		margin-left: 88%;
 	}
 
 	&__rulesTitle {
@@ -378,7 +389,7 @@
 
 	&__input {
 		background: $color6;
-		border-top: 0.3px solid #ffffff;
+		border-top: 0.3px solid $color0;
 		display: flex;
 		align-items: center;
 		justify-content: space-around;
@@ -386,7 +397,31 @@
 		padding-bottom: 15px;
 		width: 100%;
 		overflow-x: scroll;
-		div {
+		div:nth-child(1) {
+			width: 60px;
+			display: flex;
+			align-items: flex-start;
+			justify-content: center;
+			img:active {
+				opacity: 0.3;
+			}
+		}
+
+		div:nth-child(2) {
+			width: 60px;
+			display: flex;
+			align-items: flex-start;
+			justify-content: center;
+			img:active {
+				opacity: 0.3;
+			}
+		}
+
+		div:nth-child(3) {
+			width: 70%;
+		}
+
+		div:nth-child(4) {
 			width: 60px;
 			display: flex;
 			align-items: flex-start;
@@ -416,12 +451,30 @@
 		opacity: 0;
 	}
 
+	&__recordAudio {
+		width: 100% !important;
+		color: $color0;
+		font-weight: 300;
+	}
+
+	audio {
+		transform: scale(0.9);
+		margin-left: -16px;
+		height: 42px;
+		background-color: $color0;
+		border-radius: 4px;
+		&::-webkit-media-controls-panel {
+			background-color: unset;
+			background: unset;
+		}
+	}
+
 	&__textarea {
 		all: unset;
 		font-family: $font1;
 		display: flex;
 		align-items: center;
-		width: 70%;
+		width: 90%;
 		color: $color0;
 		padding-top: 2px;
 		padding-left: 20px;
@@ -460,6 +513,7 @@
 	&__msgContainer {
 		width: 100%;
 		display: flex;
+		justify-content: center;
 		align-items: center;
 		overflow: hidden;
 		position: relative;

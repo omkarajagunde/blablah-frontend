@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const UserModel = require("../Models/User");
+const AdminModel = require("../models/Admin");
 const { logRequests } = require("../Routes/middlewares");
 const bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
@@ -10,15 +10,15 @@ const { verifyTokenMiddleware } = require("./middlewares");
 router.post("/register", logRequests, async (request, response) => {
 	const { body } = request;
 	// Validating data
-	const errorLog = UserModel.registerValidation(body);
+	const errorLog = AdminModel.registerValidation(body);
 	if (errorLog) return response.status(400).send({ status: 400, message: errorLog.details[0].message });
 
 	// checking if email exists
-	const emailPresent = await UserModel.user.findOne({ email: body.email });
-	if (emailPresent) return response.status(401).send({ status: 401, message: "User with this email already exists", emailPresent: true });
+	const emailPresent = await AdminModel.user.findOne({ email: body.email });
+	if (emailPresent) return response.status(401).send({ status: 401, message: "Admin with this email already exists", emailPresent: true });
 
 	// checking if phone number unique
-	const phoneCheck = await UserModel.user.findOne({ mobile: body.mobile });
+	const phoneCheck = await AdminModel.user.findOne({ mobile: body.mobile });
 	if (phoneCheck) return response.status(402).send({ status: 402, message: "user with this mobile number already exists", mobileNumberPresent: true });
 
 	//Hash passwords
@@ -26,7 +26,7 @@ router.post("/register", logRequests, async (request, response) => {
 	const hashpassword = await bcrypt.hash(body.password, salt);
 
 	// creating user model
-	const user = new UserModel.user({
+	const user = new AdminModel.user({
 		name: body.name,
 		surname: body.surname,
 		countryCode: body.countryCode,
@@ -43,8 +43,8 @@ router.post("/register", logRequests, async (request, response) => {
 	});
 
 	try {
-		const savedUser = await user.save();
-		response.status(200).send({ status: 200, message: "user added successfully", data: savedUser });
+		const savedAdmin = await user.save();
+		response.status(200).send({ status: 200, message: "user added successfully", data: savedAdmin });
 	} catch (error) {
 		response.status(400).send({ status: 400, message: error });
 	}
@@ -57,7 +57,7 @@ router.post("/check/unique/mobile", logRequests, async (request, response) => {
 	if (body.mobile.length !== 10) return response.status(400).send({ status: 400, message: "mobile number should be 10 digits long" });
 	if (isNaN(body.mobile)) return response.status(400).send({ status: 400, message: "mobile number should be numeric" });
 	// checking if the user exists in database
-	const user = await UserModel.user.findOne({ mobile: body.mobile });
+	const user = await AdminModel.user.findOne({ mobile: body.mobile });
 	if (user) return response.status(400).send({ status: 400, message: "mobile number is not unique" });
 
 	response.status(200).send({ status: 200, message: "mobile number is unique" });
@@ -69,7 +69,7 @@ router.post("/generate/otp", logRequests, async (request, response) => {
 	if (!body.mobile) return response.status(400).send({ status: 400, message: "mobile key missing" });
 
 	// checking if the user exists in database
-	const user = await UserModel.user.findOne({ mobile: body.mobile });
+	const user = await AdminModel.user.findOne({ mobile: body.mobile });
 	if (!user) return response.status(400).send({ status: 400, message: "mobile number does not exist" });
 
 	let otp = Math.floor(100000 + Math.random() * 900000);
@@ -77,7 +77,7 @@ router.post("/generate/otp", logRequests, async (request, response) => {
 
 	// TODO here send otp to mobile phone ... then run following code
 	try {
-		const savedUser = await user.save();
+		const savedAdmin = await user.save();
 		// TODO comment this below line when otp service integrated
 		console.log("OTP for user with mobile number :: ", user.mobile, " is :: ", otp);
 
@@ -85,7 +85,7 @@ router.post("/generate/otp", logRequests, async (request, response) => {
 		setTimeout(async () => {
 			try {
 				user.userOTP = "";
-				const savedUser = await user.save();
+				const savedAdmin = await user.save();
 			} catch (error) {
 				console.log(error);
 			}
@@ -104,8 +104,8 @@ router.post("/login", async (request, response) => {
 	if (body.otp.length !== 6) return response.status(400).send({ status: 400, message: "OTP should be 6 digits long" });
 
 	// checking if the user exists in database
-	const user = await UserModel.user.findOne({ mobile: body.mobile });
-	if (!user) return response.status(401).send({ status: 401, message: "User with this email does not exists", emailPresent: false });
+	const user = await AdminModel.user.findOne({ mobile: body.mobile });
+	if (!user) return response.status(401).send({ status: 401, message: "Admin with this email does not exists", emailPresent: false });
 
 	// checking if the password is valid
 	const checkPassword = await bcrypt.compare(body.password, user.password);
@@ -118,7 +118,7 @@ router.post("/login", async (request, response) => {
 
 	try {
 		user.userOTP = "";
-		const savedUser = await user.save();
+		const savedAdmin = await user.save();
 	} catch (error) {
 		console.log(error);
 	}
@@ -126,7 +126,7 @@ router.post("/login", async (request, response) => {
 	// create and assign token
 	const token = jwt.sign({ _id: user._id }, process.env.JWT_TOEKN_SECRET);
 
-	response.status(200).set("auth-token", token).send({ status: 200, data: user, message: "User login was successfull", loginToken: token });
+	response.status(200).set("auth-token", token).send({ status: 200, data: user, message: "Admin login was successfull", loginToken: token });
 });
 
 module.exports = router;

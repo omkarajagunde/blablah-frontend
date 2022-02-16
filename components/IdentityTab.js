@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import _ from "lodash";
 import Compressor from "compressorjs";
-import socketIOClient from "socket.io-client";
 import useUpdateEffect from "./_helpers/useUpdateEffect";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
@@ -14,7 +13,7 @@ import RefreshIcon from "../Resources/Refresh.svg";
 import styles from "../styles/live.module.scss";
 
 // Actions
-import { ClearLiveChatLogs, DetectGender } from "../actions/liveChatActions";
+import { ClearLiveChatLogs, DetectGender, HandleIdentityChange } from "../actions/liveChatActions";
 
 function IdentityTab() {
 	const dispatch = useDispatch();
@@ -22,28 +21,40 @@ function IdentityTab() {
 	const [state, setState] = useState({
 		isMyGenderSpecified: false,
 		isUserImageCaptured: false,
-		detectedGenderData: null,
-		saveOrEditFlag: localStorage.getItem("username") ? true : false,
-		username: "",
+		genderFlag: null,
+		genderFlagMessage: false,
+		saveOrEditFlagFullname: LiveChatSelector.identityObj.fullname !== "",
+		identityObj: LiveChatSelector.identityObj,
 	});
 
 	useEffect(() => {
-		if (LiveChatSelector.detectedGenderData !== null) {
-			localStorage.setItem("gender", LiveChatSelector.detectedGenderData.gender);
-			setState((prevState) => ({ ...prevState, detectedGenderData: LiveChatSelector.detectedGenderData, isUserImageCaptured: false, username: localStorage.getItem("username") }));
+		console.log("GENDER :: ", LiveChatSelector.identityObj);
+		if (LiveChatSelector.identityObj?.gender !== "any") {
+			setState((prevState) => ({
+				...prevState,
+				genderFlag: LiveChatSelector.identityObj?.gender !== "any",
+				isUserImageCaptured: false,
+				genderFlagMessage: `Your gender is ${LiveChatSelector.identityObj?.gender}`,
+			}));
 		}
 	}, []);
 
 	useUpdateEffect(() => {
 		if (LiveChatSelector.detectedGenderStatus === 200) {
 			dispatch(ClearLiveChatLogs());
-			setState((prevState) => ({ ...prevState, detectedGenderData: LiveChatSelector.detectedGenderData, isUserImageCaptured: false }));
-			localStorage.setItem("gender", LiveChatSelector.detectedGenderData.gender);
+			setState((prevState) => ({
+				...prevState,
+				genderFlagMessage: `Your gender is ${LiveChatSelector.identityObj?.gender}`,
+				identityObj: { ...state.identityObj, gender: LiveChatSelector.identityObj?.gender },
+				isUserImageCaptured: false,
+				genderFlag: true,
+			}));
+			localStorage.setItem("gender", LiveChatSelector.identityObj?.gender);
 		}
 
 		if (LiveChatSelector.detectedGenderStatus === 500) {
 			dispatch(ClearLiveChatLogs());
-			setState((prevState) => ({ ...prevState, detectedGenderData: "Wrong image provided!", isUserImageCaptured: false }));
+			setState((prevState) => ({ ...prevState, genderFlag: false, genderFlagMessage: "Wrong Image Provided!", isUserImageCaptured: false }));
 		}
 	}, [LiveChatSelector.detectedGenderStatus]);
 
@@ -70,27 +81,45 @@ function IdentityTab() {
 	};
 
 	const handleResetImageCapture = () => {
-		setState((prevState) => ({ ...prevState, isUserImageCaptured: false, detectedGenderData: null }));
+		setState((prevState) => ({ ...prevState, isUserImageCaptured: false, genderFlag: null, genderFlagMessage: null }));
 	};
 
-	const handleAddUsername = () => {
+	const handleNameChange = (eve) => {
+		let value = eve.target.value.trim();
+		if (value.length > 0) {
+			setState((prevState) => ({ ...prevState, identityObj: { ...state.identityObj, fullname: value } }));
+		}
+	};
+
+	const handleAddName = (eve) => {
 		let elem = document.getElementById("NameInput");
-		if (elem.value.trim().length > 0 && !state.saveOrEditFlag) {
-			setState((prevState) => ({ ...prevState, username: elem.value, saveOrEditFlag: true }));
-			localStorage.setItem("username", elem.value.trim());
-		} else setState((prevState) => ({ ...prevState, saveOrEditFlag: false }));
+		if (elem.value.trim().length > 0) {
+			dispatch(HandleIdentityChange(state.identityObj));
+			setState((prevState) => ({ ...prevState, saveOrEditFlagFullname: !state.saveOrEditFlagFullname }));
+		}
 	};
 
-	const handleUsernameChange = (eve) => {
-		setState((prevState) => ({ ...prevState, username: eve.target.value }));
+	const handleAgeChange = (eve) => {
+		let value = eve.target.value.trim();
+		if (value.length > 0) {
+			setState((prevState) => ({ ...prevState, identityObj: { ...state.identityObj, age: value } }));
+		}
+	};
+
+	const handleAddAge = (eve) => {
+		let elem = document.getElementById("NameInput");
+		if (elem.value.trim().length > 0) {
+			dispatch(HandleIdentityChange(state.identityObj));
+			setState((prevState) => ({ ...prevState, saveOrEditFlagAge: !state.saveOrEditFlagAge }));
+		}
 	};
 
 	return (
 		<div className={styles.chatContainer__myFriends}>
 			<div className={styles.chatContainer__settingsTitle}>Cofirm you gender!</div>
 			<div className={styles.chatContainer__settingsSubTitle}> Click a selfie of yourself from below, and we will detect your gender, We never save your photos </div>
-			<div className={styles.chatContainer__identityBox} style={{ background: state.detectedGenderData && state.detectedGenderData.gender ? "#58b12e" : null }}>
-				{!state.isUserImageCaptured && !state.detectedGenderData && (
+			<div className={styles.chatContainer__identityBox} style={{ background: state.genderFlag && state.identityObj.gender ? "#58b12e" : null }}>
+				{!state.isUserImageCaptured && !state.genderFlagMessage && (
 					<React.Fragment>
 						<input type="file" accept="image/*" capture="user" onChange={(eve) => handleVerifyIndetity(eve)} />
 						<div>Click to capture image</div>
@@ -99,9 +128,9 @@ function IdentityTab() {
 
 				{state.isUserImageCaptured && <Loader width={40} height={20} top={10} right={50} color={"white"} />}
 
-				{state.detectedGenderData && (
+				{state.genderFlagMessage && (
 					<div className={styles.chatContainer__detectedGender}>
-						<div>{state.detectedGenderData.gender ? `Your gender is ${state.detectedGenderData.gender}` : state.detectedGenderData} </div>
+						<div>{state.genderFlagMessage} </div>
 						<div onClick={handleResetImageCapture}>
 							<Image src={RefreshIcon.src} alt="refresh" width={120} height={120} />
 						</div>{" "}
@@ -109,10 +138,16 @@ function IdentityTab() {
 				)}
 			</div>
 
-			<div className={styles.chatContainer__settingsTitle}>Your name?</div>
+			<div className={styles.chatContainer__settingsTitle}>Your full name?</div>
 			<div className={styles.chatContainer__keywordInput} style={{ marginTop: "10px" }}>
-				<input value={state.username} onChange={handleUsernameChange} placeholder="Enter your name here" id="NameInput" readOnly={state.saveOrEditFlag} />
-				<div onClick={handleAddUsername}>{!state.saveOrEditFlag ? "Save" : "Edit"}</div>
+				<input value={state.identityObj.fullname} onChange={handleNameChange} placeholder="Enter your name here" id="NameInput" readOnly={state.saveOrEditFlagFullname} />
+				<div onClick={handleAddName}>{!state.saveOrEditFlagFullname ? "Save" : "Edit"}</div>
+			</div>
+
+			<div className={styles.chatContainer__settingsTitle}>Your age?</div>
+			<div className={styles.chatContainer__keywordInput} style={{ marginTop: "10px" }}>
+				<input value={state.identityObj.age} onChange={handleAgeChange} placeholder="Enter your name here" id="AgeInput" readOnly={state.saveOrEditFlagAge} />
+				<div onClick={handleAddAge}>{!state.saveOrEditFlagAge ? "Save" : "Edit"}</div>
 			</div>
 		</div>
 	);

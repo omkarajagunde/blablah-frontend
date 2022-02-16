@@ -6,8 +6,13 @@ function verifyTokenMiddleware(request, response, next) {
 
 	if (!token) return response.status(401).send({ status: 401, message: "Access denied!" }); // 401 => resource which you cannot access
 
+	const bearer = token.split(" ");
+	const bearerToken = bearer[1];
+
+	if (bearer[0] !== "Blabla-Bearer") response.status(400).send({ status: 400, message: "Invalid token provided" });
+
 	try {
-		const tokenVerified = jwt.verify(token, process.env.JWT_TOEKN_SECRET);
+		const tokenVerified = jwt.verify(bearerToken, process.env.JWT_TOEKN_SECRET);
 		request.userToken = tokenVerified;
 		next();
 	} catch (error) {

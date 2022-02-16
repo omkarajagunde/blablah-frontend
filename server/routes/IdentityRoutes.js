@@ -1,7 +1,8 @@
 const { canvas, faceDetectionNet, faceDetectionOptions } = require("../helpers/ageAndGenderDetection");
 const faceapi = require("face-api.js");
 const router = require("express").Router();
-const UserModel = require("../Models/User");
+const AdminModel = require("../models/Admin");
+const UserModel = require("../models/User");
 const bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
 var mongoose = require("mongoose");
