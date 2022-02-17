@@ -22,7 +22,6 @@ jobs:
         uses: appleboy/ssh-action@v0.1.3
         with: 
           host: ${{ secrets.DO_HOST }}
-          password: ${{ secrets.DO_PASSWORD }}
           username: ${{ secrets.DO_USERNAME }}
           key: ${{ secrets.DO_SSH_KEY }}
           script: |
