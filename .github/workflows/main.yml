@@ -36,6 +36,6 @@ jobs:
             git clone https://github.com/omkarajagunde/blablah-frontend.git
             cd blablah-frontend
             
-            docker-compose up 
+            docker-compose up --build
             
       
