@@ -2,7 +2,7 @@ const database = require("mongoose");
 const dotenv = require("dotenv");
 var cors = require("cors");
 const express = require("express");
-const { logRequests } = require("./Routes/middlewares");
+const { logRequests } = require("./routes/middlewares");
 const http = require("http");
 var jwt = require("jsonwebtoken");
 var cookieParser = require("cookie-parser");
@@ -18,9 +18,9 @@ var path = require("path");
 global.expressServerRoot = path.resolve(__dirname);
 
 //import Routes
-const LiveChatRoutes = require("./Routes/LiveChatRoutes");
-const AuthRoutes = require("./Routes/AuthRoutes");
-const IdentityRoutes = require("./Routes/IdentityRoutes");
+const LiveChatRoutes = require("./routes/LiveChatRoutes");
+const AuthRoutes = require("./routes/AuthRoutes");
+const IdentityRoutes = require("./routes/IdentityRoutes");
 
 // Socket event strings
 const CLIENT_INTRODUCTION = "CLIENT_INTRODUCTION";

@@ -8,6 +8,9 @@
     "prod": "node --max-old-space-size=4096 ./server/index.js",
     "lint": "next lint"
   },
+  "engines": {
+    "node": "14.x"
+  },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "@tensorflow/tfjs-node": "^1.7.4",
@@ -31,7 +34,7 @@
     "mic-recorder-to-mp3": "^2.2.2",
     "mongoose": "^5.12.0",
     "nanoid": "^3.1.22",
-    "next": "latest",
+    "next": "12.0.10",
     "next-compose-plugins": "^2.2.1",
     "next-images": "^1.7.0",
     "nodemon": "^2.0.15",

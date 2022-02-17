@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const AdminModel = require("../models/Admin");
-const { logRequests } = require("../Routes/middlewares");
+const { logRequests } = require("../routes/middlewares");
 const bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
 var mongoose = require("mongoose");

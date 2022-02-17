@@ -12,8 +12,8 @@ const { logRequests } = require("./middlewares");
 router.post("/agdetector", async (request, response) => {
 	const { body } = request;
 
-	await faceDetectionNet.loadFromDisk(expressServerRoot + "/Resources/");
-	await faceapi.nets.ageGenderNet.loadFromDisk(expressServerRoot + "/Resources/");
+	await faceDetectionNet.loadFromDisk(expressServerRoot + "/resources/");
+	await faceapi.nets.ageGenderNet.loadFromDisk(expressServerRoot + "/resources/");
 	const img = await canvas.loadImage(body.imageURL);
 	const results = await faceapi.detectAllFaces(img, faceDetectionOptions).withAgeAndGender();
 	if (results.length > 0) response.status(200).send({ status: 200, message: "success", data: results[0] });

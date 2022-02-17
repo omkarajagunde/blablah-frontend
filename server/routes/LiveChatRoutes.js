@@ -1,7 +1,7 @@
 const router = require("express").Router();
-const SmartReplyModel = require("../Models/SmartReply");
-const { logRequests } = require("../Routes/middlewares");
-const { verifyTokenMiddleware } = require("../Routes/middlewares");
+const SmartReplyModel = require("../models/SmartReply");
+const { logRequests } = require("../routes/middlewares");
+const { verifyTokenMiddleware } = require("../routes/middlewares");
 
 // [Domain]/api/chat/enablement/get/smart/replies
 router.get("/get/smart/replies", logRequests, verifyTokenMiddleware, async (request, response) => {
