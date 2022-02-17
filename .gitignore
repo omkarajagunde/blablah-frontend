@@ -31,3 +31,7 @@
 
 # vercel
 /.vercel
+
+# ssh keys
+/blablah_key
+/blablah_key.pub
