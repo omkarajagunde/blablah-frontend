@@ -21,8 +21,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         uses: appleboy/ssh-action@v0.1.3
         with: 
-          host: ${{ secrets.DIGITAL_OCEAN }}
-          password: ${{ secrets.DO_HOST_PASSWORD }}
+          host: ${{ secrets.DO_HOST }}
+          password: ${{ secrets.DO_PASSWORD }}
           username: ${{ secrets.DO_USERNAME }}.DO_KEY }}
           script: |
             #this deployment gives little downtime on app
