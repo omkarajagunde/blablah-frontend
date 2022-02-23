@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Head from "next/head";
+import { useRouter } from 'next/router'
 import _ from "lodash";
 import Compressor from "compressorjs";
 import TextareaAutosize from "react-textarea-autosize";
@@ -21,10 +22,11 @@ import MicIcon from "../../Resources/MicIcon.svg";
 import MicCancel from "../../Resources/MicCancel.svg";
 
 // Actions
-import { ClearLiveChatLogs, IsServerOperational } from "../../actions/liveChatActions";
+import { ClearLiveChatLogs, IsServerOperational, GetTrends } from "../../actions/liveChatActions";
 
 // Styles
 import styles from "../../styles/live.module.scss";
+import Loader from "../../components/_helpers/Loader";
 
 // Socket event strings
 const CLIENT_INTRODUCTION = "CLIENT_INTRODUCTION";
@@ -42,6 +44,7 @@ const recorder = new MicRecorder({
 
 function Index() {
 	const dispatch = useDispatch();
+	const router = useRouter()
 	const LiveChatSelector = useSelector((state) => state.liveChat, _.isEqual);
 	const [state, setState] = useState({
 		isMobileView: false,
@@ -60,7 +63,7 @@ function Index() {
 		settingsTabIndex: 2,
 		tabIndex: 0,
 		commonInterestsArray: [],
-		smartRepliesArray: ["Happy Diwali!", "Happy Christmas", "United we stand", " Boycott Bollywood"],
+		smartRepliesArray: ["", "", "", ""],
 		restrictedModeKeywordsArray: typeof window !== "undefined" ? JSON.parse(localStorage.getItem("restrictedModeNewKeywordsArray")) || [] : [],
 		restrictedModeNewKeywordsArray: [],
 		peerNegativeKeywordsArray: [],
@@ -83,11 +86,14 @@ function Index() {
 	}, [state.mySocketId]);
 
 	useUpdateEffect(() => {
-		if (state.pairedUserData) console.log("user found with socketId  :: ", state.pairedUserData?.data.peerSocketId);
+		if (state.pairedUserData) console.log("user found with socketId  :: ", state.pairedUserData?.mySocketId);
 	}, [state.userFoundFlag]);
 
 	useUpdateEffect(() => {
-		setState((prevState) => ({ ...prevState, username: LiveChatSelector.identityObj.fullname, age: LiveChatSelector.identityObj.age }));
+		if ( LiveChatSelector.identityObj.fullname !== null) {
+			dispatch(ClearLiveChatLogs());
+			setState((prevState) => ({ ...prevState, username:  LiveChatSelector.identityObj.fullname }));
+		}
 	}, [LiveChatSelector]);
 
 	const handleSocketEvent = (eve, data) => {
@@ -116,7 +122,7 @@ function Index() {
 				action: PEER_STARTED_TYPING,
 				data: {
 					typing: true,
-					peerSocketId: state.pairedUserData?.data.peerSocketId,
+					peerSocketId: state.pairedUserData?.mySocketId,
 				},
 			});
 		}
@@ -127,7 +133,7 @@ function Index() {
 				action: PEER_STOPPED_TYPING,
 				data: {
 					typing: false,
-					peerSocketId: state.pairedUserData?.data.peerSocketId,
+					peerSocketId: state.pairedUserData?.mySocketId,
 				},
 			});
 		}
@@ -138,7 +144,7 @@ function Index() {
 				action: SEND_MESSAGE,
 				data: {
 					chatData: data,
-					peerSocketId: state.pairedUserData?.data.peerSocketId,
+					peerSocketId: state.pairedUserData?.mySocketId,
 				},
 			});
 		}
@@ -150,7 +156,7 @@ function Index() {
 				data: {
 					username: state.username,
 					keywordsArray: state.restrictedModeKeywordsArray,
-					peerSocketId: state.pairedUserData?.data.peerSocketId,
+					peerSocketId: state.pairedUserData?.mySocketId,
 				},
 			});
 		}
@@ -160,64 +166,25 @@ function Index() {
 				socketId: socketRef.current.id,
 				action: END_CURRENT_SESSION,
 				data: {
-					username: state.username,
-					peerSocketId: state.pairedUserData?.data.peerSocketId,
+					peerSocketId: state.pairedUserData?.mySocketId,
 				},
 			});
 		}
 	};
 
-	useUpdateEffect(() => {
-		if (LiveChatSelector.username !== null) {
-			dispatch(ClearLiveChatLogs());
-			console.log(LiveChatSelector.username);
-			setState((prevState) => ({ ...prevState, username: LiveChatSelector.username }));
-		}
-	}, [LiveChatSelector.username]);
-
-	useUpdateEffect(() => {
-		if (LiveChatSelector.isServerOperationalStatus === 200) {
-			dispatch(ClearLiveChatLogs());
-			setState((prevState) => ({ ...prevState, myInfo: LiveChatSelector.isServerOperationalData }));
-		}
-	}, [LiveChatSelector]);
-
-	// Run only first time when component loads
-	useEffect(() => {
-		// set initial level
-
-		let gender = localStorage.getItem("gender");
-		if (gender) {
-			setState((prevState) => ({ ...prevState, detectedGenderData: { gender } }));
-		}
-
-		userFoundRef.current = false;
-		if (window.innerWidth <= 768) setState((prevState) => ({ ...prevState, isMobileView: true }));
-		else setState((prevState) => ({ ...prevState, isMobileView: false }));
-
-		window.addEventListener("resize", () => {
-			if (window.innerWidth < 768) setIsMobileViewDebouncer(true);
-			else setIsMobileViewDebouncer(false);
-		});
-
-		dispatch(IsServerOperational());
-
-		return () => {
-			window.removeEventListener("resize", () => {});
-			handleSocketEvent(END_CURRENT_SESSION, null);
-			socketRef.current.disconnect();
-		};
-	}, []);
-
-	useUpdateEffect(() => {
+	const handleInitSocketEvents = () => {
 		socketRef.current = socketIOClient(process.env.NEXT_PUBLIC_SERVER_URL, {
 			path: "/live",
-			query: { token: state.myInfo.token },
+			query: { token: window.tkn },
 			transports: ["websocket"],
 		});
 
 		socketRef.current.on("connect", () => {
 			setState((prevState) => ({ ...prevState, mySocketId: socketRef.current.id }));
+		});
+
+		socketRef.current.on("connect_error", (err) => {
+			console.log(err);
 		});
 
 		socketRef.current.on(CLIENT_INTRODUCTION, (data) => {
@@ -283,13 +250,65 @@ function Index() {
 				isChatEnded: true,
 				pairedUserData: null,
 				chatMessagesArray: [],
-				isChatEndedWith: data.data.data.username || data.data.data.peerSocketId,
+				isChatEndedWith: data.data.data.myName || data.data.data.mySocketId,
 			}));
 		});
+	}
 
-		socketRef.current.on("error", (data) => {
-			console.log("SOCKET IO ERROR :: ", data);
+	useUpdateEffect(() => {
+
+		if (LiveChatSelector.isServerOperationalStatus === 200) {
+			dispatch(ClearLiveChatLogs());
+			// Get trending trends
+			dispatch(GetTrends())
+			handleInitSocketEvents()
+			setState((prevState) => ({ ...prevState, myInfo: LiveChatSelector.isServerOperationalData }));
+		}
+
+		if (LiveChatSelector.isServerOperationalStatus === 600) {
+			dispatch(ClearLiveChatLogs());
+			if (confirm("Please check your internet connection, Click OK to refresh"))
+				window.location.reload()
+		}
+
+		if (LiveChatSelector.detectedGenderStatus === 600) {
+			dispatch(ClearLiveChatLogs());
+			if (confirm("Please check your internet connection, Click OK to refresh"))
+				window.location.reload()
+		}
+
+		if (LiveChatSelector.trendsStatus === 200){
+			dispatch(ClearLiveChatLogs());
+			setState((prevState) => ({ ...prevState, smartRepliesArray: LiveChatSelector.trendsData.data }));
+		}
+
+	}, [LiveChatSelector]);
+
+	// Run only first time when component loads
+	useEffect(() => {
+		// set initial level
+		setState((prevState) => ({ ...prevState, username: LiveChatSelector.identityObj.fullname, age: LiveChatSelector.identityObj.age, gender: LiveChatSelector.identityObj.gender }));
+		
+		userFoundRef.current = false;
+		if (window.innerWidth <= 768) setState((prevState) => ({ ...prevState, isMobileView: true }));
+		else setState((prevState) => ({ ...prevState, isMobileView: false }));
+
+		window.addEventListener("resize", () => {
+			if (window.innerWidth < 768) setIsMobileViewDebouncer(true);
+			else setIsMobileViewDebouncer(false);
 		});
+
+		// Get my ip location from server
+		dispatch(IsServerOperational());
+		
+		return () => {
+			handleSocketEvent(END_CURRENT_SESSION, null);
+			socketRef.current.disconnect();
+		};
+	}, []);
+
+	useUpdateEffect(() => {
+		handleInitSocketEvents()
 	}, [state.myInfo]);
 
 	// see chatMessageArray updates
@@ -336,7 +355,7 @@ function Index() {
 	const helperDoesNegativeWordExists = (enteredText) => {
 		let negativeKeywordPresnt = false;
 		for (let index = 0; index < state.peerNegativeKeywordsArray.length; index++) {
-			if (enteredText.replaceAll(/ /g, "").includes(state.peerNegativeKeywordsArray[index])) {
+			if (enteredText.toLowerCase().replaceAll(/ /g, "").includes(state.peerNegativeKeywordsArray[index])) {
 				negativeKeywordPresnt = true;
 				break;
 			} else negativeKeywordPresnt = false;
@@ -345,22 +364,35 @@ function Index() {
 	};
 
 	const handleMicClick = () => {
-		if (!state.isMicPressed) {
+		if (!state.isMicPressed ) {
+			console.log(navigator.mediaDevices.getUserMedia);
+			
 			// Start recording. Browser will request permission to use your microphone.
-			recorder
-				.start()
-				.then(() => {
-					setState((prevState) => ({ ...prevState, isMicRecording: true, isMicBlocked: false }));
-				})
-				.catch((e) => {
-					console.error(e);
-					setState((prevState) => ({ ...prevState, isMicRecording: false, isMicBlocked: true }));
-				});
+			navigator.getUserMedia({ audio: true },
+				() => {
+					recorder
+					.start()
+					.then(() => {
+						setState((prevState) => ({ ...prevState, isMicRecording: true, isMicBlocked: false }));
+					})
+					.catch((e) => {
+						console.error(e);
+						setState((prevState) => ({ ...prevState, isMicRecording: false, isMicBlocked: false }));
+					});
+				},
+				(err) => {
+					console.log(err);
+					alert("You have blocked your mic access, please unblock audio from site settings");
+					setState((prevState) => ({ ...prevState, isMicBlocked: true, isMicRecording: false, isMicPressed: false }));
+				}
+				
+			);
 		} else recorder.stop();
 		setState((prevState) => ({ ...prevState, isMicPressed: !prevState.isMicPressed }));
 	};
 
-	const handleSendClick = () => {
+	const handleSendClick = (e) => {
+		if (e) e.preventDefault()
 		let chatArray = [...state.chatMessagesArray];
 		chatArray.map((msg, index) => {
 			msg.newlyAdded = false;
@@ -369,57 +401,55 @@ function Index() {
 		if (state.isMicPressed && state.isMicRecording && !state.isMicBlocked) {
 			// Once you are done singing your best song, stop and get the mp3.
 			recorder
-				.stop()
-				.getMp3()
-				.then(([buffer, blob]) => {
-					// do what ever you want with buffer and blob
-					// Example: Create a mp3 file and play
-
-					let time = new Date();
-					const file = new File(buffer, "audio-message.mp3", {
-						type: blob.type,
-						lastModified: Date.now(),
-					});
-					var reader = new FileReader();
-					reader.readAsDataURL(file);
-					reader.onload = (e) => {
-						let sendMsgObject = {
-							type: "sent",
-							isImage: false,
-							isAudio: true,
-							msg: e.target.result,
-							senderName: state.username || null,
-							senderAge: state.age || null,
-							timeStamp: `${time.getHours()}:${time.getMinutes()}, ${time.toDateString()}`,
-							newlyAdded: true,
-						};
-
-						console.log("Audio message size in mb : ", Buffer.byteLength(JSON.stringify(sendMsgObject)) / 1e6);
-						if (Buffer.byteLength(JSON.stringify(sendMsgObject)) / 1e6 >= 6) alert("Max Audio length can be 2 mins, Try with audio message less than 2 mins");
-						else {
-							// Send Audio message
-							handleSocketEvent(SEND_MESSAGE, sendMsgObject);
-						}
-
-						setState((prevState) => ({
-							...prevState,
-							chatMessagesArray: [...chatArray, sendMsgObject],
-							isMicBlocked: false,
-							isMicRecording: false,
-							isMicPressed: false,
-						}));
-					};
-				})
-				.catch((e) => {
-					alert("We could not send your message");
-					console.log(e);
-					setState((prevState) => ({ ...prevState, isMicBlocked: false, isMicRecording: false, isMicPressed: false }));
+			.stop()
+			.getMp3()
+			.then(([buffer, blob]) => {
+				let time = new Date();
+				const file = new File(buffer, "audio-message.mp3", {
+					type: blob.type,
+					lastModified: Date.now(),
 				});
+				var reader = new FileReader();
+				reader.readAsDataURL(file);
+				reader.onload = (e) => {
+					let sendMsgObject = {
+						type: "sent",
+						isImage: false,
+						isAudio: true,
+						msg: e.target.result,
+						senderName: state.username || null,
+						senderAge: state.age || null,
+						timeStamp: `${time.getHours()}:${time.getMinutes()}, ${time.toDateString()}`,
+						newlyAdded: true,
+					};
+
+					console.log("Audio message size in mb : ", Buffer.byteLength(JSON.stringify(sendMsgObject)) / 1e6);
+					if (Buffer.byteLength(JSON.stringify(sendMsgObject)) / 1e6 >= 6) alert("Max Audio length can be 2 mins, Try with audio message less than 2 mins");
+					else {
+						// Send Audio message
+						handleSocketEvent(SEND_MESSAGE, sendMsgObject);
+					}
+
+					setState((prevState) => ({
+						...prevState,
+						chatMessagesArray: [...chatArray, sendMsgObject],
+						isMicBlocked: false,
+						isMicRecording: false,
+						isMicPressed: false,
+					}));
+				};
+			
+			})
+			.catch((e) => {
+				alert("We could not send your message");
+				console.log(e);
+				setState((prevState) => ({ ...prevState, isMicBlocked: false, isMicRecording: false, isMicPressed: false }));
+			});
 		} else {
 			// Send Text Message
 			let elem = document.getElementById("inputText");
 
-			if (elem.value.trim().length > 0) {
+			if (elem && elem.value && elem.value.trim().length > 0) {
 				let time = new Date();
 				let sendMsgObject = {
 					type: "sent",
@@ -494,7 +524,7 @@ function Index() {
 		if (value.trim().length > 0) {
 			setState((prevState) => ({
 				...prevState,
-				restrictedModeKeywordsArray: [...state.restrictedModeKeywordsArray, value.trim()],
+				restrictedModeKeywordsArray: [...state.restrictedModeKeywordsArray, value.trim().toLowerCase()],
 			}));
 			elem.value = "";
 		}
@@ -592,7 +622,7 @@ function Index() {
 								</div>
 							</div>
 							<div className={styles.chatContainer__receivedMsgName}>
-								<b>{msg.senderName}</b> {msg.timeStamp}
+								<b>{msg.senderName}</b> <br/> {msg.timeStamp}
 							</div>
 						</div>
 					</div>
@@ -610,7 +640,7 @@ function Index() {
 								<audio controls controlsList="nodownload novolume nofullscreen noremoteplayback noplaybackrate" src={msg.msg}></audio>
 							</div>
 							<div className={styles.chatContainer__receivedMsgName}>
-								<b>{msg.senderName}</b> {msg.timeStamp}
+								<b>{msg.senderName}</b> <br/>  {msg.timeStamp}
 							</div>
 						</div>
 					</div>
@@ -637,7 +667,7 @@ function Index() {
 						<div className={styles.chatContainer__receivedMsgName}>
 							{!msg.retracted && (
 								<>
-									<b>{msg.senderName}</b> {msg.timeStamp}
+									<b>{msg.senderName}</b> <br/>  {msg.timeStamp}
 								</>
 							)}
 						</div>
@@ -649,7 +679,7 @@ function Index() {
 
 	// rendering desktop view
 	const renderDesktopView = () => {
-		return <div>Live Chat Page on desktop, coming soon with a boom</div>;
+		return <div>{renderMobileView()}</div>;
 	};
 
 	const renderCorrectTab = () => {
@@ -660,7 +690,7 @@ function Index() {
 
 					<div className={styles.chatContainer__settingsTitle}>Connect With</div>
 					<div className={styles.chatContainer__settingsSubTitle} style={{ animation: !state.isMyGenderSpecified ? "alert 1s ease" : null }}>
-						To use this confirm your gender by <b onClick={() => handleTabChange(2)}>clicking here</b>
+						To use this confirm your gender by <b onClick={() => handleTabChange(1)}>clicking here</b>
 					</div>
 					<div className={styles.chatContainer__settingsTabView}>
 						{state.settingsTabViewOptions.map((tab, index) => (
@@ -779,7 +809,8 @@ function Index() {
 										</div>
 									))}
 								</div>
-								{renderCorrectTab()}
+								{socketRef.current && state.mySocketId && renderCorrectTab()}
+								{!socketRef.curent && !state.mySocketId && <div className={styles.chatContainer__initLoader}><Loader width={40} height={20} style={{marginRight: "40px"}} color={"#474663"} /></div>}
 							</div>
 							<div className={styles.chatContainer__arrowDown}></div>
 						</div>
@@ -803,11 +834,11 @@ function Index() {
 						{state.smartRepliesArray.map((reply, index) => (
 							<div
 								style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null }}
-								onClick={() => handleSmartReplyClick(reply)}
+								onClick={() => handleSmartReplyClick(reply.text)}
 								className={styles.chatContainer__smartReplyItem}
-								key={`${index}-${reply}`}
+								key={`${index}-${reply.text}`}
 							>
-								{reply}
+								{reply.text}
 							</div>
 						))}
 					</div>
@@ -829,6 +860,7 @@ function Index() {
 									id="inputText"
 									placeholder="your message here"
 									className={styles.chatContainer__textarea}
+									onKeyPress={(e) => e.key === "Enter"? handleSendClick(e): ""}
 								/>
 							)}
 

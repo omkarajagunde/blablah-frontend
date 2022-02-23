@@ -2,9 +2,9 @@
   "name": "blabla-client",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 8080",
     "build": "next build",
-    "start": "next start"
+    "start": "next start -p 8080"
   },
   "dependencies": {
     "@types/jasmine": "^3.5.9",

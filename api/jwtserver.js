@@ -9,8 +9,7 @@ var axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(function (config) {
-	const token = localStorage.getItem("token");
-	config.headers.Authorization = token ? `${token}` : "";
+	config.headers.Authorization = window.tkn ? `Blabla-Bearer ${window.tkn }` : "";
 	return config;
 });
 

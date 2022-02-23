@@ -1,6 +1,8 @@
 import Server from "../api/jwtserver";
 
-import { DETECT_GENDER_SUCCESS, DETECT_GENDER_FAILURE, CLEAR_LIVE_CHAT_LOGS, HANDLE_IDENTITY_CHANGE, SERVER_IS_OPERATIONAL_FAILURE, SERVER_IS_OPERATIONAL_SUCCESS } from "./types";
+import {GET_TRENDS_SUCCESS, GET_TRENDS_FAILURE, DETECT_GENDER_SUCCESS, DETECT_GENDER_FAILURE, CLEAR_LIVE_CHAT_LOGS, HANDLE_IDENTITY_CHANGE, SERVER_IS_OPERATIONAL_FAILURE, SERVER_IS_OPERATIONAL_SUCCESS } from "./types";
+
+let networkErrObj = { data: { status: 600, message: "Please check your network connection" } }
 
 const DetectGender = (params) => {
 	return async (dispatch, getState) => {
@@ -11,10 +13,43 @@ const DetectGender = (params) => {
 				payload: response,
 			});
 		} catch (e) {
+
+			if (e.response){
+				dispatch({
+					type: DETECT_GENDER_FAILURE,
+					payload: e.response,
+				});
+			} else {
+				dispatch({
+					type: DETECT_GENDER_FAILURE,
+					payload: networkErrObj ,
+				});
+			}
+		}
+	};
+};
+
+const GetTrends = (params) => {
+	return async (dispatch, getState) => {
+		try {
+			const response = await Server.get(process.env.NEXT_PUBLIC_SERVER_URL + "/api/chat/enablement/get/smart/replies", params);
 			dispatch({
-				type: DETECT_GENDER_FAILURE,
-				payload: e.response,
+				type: GET_TRENDS_SUCCESS,
+				payload: response,
 			});
+		} catch (e) {
+
+			if (e.response){
+				dispatch({
+					type: GET_TRENDS_FAILURE,
+					payload: e.response,
+				});
+			} else {
+				dispatch({
+					type: GET_TRENDS_FAILURE,
+					payload: networkErrObj,
+				});
+			}
 		}
 	};
 };
@@ -37,10 +72,18 @@ const IsServerOperational = (params) => {
 				payload: response,
 			});
 		} catch (e) {
-			dispatch({
-				type: SERVER_IS_OPERATIONAL_FAILURE,
-				payload: e.response,
-			});
+
+			if (e.response){
+				dispatch({
+					type: SERVER_IS_OPERATIONAL_FAILURE,
+					payload: e.response,
+				});
+			} else {
+				dispatch({
+					type: SERVER_IS_OPERATIONAL_FAILURE,
+					payload: networkErrObj,
+				});
+			}
 		}
 	};
 };
@@ -49,4 +92,4 @@ const ClearLiveChatLogs = (params) => {
 	return (dispatch) => dispatch({ type: CLEAR_LIVE_CHAT_LOGS, payload: params });
 };
 
-export { DetectGender, ClearLiveChatLogs, HandleIdentityChange, IsServerOperational };
+export { DetectGender, ClearLiveChatLogs, HandleIdentityChange, IsServerOperational, GetTrends };

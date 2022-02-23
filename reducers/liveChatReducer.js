@@ -1,4 +1,4 @@
-import { DETECT_GENDER_FAILURE, DETECT_GENDER_SUCCESS, CLEAR_LIVE_CHAT_LOGS, HANDLE_IDENTITY_CHANGE, SERVER_IS_OPERATIONAL_FAILURE, SERVER_IS_OPERATIONAL_SUCCESS } from "../actions/types";
+import { DETECT_GENDER_FAILURE, DETECT_GENDER_SUCCESS, CLEAR_LIVE_CHAT_LOGS, HANDLE_IDENTITY_CHANGE, SERVER_IS_OPERATIONAL_FAILURE, SERVER_IS_OPERATIONAL_SUCCESS, GET_TRENDS_SUCCESS, GET_TRENDS_FAILURE } from "../actions/types";
 
 const INIT_STATE = {
 	detectedGenderStatus: null,
@@ -11,6 +11,9 @@ const INIT_STATE = {
 		age: "",
 		gender: "any",
 	},
+
+	trendsData: null,
+	trendsStatus: null
 };
 
 const LiveChatReducer = (state = INIT_STATE, action) => {
@@ -21,9 +24,25 @@ const LiveChatReducer = (state = INIT_STATE, action) => {
 				...state,
 				detectedGenderStatus: null,
 				isServerOperationalStatus: null,
+				trendsStatus: null
 			};
 
+		case GET_TRENDS_SUCCESS:
+			return{
+				...state,
+				trendsData: payload.data,
+				trendsStatus: payload.data.status
+			}
+
+		case GET_TRENDS_FAILURE:
+			return{
+				...state,
+				trendsStatus: payload.data.status
+			}
+
 		case SERVER_IS_OPERATIONAL_SUCCESS:
+			window.tkn = payload.data.token;
+			payload.data.token = null
 			return {
 				...state,
 				isServerOperationalStatus: payload.data.status,
