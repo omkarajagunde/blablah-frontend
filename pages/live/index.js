@@ -50,7 +50,7 @@ function Index() {
 		isMobileView: false,
 		isSenderTyping: false,
 		isRulesViewOpen: false,
-		isMyGenderSpecified: false,
+		isMyGenderSpecified: LiveChatSelector.identityObj.gender !== "any",
 		isChatEnded: false,
 		isUserImageCaptured: false,
 		detectedGenderData: null,
@@ -93,6 +93,7 @@ function Index() {
 			chatMessagesArray: [],
 			isChatEndedWithError: null,
 		}));
+		document.getElementById("inputText").blur();
 	}, [state.mySocketId]);
 
 	useUpdateEffect(() => {
@@ -103,6 +104,11 @@ function Index() {
 		if ( LiveChatSelector.identityObj.fullname !== null) {
 			dispatch(ClearLiveChatLogs());
 			setState((prevState) => ({ ...prevState, username:  LiveChatSelector.identityObj.fullname }));
+		}
+
+		if ( LiveChatSelector.identityObj.gender !== "any") {
+			dispatch(ClearLiveChatLogs());
+			setState((prevState) => ({ ...prevState, isMyGenderSpecified: true}));
 		}
 	}, [LiveChatSelector]);
 
@@ -127,6 +133,18 @@ function Index() {
 		}
 
 		if (eve === PEER_STARTED_TYPING) {
+			let elemsArray = document.querySelectorAll("#chatMessage");
+			let typingContainer = document.querySelector("#typingContainer")
+			let scrollElem = elemsArray[elemsArray.length - 1];
+			// On mobile scroll to fix scrollIntoView we call it in setTimeOut when default keyboard is closed
+			setTimeout(() => {
+				if (scrollElem) scrollElem.scrollIntoView();
+			}, 200);
+
+			setTimeout(() => {
+				if (typingContainer) typingContainer.scrollIntoView();
+			}, 800);
+
 			socketRef.current.emit(PEER_STARTED_TYPING, {
 				socketId: socketRef.current.id,
 				action: PEER_STARTED_TYPING,
@@ -138,6 +156,18 @@ function Index() {
 		}
 
 		if (eve === PEER_STOPPED_TYPING) {
+			let elemsArray = document.querySelectorAll("#chatMessage");
+			let typingContainer = document.querySelector("#typingContainer")
+			let scrollElem = elemsArray[elemsArray.length - 1];
+			// On mobile scroll to fix scrollIntoView we call it in setTimeOut when default keyboard is closed
+			setTimeout(() => {
+				if (scrollElem) scrollElem.scrollIntoView();
+			}, 200);
+
+			setTimeout(() => {
+				if (typingContainer) typingContainer.scrollIntoView();
+			}, 800);
+
 			socketRef.current.emit(PEER_STOPPED_TYPING, {
 				socketId: socketRef.current.id,
 				action: PEER_STOPPED_TYPING,
@@ -172,6 +202,7 @@ function Index() {
 		}
 
 		if (eve === END_CURRENT_SESSION) {
+			document.getElementById("inputText").blur();
 			socketRef.current.emit(END_CURRENT_SESSION, {
 				socketId: socketRef.current.id,
 				action: END_CURRENT_SESSION,
@@ -254,14 +285,37 @@ function Index() {
 		});
 
 		socketRef.current.on(PEER_STARTED_TYPING, (data) => {
+			let elemsArray = document.querySelectorAll("#chatMessage");
+			let typingContainer = document.querySelector("#typingContainer")
+			let scrollElem = elemsArray[elemsArray.length - 1];
+			// On mobile scroll to fix scrollIntoView we call it in setTimeOut when default keyboard is closed
+			setTimeout(() => {
+				if (scrollElem) scrollElem.scrollIntoView();
+			}, 200);
+
+			setTimeout(() => {
+				if (typingContainer) typingContainer.scrollIntoView();
+			}, 800);
 			setState((prevState) => ({ ...prevState, isSenderTyping: data.typing }));
 		});
 
 		socketRef.current.on(PEER_STOPPED_TYPING, (data) => {
+			let elemsArray = document.querySelectorAll("#chatMessage");
+			let typingContainer = document.querySelector("#typingContainer")
+			let scrollElem = elemsArray[elemsArray.length - 1];
+			// On mobile scroll to fix scrollIntoView we call it in setTimeOut when default keyboard is closed
+			setTimeout(() => {
+				if (scrollElem) scrollElem.scrollIntoView();
+			}, 200);
+
+			setTimeout(() => {
+				if (typingContainer) typingContainer.scrollIntoView();
+			}, 800);
 			setState((prevState) => ({ ...prevState, isSenderTyping: data.typing }));
 		});
 
 		socketRef.current.on(END_CURRENT_SESSION, (data) => {
+			document.getElementById("inputText").blur();
 			console.log("END_CURRENT_SESSION :: ", data);
 			setState((prevState) => ({
 				...prevState,
@@ -271,7 +325,7 @@ function Index() {
 				isChatEnded: true,
 				pairedUserData: null,
 				chatMessagesArray: [],
-				isChatEndedWith: data.data.data.myName || data.data.data.mySocketId,
+				isChatEndedWith: data.data.data.myName || data.data.data.mySocketId || "Stranger",
 			}));
 		});
 	}
@@ -568,7 +622,8 @@ function Index() {
 
 	const handleSettingsTabChange = (index) => {
 		let myGender = LiveChatSelector.identityObj?.gender;
-		if (myGender !== null) setState((prevState) => ({ ...prevState, settingsTabIndex: index, isMyGenderSpecified: true }));
+		console.log(myGender);
+		if (myGender !== "any") setState((prevState) => ({ ...prevState, settingsTabIndex: index, isMyGenderSpecified: true }));
 		else setState((prevState) => ({ ...prevState, isMyGenderSpecified: false }));
 	};
 
@@ -711,13 +766,12 @@ function Index() {
 		if (state.tabIndex === 0) {
 			return (
 				<div className={styles.chatContainer__settings}>
-					{state.isChatEnded && <div style={{ marginTop: "10px" }} className={styles.chatContainer__settingsSubTitle}>{state.isChatEndedWithError ? state.isChatEndedWithError : `Chat ended with ${state?.isChatEndedWith}` } </div>}
-
 					<div className={styles.chatContainer__settingsTitle}>Connect With</div>
-					<div className={styles.chatContainer__settingsSubTitle} style={{ animation: !state.isMyGenderSpecified ? "alert 1s ease" : null }}>
-						To use this confirm your gender by <b onClick={() => handleTabChange(1)}>clicking here</b>
+					<div className={styles.chatContainer__settingsSubTitle} >
+						{state.isMyGenderSpecified ? "Select the gender you want to chat with" : <>To use this confirm your gender by <b onClick={() => handleTabChange(1)}>clicking here</b></> }
 					</div>
-					<div className={styles.chatContainer__settingsTabView}>
+					
+					<div style={{ opacity: !state.isMyGenderSpecified ? "0.4": "1" }} className={styles.chatContainer__settingsTabView}>
 						{state.settingsTabViewOptions.map((tab, index) => (
 							<div
 								style={{ backgroundColor: state.settingsTabIndex === index ? "#e56b9f" : null, color: state.settingsTabIndex === index ? "white" : null }}
@@ -741,12 +795,14 @@ function Index() {
 					</div>
 
 					<div className={styles.chatContainer__startSession}>
-						<div>Want to advertise on blabla? - Read here</div>
+						<div>Want to advertise on blabla? - <span style={{fontWeight: "500", textDecoration:"underline"}} onClick={handleAdCampaignClick}>Read here</span> </div>
 						<button onClick={handleChangeSessionStatus} disabled={state.userSearchTryingCount !== 0}>
 							Start session
 						</button>
 						{state.userFoundFlag !== "" && !state.userFoundFlag ? <div style={{ marginTop: "10px", fontSize: "0.9em" }} className={styles.chatContainer__settingsSubTitle}>Searching... new user to chat!</div> : ""}
 					</div>
+
+					{state.isChatEnded && <div style={{ marginTop: "10px" }} className={styles.chatContainer__settingsSubTitle}>{state.isChatEndedWithError ? state.isChatEndedWithError : `Chat ended with ${state?.isChatEndedWith}` } </div>}
 					
 				</div>
 			);
@@ -809,7 +865,7 @@ function Index() {
 
 				{renderChatMessages()}
 				{state.isSenderTyping && (
-					<div className={styles.chatContainer__typingContainer}>
+					<div id="typingContainer" className={styles.chatContainer__typingContainer}>
 						<div></div>
 						<div></div>
 						<div></div>
@@ -820,7 +876,7 @@ function Index() {
 					{state.isNewSessionStatus === "New" && (
 						<div className={styles.chatContainer__newSessionScreen} onClick={handleChangeSessionStatus}>
 							<div className={styles.chatContainer__newSessionOptions} onClick={(e) => e.stopPropagation()}>
-								<div className={styles.chatContainer__newAd}>Your banner ad can be here - check out</div>
+								<div className={styles.chatContainer__newAd} onClick={handleAdCampaignClick}>Your banner ad can be here - check out</div>
 								<div className={styles.chatContainer__newTabs}>
 									{state.newTabs.map((tab, index) => (
 										<div
