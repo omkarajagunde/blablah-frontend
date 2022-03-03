@@ -83,6 +83,16 @@ function Index() {
 
 	useUpdateEffect(() => {
 		console.log("My ID :: ", state.mySocketId);
+		setState((prevState) => ({
+			...prevState,
+			isNewSessionStatus: "New",
+			userFoundFlag: "",
+			userSearchTryingCount: 0,
+			isChatEnded: false,
+			pairedUserData: null,
+			chatMessagesArray: [],
+			isChatEndedWithError: null,
+		}));
 	}, [state.mySocketId]);
 
 	useUpdateEffect(() => {
@@ -176,15 +186,25 @@ function Index() {
 		socketRef.current = socketIOClient(process.env.NEXT_PUBLIC_SERVER_URL, {
 			path: "/live",
 			query: { token: window.tkn },
-			transports: ["websocket"],
+			transports: ["websocket", "polling", "flashsocket"],
 		});
 
 		socketRef.current.on("connect", () => {
-			setState((prevState) => ({ ...prevState, mySocketId: socketRef.current.id }));
+			setState((prevState) => ({ ...prevState, mySocketId: socketRef.current.id, isChatEnded: false, isChatEndedWithError: null }));
 		});
 
 		socketRef.current.on("connect_error", (err) => {
 			console.log(err);
+			setState((prevState) => ({
+				...prevState,
+				isNewSessionStatus: "New",
+				userFoundFlag: "",
+				userSearchTryingCount: 0,
+				isChatEnded: true,
+				pairedUserData: null,
+				chatMessagesArray: [],
+				isChatEndedWithError: err + " Please check your network connection and try again ",
+			}));
 		});
 
 		socketRef.current.on(CLIENT_INTRODUCTION, (data) => {
@@ -221,6 +241,7 @@ function Index() {
 		});
 
 		socketRef.current.on(CLIENT_INTRODUCTION_PAIR_NOT_FOUND, (data) => {
+			console.log(CLIENT_INTRODUCTION_PAIR_NOT_FOUND);
 			setState((prevState) => ({ ...prevState, userFoundFlag: false, pairedUserData: null }));
 		});
 
@@ -607,6 +628,10 @@ function Index() {
 		}));
 	};
 
+	const handleAdCampaignClick = () => {
+		window.open("/ads", "_blank");
+	}
+
 	const renderChatMessages = () => {
 		return state.chatMessagesArray.map((msg, index) => {
 			if (msg.isImage) {
@@ -686,7 +711,7 @@ function Index() {
 		if (state.tabIndex === 0) {
 			return (
 				<div className={styles.chatContainer__settings}>
-					{state.isChatEnded && <div>Chat ended with {state?.isChatEndedWith}</div>}
+					{state.isChatEnded && <div style={{ marginTop: "10px" }} className={styles.chatContainer__settingsSubTitle}>{state.isChatEndedWithError ? state.isChatEndedWithError : `Chat ended with ${state?.isChatEndedWith}` } </div>}
 
 					<div className={styles.chatContainer__settingsTitle}>Connect With</div>
 					<div className={styles.chatContainer__settingsSubTitle} style={{ animation: !state.isMyGenderSpecified ? "alert 1s ease" : null }}>
@@ -720,11 +745,9 @@ function Index() {
 						<button onClick={handleChangeSessionStatus} disabled={state.userSearchTryingCount !== 0}>
 							Start session
 						</button>
-						{state.userFoundFlag !== "" && !state.userFoundFlag ? "Searching... new user to chat!" : ""}
+						{state.userFoundFlag !== "" && !state.userFoundFlag ? <div style={{ marginTop: "10px", fontSize: "0.9em" }} className={styles.chatContainer__settingsSubTitle}>Searching... new user to chat!</div> : ""}
 					</div>
-					{!state.userFoundFlag && state.userSearchTryingCount !== 0 && (
-						<div className={styles.chatContainer__tryingToFindText}> {`Trying to find user since ${state.userSearchTryingCount}s`} </div>
-					)}
+					
 				</div>
 			);
 		}
@@ -816,15 +839,9 @@ function Index() {
 						</div>
 					)}
 					<div className={styles.chatContainer__chatAd}>
-						iPhone selling for 20k, only 10 days used -
-						<div className={styles.chatContainer__adAction}>
-							<Link
-								href={{
-									pathname: "/ads",
-								}}
-							>
-								Visit now
-							</Link>
+						Place your text Ads here  -
+						<div className={styles.chatContainer__adAction} onClick={handleAdCampaignClick}>
+							Know more
 						</div>
 					</div>
 					<div className={styles.chatContainer__smartReply}>
