@@ -819,7 +819,7 @@ function Index() {
 			<div className={styles.chatContainer} id="chatContainer" style={{ overflowY: state.isRulesViewOpen ? "hidden" : null }}>
 				{state.isRulesViewOpen && (
 					<div className={styles.chatContainer__rulesView} onClick={handleToggleRules}>
-						<div className={styles.chatContainer__rulesUpArrow}></div>
+						<div className={styles.chatContainer__rulesUpArrow} style={{ marginLeft: isMobileView? "66%" : "71%" }}></div>
 						<div className={styles.chatContainer__rulesScreen} onClick={handleStopRulesScreenPropagation}>
 							<div className={styles.chatContainer__rulesTitle}>
 								This is a <b>restricted mode</b> where the following words can’t be used while chatting (click to remove)
@@ -860,6 +860,7 @@ function Index() {
 					</div>
 					<div className={styles.chatContainer__chatOptions}>
 						<button onClick={handleToggleRules}>Rules</button>
+						<button onClick={handleChangeSessionStatus}>{state.isNewSessionStatus}?</button>
 					</div>
 				</div>
 
@@ -875,7 +876,8 @@ function Index() {
 				<div className={styles.chatContainer__controls}>
 					{state.isNewSessionStatus === "New" && (
 						<div className={styles.chatContainer__newSessionScreen} onClick={handleChangeSessionStatus}>
-							<div className={styles.chatContainer__newSessionOptions} onClick={(e) => e.stopPropagation()}>
+							<div className={styles.chatContainer__rulesUpArrow} style={{ marginLeft: isMobileView? "85%" : "94%", marginTop: isMobileView? "70px": "90px" }}></div>
+							<div className={styles.chatContainer__newSessionOptions} style={{ marginTop:"unset" }} onClick={(e) => e.stopPropagation()}>
 								<div className={styles.chatContainer__newAd} onClick={handleAdCampaignClick}>Your banner ad can be here - check out</div>
 								<div className={styles.chatContainer__newTabs}>
 									{state.newTabs.map((tab, index) => (
@@ -891,7 +893,6 @@ function Index() {
 								{socketRef.current && state.mySocketId && renderCorrectTab()}
 								{!socketRef.curent && !state.mySocketId && <div className={styles.chatContainer__initLoader}><Loader width={40} height={20} style={{marginRight: "40px"}} color={"#474663"} /></div>}
 							</div>
-							<div className={styles.chatContainer__arrowDown}></div>
 						</div>
 					)}
 					<div className={styles.chatContainer__chatAd}>
@@ -901,9 +902,6 @@ function Index() {
 						</div>
 					</div>
 					<div className={styles.chatContainer__smartReply}>
-						<div className={styles.chatContainer__skipNewReally} onClick={handleChangeSessionStatus}>
-							{state.isNewSessionStatus}?
-						</div>
 						{state.smartRepliesArray.map((reply, index) => (
 							<div
 								style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null }}

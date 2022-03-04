@@ -47,7 +47,6 @@
 		display: flex;
 		justify-content: flex-end;
 		align-items: center;
-		margin-right: -20px;
 		position: relative;
 		button {
 			user-select: none;
@@ -82,7 +81,7 @@
 
 	&__rulesView {
 		position: absolute;
-		top: 65px;
+		top: 60px;
 		left: 0px;
 		height: 100%;
 		width: 100vw;
@@ -90,6 +89,7 @@
 		backdrop-filter: blur(1.5px);
 		z-index: 300;
 		padding: 15px;
+		padding-top: unset;
 	}
 
 	&__rulesScreen {
@@ -247,8 +247,8 @@
 
 	&__newSessionOptions {
 		background-color: $color0;
-		height: 95%;
-		margin-top: 5%;
+		height: 88%;
+		margin-top: 70px;
 		width: 95%;
 		margin-left: auto;
 		margin-right: auto;
@@ -647,6 +647,25 @@
 
 		&__sentMsgContainer {
 			max-width: 50%
+		}
+
+		&__newSessionScreen{
+			height: 92%;
+		}
+
+		&__newSessionOptions {
+			height: max-content;
+			margin-left: 68%;
+			width: 31%;
+		}
+
+		&__rulesUpArrow {
+			margin-left: 98%;
+		}
+
+		&__rulesView {
+			top: 85px;
+    		padding-left: 70%;
 		}
 
 		&__input {

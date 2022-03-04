@@ -47,6 +47,10 @@ export default function Home() {
 		setState((prevState) => ({ ...prevState, isNavOpen: !prevState.isNavOpen }));
 	};
 
+	const handleRedirectLiveChat = () => {
+		window.location.pathname = "/live"
+	}
+
 	const renderLeftSection = () => (
 		<div className={styles.mainContainer_leftSection}>
 			<div className={styles.mainContainer_siteLogoNavBar}>
@@ -79,7 +83,7 @@ export default function Home() {
 					Don{`'`}t just timepass <br /> Make memories
 				</div>
 				<div className={styles.mainContainer_tagLineButtonsContainer}>
-					<button>Create Quiz</button> <button>Meet People</button>
+					<button>Create Quiz</button> <button onClick={handleRedirectLiveChat}>Meet People</button>
 				</div>
 			</div>
 		</div>
