@@ -373,6 +373,18 @@ function Index() {
 			else setIsMobileViewDebouncer(false);
 		});
 
+		const urlParams = new URLSearchParams(window.location.search);
+		let interests = urlParams.get('interests');
+		if (interests){
+			interests = interests.split(",")
+			let interestCopy = []
+			interests.forEach(interest => {
+				if (interest.length > 0)
+				interestCopy.push(interest.toLowerCase())
+			})
+			setState((prevState) => ({...prevState, commonInterestsArray: interestCopy}))
+		}
+
 		// Get my ip location from server
 		dispatch(IsServerOperational());
 		
@@ -627,12 +639,20 @@ function Index() {
 		else setState((prevState) => ({ ...prevState, isMyGenderSpecified: false }));
 	};
 
+	const setURLSearchParam = (key, value) => {
+		const url = new URL(window.location.href);
+		url.searchParams.set(key, value);
+		window.history.pushState({ path: url.href }, '', url.href);
+	}
+
 	const handleAddInterest = (e) => {
 		let value = e.target.value;
 		if (e.key === "Enter" && value.trim().length > 0) {
+			let commonInterestsArray = [...state.commonInterestsArray, value.trim().toLowerCase()]
+			setURLSearchParam("interests", commonInterestsArray)
 			setState((prevState) => ({
 				...prevState,
-				commonInterestsArray: [...state.commonInterestsArray, value.trim().toLowerCase()],
+				commonInterestsArray,
 			}));
 			document.getElementById("interestInput").value = "";
 		}
@@ -677,9 +697,11 @@ function Index() {
 	};
 
 	const handleRemoveInterest = (interestIndex) => {
+		let commonInterestsArray = state.commonInterestsArray.filter((val, index) => interestIndex !== index)
+		setURLSearchParam("interests", commonInterestsArray)
 		setState((prevState) => ({
 			...prevState,
-			commonInterestsArray: state.commonInterestsArray.filter((val, index) => interestIndex !== index),
+			commonInterestsArray,
 		}));
 	};
 

@@ -10,6 +10,25 @@
 	font-family: $font1;
 	transition: all 400ms ease;
 
+	&_features{
+		display: block;
+		margin-top: 40px;
+	}
+
+	&_featureItem{
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		font-size: 1em;
+		font-weight: 500;
+		margin-bottom: 18px;
+		color: $color2;
+		div{
+			margin-left: 20px;
+			width: 75%;
+		}
+	}
+
 	&_leftSection {
 		width: 50%;
 		padding: 50px;
@@ -121,7 +140,7 @@
 	}
 
 	&_tagLine {
-		margin-top: 170px;
+		margin-top: 140px;
 		font-size: 3rem;
 		font-weight: 500;
 		color: $color2;
@@ -267,8 +286,8 @@
 
 			&_poly3 {
 				position: absolute;
-				left: 41px;
-				top: 153px;
+				left: 95px;
+				top: 243px;
 				width: unset;
 				z-index: 199;
 			}
@@ -276,7 +295,7 @@
 			&_poly4 {
 				position: absolute;
 				left: 0px;
-				top: 155px;
+				top: 255px;
 				width: unset;
 			}
 		}

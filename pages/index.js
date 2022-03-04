@@ -13,6 +13,7 @@ import Polygon1 from "../Resources/Polygon1.svg";
 import Polygon2 from "../Resources/Polygon2.svg";
 import Polygon3 from "../Resources/Polygon3.svg";
 import Polygon4 from "../Resources/Polygon4.svg";
+import Tick from "../Resources/tick.svg";
 import LiveChatMobilePreview from "../Resources/LiveChatMobilePreview.svg";
 import LiveChatMobilePreviewOptions from "../Resources/LiveChatMobilePreviewOptions.svg";
 
@@ -67,23 +68,64 @@ export default function Home() {
 
 			<div className={styles.mainContainer_tagLine}>
 				<div className={styles.mainContainer_tagLine_poly1}>
-					<Image src={Polygon1.src} width={state.isMobileView ? 80 : 180} height={state.isMobileView ? 80 : 180} alt="" />
+					<Image src={Polygon1.src} width={state.isMobileView ? 180 : 180} height={state.isMobileView ? 180 : 180} alt="" />
 				</div>
 				<div className={styles.mainContainer_tagLine_poly2}>
-					<Image src={Polygon2.src} width={state.isMobileView ? 100 : 200} height={state.isMobileView ? 100 : 200} alt="" />
+					<Image src={Polygon2.src} width={state.isMobileView ? 200 : 200} height={state.isMobileView ? 200 : 200} alt="" />
 				</div>
 				<div className={styles.mainContainer_tagLine_poly3}>
-					<Image src={Polygon3.src} width={state.isMobileView ? 100 : 280} height={state.isMobileView ? 100 : 280} alt="" />
+					<Image src={Polygon3.src} width={state.isMobileView ? 200 : 280} height={state.isMobileView ? 200 : 280} alt="" />
 				</div>
 				<div className={styles.mainContainer_tagLine_poly4}>
-					<Image src={Polygon4.src} width={state.isMobileView ? 100 : 190} height={state.isMobileView ? 100 : 190} alt="" />
+					<Image src={Polygon4.src} width={state.isMobileView ? 200 : 190} height={state.isMobileView ? 200 : 190} alt="" />
 				</div>
 
 				<div>
 					Don{`'`}t just timepass <br /> Make memories
 				</div>
 				<div className={styles.mainContainer_tagLineButtonsContainer}>
-					<button>Create Quiz</button> <button onClick={handleRedirectLiveChat}>Meet People</button>
+					<button>Create Quiz</button>  
+					<button >
+						<Link
+							href={{
+								pathname: "/live",
+							}}
+						>
+							Meet People
+						</Link>
+					</button>
+				</div>
+			</div>
+
+			<div className={styles.mainContainer_features}>
+				<div className={styles.mainContainer_featureItem}>
+					<Image src={Tick.src} width={30} height={30} alt="" />
+					<div>We don’t save your chat logs</div>
+				</div>
+
+				<div className={styles.mainContainer_featureItem}>
+					<Image src={Tick.src} width={30} height={30} alt="" />
+					<div>Anonymous safe random chats</div>
+				</div>
+
+				<div className={styles.mainContainer_featureItem}>
+					<Image src={Tick.src} width={30} height={30} alt="" />
+					<div>Gender detection & filters</div>
+				</div>
+
+				<div className={styles.mainContainer_featureItem}>
+					<Image src={Tick.src} width={30} height={30} alt="" />
+					<div>Free to use</div>
+				</div>
+
+				<div className={styles.mainContainer_featureItem}>
+					<Image src={Tick.src} width={30} height={30} alt="" />
+					<div>Full Privacy Controls</div>
+				</div>
+
+				<div className={styles.mainContainer_featureItem}>
+					<Image src={Tick.src} width={30} height={30} alt="" />
+					<div>Image/Audio sharing</div>
 				</div>
 			</div>
 		</div>
