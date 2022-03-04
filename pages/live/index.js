@@ -876,7 +876,7 @@ function Index() {
 				<div className={styles.chatContainer__controls}>
 					{state.isNewSessionStatus === "New" && (
 						<div className={styles.chatContainer__newSessionScreen} onClick={handleChangeSessionStatus}>
-							<div className={styles.chatContainer__rulesUpArrow} style={{ marginLeft: isMobileView? "85%" : "94%", marginTop: isMobileView? "70px": "90px" }}></div>
+							<div className={styles.chatContainer__rulesUpArrow} style={{ marginLeft: isMobileView? "85%" : "94%", marginTop: isMobileView? "62px": "90px" }}></div>
 							<div className={styles.chatContainer__newSessionOptions} style={{ marginTop:"unset" }} onClick={(e) => e.stopPropagation()}>
 								<div className={styles.chatContainer__newAd} onClick={handleAdCampaignClick}>Your banner ad can be here - check out</div>
 								<div className={styles.chatContainer__newTabs}>
