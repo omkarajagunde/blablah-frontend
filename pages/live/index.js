@@ -9,6 +9,7 @@ import socketIOClient from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
+import ReactGA from '../../api/reactga'
 import IdentityTab from "../../components/IdentityTab";
 import useUpdateEffect from "../../components/_helpers/useUpdateEffect";
 import AudioRecording from "../../components/AudioRecording";
@@ -385,6 +386,9 @@ function Index() {
 			setState((prevState) => ({...prevState, commonInterestsArray: interestCopy}))
 		}
 
+		// Record pageview
+		ReactGA.pageview(window.location.pathname + window.location.search);
+
 		// Get my ip location from server
 		dispatch(IsServerOperational());
 		
@@ -620,6 +624,10 @@ function Index() {
 	const handleChangeSessionStatus = () => {
 		if (state.isNewSessionStatus === "New") {
 			handleSocketEvent(CLIENT_INTRODUCTION);
+			ReactGA.event({
+				category: 'ClickEvent',
+				action: 'Start new session button Clicked'
+			});
 		}
 		if (state.isNewSessionStatus === "Skip") setState((prevState) => ({ ...prevState, isNewSessionStatus: "Really" }));
 		if (state.isNewSessionStatus === "Really") {
@@ -633,6 +641,10 @@ function Index() {
 	};
 
 	const handleSettingsTabChange = (index) => {
+		ReactGA.event({
+			category: 'ClickEvent',
+			action: 'Gender Filter Clicked'
+		});
 		let myGender = LiveChatSelector.identityObj?.gender;
 		console.log(myGender);
 		if (myGender !== "any") setState((prevState) => ({ ...prevState, settingsTabIndex: index, isMyGenderSpecified: true }));
@@ -706,6 +718,11 @@ function Index() {
 	};
 
 	const handleAdCampaignClick = () => {
+		ReactGA.event({
+			category: 'AdsClickEvent',
+			action: 'LiveChat text ad Clicked',
+			label: "Blablah default ad"
+		});
 		window.open("/ads", "_blank");
 	}
 

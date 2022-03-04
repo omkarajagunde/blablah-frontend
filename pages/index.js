@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
+import ReactGA from '../api/reactga'
 
 import styles from "../styles/Home.module.scss";
 import Head from "next/head";
@@ -33,6 +34,11 @@ export default function Home() {
 			if (window.innerWidth <= 768) setIsMobileViewDebouncer(true);
 			else setIsMobileViewDebouncer(false);
 		});
+
+		// Reecord landing page view
+		ReactGA.pageview(window.location.pathname + window.location.search);
+
+
 		return () => {
 			window.removeEventListener("resize", () => {});
 		};
@@ -48,8 +54,11 @@ export default function Home() {
 		setState((prevState) => ({ ...prevState, isNavOpen: !prevState.isNavOpen }));
 	};
 
-	const handleRedirectLiveChat = () => {
-		window.location.pathname = "/live"
+	const handleMeetPeopleClick = () => {
+		ReactGA.event({
+			category: 'ClickEvent',
+			action: 'Landing page Meet People button clicked'
+		});
 	}
 
 	const renderLeftSection = () => (
@@ -85,7 +94,7 @@ export default function Home() {
 				</div>
 				<div className={styles.mainContainer_tagLineButtonsContainer}>
 					<button>Create Quiz</button>  
-					<button >
+					<button onClick={handleMeetPeopleClick}>
 						<Link
 							href={{
 								pathname: "/live",
