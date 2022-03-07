@@ -85,7 +85,7 @@ a {
     opacity: 0.7;
     line-height: 50px;
     font-size: 24px;
-    letter-spacing: 12px;
+    letter-spacing: 6px;
     color: var(--color6);
     font-weight: 400;
     color: white;
@@ -94,7 +94,7 @@ a {
 
 @media only screen and (max-width: 768px) {
 	.watermarked::before {
-		font-size: 16px;
+		font-size: 10px;
 		line-height: 25px;
 	}
 }
