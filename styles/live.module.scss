@@ -16,6 +16,16 @@
 	scroll-behavior: smooth;
 	overscroll-behavior: contain;
 
+	@keyframes heightSmooth {
+		0%{
+			height: 60px;
+			opacity: 0;
+		}100%{
+			height: 200px;
+			opacity: 1;
+		}
+	}
+
 	&__initLoader{
 		width: 100%;
 		height: 300px;
@@ -184,6 +194,7 @@
 	}
 
 	&__smartReply {
+		position: relative;
 		background: $color6;
 		height: 50px;
 		display: flex;
@@ -194,6 +205,37 @@
 			width: 0px;
 			height: 0px;
 		}
+	}
+
+	&__smartReplyExpandCollapse{
+		position: absolute;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 50px;
+		width: max-content;
+		right: 0px;
+		bottom: 0;
+		width: 50px;
+		cursor: pointer;
+		box-shadow: 0px 4px 34px 5px rgba(255, 255, 255, 0.65);
+	}
+
+	&__smartReplyMenu{
+		position: absolute;
+		width: 96%;
+		margin: auto;
+		bottom: 120px;
+		background: $color0;
+		border-radius: 2px;
+		padding: 10px;
+		display: block;
+		right: 2%;
+		bottom: 120px;
+		z-index: 999;
+		height: 200px;
+		overflow-y: scroll;
+		animation: heightSmooth 300ms ease-in-out;
 	}
 
 	&__smartReplyItem {
@@ -257,7 +299,7 @@
 		overflow-y: scroll;
 		padding: 15px;
 		position: relative;
-	}
+	}  
 
 	&__newAd {
 		width: 100%;
@@ -658,6 +700,11 @@
 			height: max-content;
 			margin-left: 68%;
 			width: 31%;
+		}
+
+		&__smartReplyMenu{
+			width: 380px;
+			right: 20px;
 		}
 
 		&__rulesUpArrow {

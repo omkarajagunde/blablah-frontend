@@ -62,3 +62,39 @@ a {
 		height: 20px;
 	}
 }
+
+.watermarked {
+	position: relative;
+	overflow: hidden;
+	color: var(--color6);
+}
+
+.watermarked img {
+	width: 100%;
+}
+
+.watermarked::before {
+	position: absolute;
+    top: 56%;
+    left: -20%;
+    display: block;
+    height: 250%;
+    width: 260%;
+    transform: rotate(-11deg);
+    content: attr(data-watermark);
+    opacity: 0.5;
+    line-height: 50px;
+    font-size: 24px;
+    letter-spacing: 12px;
+    color: var(--color6);
+    font-weight: 400;
+    color: white;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}	
+
+@media only screen and (max-width: 768px) {
+	.watermarked::before {
+		font-size: 16px;
+		line-height: 25px;
+	}
+}

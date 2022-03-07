@@ -21,6 +21,7 @@ import SendIcon from "../../Resources/SendIcon.svg";
 import ImageIcon from "../../Resources/ImageIcon.svg";
 import MicIcon from "../../Resources/MicIcon.svg";
 import MicCancel from "../../Resources/MicCancel.svg";
+import ExpandCollapse from '../../Resources/expandCollapse.svg'
 
 // Actions
 import { ClearLiveChatLogs, IsServerOperational, GetTrends } from "../../actions/liveChatActions";
@@ -73,6 +74,7 @@ function Index() {
 		username: LiveChatSelector.identityObj.fullname,
 		age: LiveChatSelector.identityObj.age,
 		myInfo: null,
+		expandSmartReply: false,
 
 		// Audio related state vars
 		isMicPressed: false,
@@ -87,6 +89,8 @@ function Index() {
 		setState((prevState) => ({
 			...prevState,
 			isNewSessionStatus: "New",
+			expandSmartReply: false,
+			isRulesViewOpen: false,
 			userFoundFlag: "",
 			userSearchTryingCount: 0,
 			isChatEnded: false,
@@ -409,7 +413,14 @@ function Index() {
 		elemsArray = Array.from(elemsArray);
 		let scrollElem = elemsArray[elemsArray.length - 1];
 
+		console.log(state);
 		//console.log(state.chatMessagesArray);
+		const imgContainerSelector = document.querySelectorAll(".watermarked");
+		imgContainerSelector.forEach(cont => {
+			cont.dataset.watermark = (
+				state.myInfo.ipInfo.ip + " "
+				).repeat(state.isMobileView? 10 : 20);
+		})
 
 		// On mobile scroll to fix scrollIntoView we call it in setTimeOut when default keyboard is closed
 		setTimeout(() => {
@@ -737,7 +748,9 @@ function Index() {
 						>
 							<div className={styles.chatContainer__receivedMsg}>
 								<div className={styles.chatContainer__receivedMsg}>
-									<img src={msg.msg} id={`ss-${index}`} />
+									<div className="watermarked" data-watermark="" id={`ss-${index}`}>
+										<img src={msg.msg} id={`ss-${index}`} />
+									</div>
 								</div>
 							</div>
 							<div className={styles.chatContainer__receivedMsgName}>
@@ -795,6 +808,10 @@ function Index() {
 			);
 		});
 	};
+
+	const handleSmartReplyExpander = () => {
+		setState((prevState) => ({...prevState, expandSmartReply: !prevState.expandSmartReply}))
+	}
 
 	// rendering desktop view
 	const renderDesktopView = () => {
@@ -912,6 +929,27 @@ function Index() {
 					</div>
 				)}
 
+				{state.expandSmartReply && 
+					<div className={styles.chatContainer__smartReplyMenu} id="smartReplyMenu"> 
+						{state.smartRepliesArray.map((reply, index) => {
+							let renderIdx = state.isMobileView? 2 : 6
+							if (index >= renderIdx){
+								return (
+									<div
+									style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null, color: "#474663", margin: "5px", border: "1px solid #405068" }}
+									onClick={() => handleSmartReplyClick(reply.text)}
+									className={styles.chatContainer__smartReplyItem}
+									key={`${index}-${reply.text}`}
+									>
+										{reply.text}
+									</div>
+								)
+							}
+							return ""
+						})}
+					</div>	
+				}
+
 				<div className={styles.chatContainer__controls}>
 					{state.isNewSessionStatus === "New" && (
 						<div className={styles.chatContainer__newSessionScreen} onClick={handleChangeSessionStatus}>
@@ -941,16 +979,25 @@ function Index() {
 						</div>
 					</div>
 					<div className={styles.chatContainer__smartReply}>
-						{state.smartRepliesArray.map((reply, index) => (
-							<div
-								style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null }}
-								onClick={() => handleSmartReplyClick(reply.text)}
-								className={styles.chatContainer__smartReplyItem}
-								key={`${index}-${reply.text}`}
-							>
-								{reply.text}
-							</div>
-						))}
+						{state.smartRepliesArray.map((reply, index) => {
+							let renderIdx = state.isMobileView? 2 : 6
+							if (index < renderIdx){
+								return (
+									<div
+									style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null }}
+									onClick={() => handleSmartReplyClick(reply.text)}
+									className={styles.chatContainer__smartReplyItem}
+									key={`${index}-${reply.text}`}
+									>
+										{reply.text}
+									</div>
+								)
+							}
+							return ""
+						})}
+						<div className={styles.chatContainer__smartReplyExpandCollapse} onClick={handleSmartReplyExpander} style={{ transform: state.expandSmartReply? "rotate(180deg)": "rotate(0deg)" }} > 
+							<Image src={ExpandCollapse.src} alt="image-icon" width={25} height={25} />
+						</div>
 					</div>
 					<div className={styles.chatContainer__input} style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null }}>
 						<div className={styles.chatContainer__inputImageSelector}>
