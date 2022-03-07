@@ -120,6 +120,7 @@ function Index() {
 	}, [LiveChatSelector]);
 
 	const handleSocketEvent = (eve, data) => {
+		setState((prevState)=>({...prevState, expandSmartReply: false}))
 		if (eve === CLIENT_INTRODUCTION) {
 			socketRef.current.emit(CLIENT_INTRODUCTION, {
 				mySocketId: socketRef.current.id,
@@ -567,6 +568,7 @@ function Index() {
 	};
 
 	const handleSmartReplyClick = (reply) => {
+		setState((prevState)=>({...prevState, expandSmartReply: false}))
 		let chatArray = [...state.chatMessagesArray];
 		chatArray.map((msg, index) => {
 			msg.newlyAdded = false;
