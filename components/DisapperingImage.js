@@ -13,7 +13,6 @@ function DisapperingImage(props) {
     }, [])
 
     useEffect(() => {
-        console.log(imgRef);
         if (time === 0){
             if (imgRef.current)
             imgRef.current.style.filter = "blur(3px)";
