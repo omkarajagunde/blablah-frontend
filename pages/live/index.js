@@ -910,28 +910,29 @@ function Index() {
 					</div>
 				)}
 
-				{state.expandSmartReply && 
-					<div className={styles.chatContainer__smartReplyMenu} id="smartReplyMenu"> 
-						{state.smartRepliesArray.map((reply, index) => {
-							let renderIdx = state.isMobileView? 2 : 6
-							if (index >= renderIdx){
-								return (
-									<div
-									style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null, color: "#474663", margin: "5px", border: "1px solid #405068" }}
-									onClick={() => handleSmartReplyClick(reply.text)}
-									className={styles.chatContainer__smartReplyItem}
-									key={`${index}-${reply.text}`}
-									>
-										{reply.text}
-									</div>
-								)
-							}
-							return ""
-						})}
-					</div>	
-				}
+				
 
 				<div className={styles.chatContainer__controls}>
+					{state.expandSmartReply && 
+						<div className={styles.chatContainer__smartReplyMenu} id="smartReplyMenu"> 
+							{state.smartRepliesArray.map((reply, index) => {
+								let renderIdx = state.isMobileView? 2 : 6
+								if (index >= renderIdx){
+									return (
+										<div
+										style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null, color: "#474663", margin: "5px", border: "1px solid #405068" }}
+										onClick={() => handleSmartReplyClick(reply.text)}
+										className={styles.chatContainer__smartReplyItem}
+										key={`${index}-${reply.text}`}
+										>
+											{reply.text}
+										</div>
+									)
+								}
+								return ""
+							})}
+						</div>	
+					}
 					{state.isNewSessionStatus === "New" && (
 						<div className={styles.chatContainer__newSessionScreen} onClick={handleChangeSessionStatus}>
 							<div className={styles.chatContainer__rulesUpArrow} style={{ marginLeft: isMobileView? "85%" : "94%", marginTop: isMobileView? "62px": "90px" }}></div>
