@@ -82,7 +82,7 @@ a {
     width: 260%;
     transform: rotate(-11deg);
     content: attr(data-watermark);
-    opacity: 0.5;
+    opacity: 0.7;
     line-height: 50px;
     font-size: 24px;
     letter-spacing: 12px;
