@@ -223,19 +223,17 @@
 	}
 
 	&__smartReplyMenu{
-		position: absolute;
-		width: 96%;
-		margin: auto;
-		bottom: 120px;
-		background: $color0;
+		position: sticky;
+		background: var(--color0);
 		border-radius: 2px;
 		padding: 10px;
 		display: block;
-		right: 2%;
-		bottom: 120px;
+		bottom: -47px;
 		z-index: 999;
 		height: 200px;
 		overflow-y: scroll;
+		width: 96%;
+		left: 2%;
 		animation: heightSmooth 300ms ease-in-out;
 	}
 
@@ -705,7 +703,11 @@
 
 		&__smartReplyMenu{
 			width: 380px;
-			right: 20px;
+			position: sticky;
+			right: unset;
+			bottom: -47px;
+			left: calc(100% - 393px);
+			
 		}
 
 		&__rulesUpArrow {
