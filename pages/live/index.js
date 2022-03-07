@@ -13,7 +13,9 @@ import ReactGA from '../../api/reactga'
 import IdentityTab from "../../components/IdentityTab";
 import useUpdateEffect from "../../components/_helpers/useUpdateEffect";
 import AudioRecording from "../../components/AudioRecording";
+import DisapperingImage from '../../components/DisapperingImage'
 import MicRecorder from "mic-recorder-to-mp3";
+
 
 // Images
 import SiteLogoWhite from "../../Resources/SiteLogoWhite.svg";
@@ -413,15 +415,6 @@ function Index() {
 		elemsArray = Array.from(elemsArray);
 		let scrollElem = elemsArray[elemsArray.length - 1];
 
-		console.log(state);
-		//console.log(state.chatMessagesArray);
-		const imgContainerSelector = document.querySelectorAll(".watermarked");
-		imgContainerSelector.forEach(cont => {
-			cont.dataset.watermark = (
-				state.myInfo.ipInfo.ip + " "
-				).repeat(state.isMobileView? 10 : 20);
-		})
-
 		// On mobile scroll to fix scrollIntoView we call it in setTimeOut when default keyboard is closed
 		setTimeout(() => {
 			if (scrollElem) scrollElem.scrollIntoView();
@@ -742,21 +735,7 @@ function Index() {
 			if (msg.isImage) {
 				return (
 					<div className={styles.chatContainer__msgContainer} id="chatMessage" key={`${msg.msg}-${index}`} style={{ justifyContent: msg.type === "received" ? "flex-start" : "flex-end" }}>
-						<div
-							style={{ animation: msg.newlyAdded ? "newMessage 500ms ease-in-out" : null }}
-							className={msg.type === "received" ? styles.chatContainer__receivedMsgContainer : styles.chatContainer__sentMsgContainer}
-						>
-							<div className={styles.chatContainer__receivedMsg}>
-								<div className={styles.chatContainer__receivedMsg}>
-									<div className="watermarked" data-watermark="" id={`ss-${index}`}>
-										<img src={msg.msg} id={`ss-${index}`} />
-									</div>
-								</div>
-							</div>
-							<div className={styles.chatContainer__receivedMsgName}>
-								<b>{msg.senderName}</b> <br/> {msg.timeStamp}
-							</div>
-						</div>
+						<DisapperingImage msg={msg} index={index} state={state}/>
 					</div>
 				);
 			}
