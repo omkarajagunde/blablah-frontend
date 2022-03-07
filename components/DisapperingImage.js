@@ -9,7 +9,7 @@ function DisapperingImage(props) {
 
     useEffect(() => {
         imgRef.current = document.querySelector(`#ss-${props.index}`);
-        imgRef.current.dataset.watermark = (props.state.myInfo.ipInfo.ip + " ").repeat(props.state.isMobileView? 10 : 20);
+        imgRef.current.dataset.watermark = (props.state.myInfo.ipInfo.ip + "  ||  ").repeat(props.state.isMobileView? 10 : 20);
     }, [])
 
     useEffect(() => {
