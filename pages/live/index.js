@@ -836,8 +836,9 @@ function Index() {
 					</div>
 
 					<div className={styles.chatContainer__settingsTitle}>
-						Connect with anyone if interests not avialable?
+						Connect with anyone?
 					</div>
+					<div className={styles.chatContainer__settingsSubTitle}>Connect with anyone if interests not avialable?</div>
 					<div style={{ display: "flex", marginTop: "10px" }}>
 						<div className={styles.chatContainer__radioToggle}><input onClick={handleToggleConnectToStrangers} type="radio" checked={state.connectWithAnyone}/> Yes </div>
 						<div className={styles.chatContainer__radioToggle}><input onClick={handleToggleConnectToStrangers} type="radio" checked={!state.connectWithAnyone}/> No </div>
