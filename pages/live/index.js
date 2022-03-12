@@ -14,6 +14,7 @@ import IdentityTab from "../../components/IdentityTab";
 import useUpdateEffect from "../../components/_helpers/useUpdateEffect";
 import AudioRecording from "../../components/AudioRecording";
 import DisapperingImage from '../../components/DisapperingImage'
+import PrivacyText from "../../components/PrivacyText";
 import MicRecorder from "mic-recorder-to-mp3";
 
 
@@ -78,6 +79,7 @@ function Index() {
 		myInfo: null,
 		expandSmartReply: false,
 		showImageDisapperModal: false,
+		showPrivacyModal: true,
 		connectWithAnyone: false,
 
 		// Audio related state vars
@@ -338,7 +340,8 @@ function Index() {
 				pairedUserData: null,
 				chatMessagesArray: [],
 				isChatEndedWith: data.data.data.myName || data.data.data.mySocketId || "Stranger",
-				showImageDisapperModal: false
+				showImageDisapperModal: false,
+				showPrivacyModal: false,
 			}));
 		});
 	}
@@ -1000,6 +1003,19 @@ function Index() {
 							<div
 								style={{ margin: "5px" }}
 								onClick={() => setState((prevState) => ({...prevState, showImageDisapperModal: false, imageFile: null }))}
+								className={styles.chatContainer__startSession}
+							>
+								<button>Cancel</button>
+							</div>
+						</div>	
+					}
+					{state.showPrivacyModal && state.isNewSessionStatus !== "New" &&
+						<div className={styles.chatContainer__smartReplyMenu} id="smartReplyMenu" style={{ height: "75vh" }}> 
+							<div className={styles.chatContainer__settingsTitle} style={{ marginTop: "unset" }}>Guidelines for usage (Scroll till end to close this dialog)</div>
+							<PrivacyText />
+							<div
+								style={{ margin: "5px" }}
+								onClick={() => setState((prevState) => ({...prevState, showPrivacyModal: false }))}
 								className={styles.chatContainer__startSession}
 							>
 								<button>Cancel</button>

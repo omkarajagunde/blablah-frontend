@@ -242,6 +242,15 @@ export default function Home() {
 								About
 							</Link>
 						</div>
+						<div className={styles.mainContainer__navMenuItem}>
+							<Link
+								href={{
+									pathname: "/privacy-policy",
+								}}
+							>
+								Privacy Policy
+							</Link>
+						</div>
 					</div>
 				</div>
 			)}
