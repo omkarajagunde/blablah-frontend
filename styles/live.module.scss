@@ -340,6 +340,18 @@
 		font-weight: 600;
 	}
 
+	&__radioToggle{
+		display: flex;
+		align-items: center;
+		margin-right: 25px;
+		input{
+			margin-right: 10px;
+			width: 20px;
+			height: 20px;
+			font-size: 1.4rem;
+		}
+	}
+
 	&__settingsSubTitle {
 		font-size: 0.8rem;
 	}

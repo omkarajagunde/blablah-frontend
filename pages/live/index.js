@@ -77,6 +77,8 @@ function Index() {
 		age: LiveChatSelector.identityObj.age,
 		myInfo: null,
 		expandSmartReply: false,
+		showImageDisapperModal: false,
+		connectWithAnyone: false,
 
 		// Audio related state vars
 		isMicPressed: false,
@@ -99,6 +101,7 @@ function Index() {
 			pairedUserData: null,
 			chatMessagesArray: [],
 			isChatEndedWithError: null,
+			showImageDisapperModal: false,
 		}));
 		document.getElementById("inputText").blur();
 	}, [state.mySocketId]);
@@ -136,6 +139,7 @@ function Index() {
 					myGender: LiveChatSelector.identityObj?.gender,
 					myAge: LiveChatSelector.identityObj?.age,
 					myName: LiveChatSelector.identityObj?.fullname,
+					connectWithAnyone: state.commonInterestsArray.length !== 0? state.connectWithAnyone : true
 				},
 			});
 		}
@@ -334,6 +338,7 @@ function Index() {
 				pairedUserData: null,
 				chatMessagesArray: [],
 				isChatEndedWith: data.data.data.myName || data.data.data.mySocketId || "Stranger",
+				showImageDisapperModal: false
 			}));
 		});
 	}
@@ -676,12 +681,16 @@ function Index() {
 		}
 	};
 
-	const handleFileUpload = (e) => {
+	const handleConfirmImage = (e) => {
+		setState((prevState) => ({...prevState, imageFile: e, showImageDisapperModal: true }))
+	}
+
+	const handleFileUpload = (disappearImageSecs, flag) => {
 		let chatArray = [...state.chatMessagesArray];
 		chatArray.map((msg, index) => {
 			msg.newlyAdded = false;
 		});
-
+		let e = state.imageFile
 		new Compressor(e.target.files[0], {
 			quality: 0.4,
 
@@ -696,6 +705,8 @@ function Index() {
 						type: "sent",
 						isImage: true,
 						isAudio: false,
+						shouldDisappear: flag,
+						disappearSecs: disappearImageSecs,
 						//msg: URL.createObjectURL(e.target.files[0]),
 						msg: e.target.result,
 						senderName: state.username || null,
@@ -705,7 +716,7 @@ function Index() {
 					};
 					// Send message
 					handleSocketEvent(SEND_MESSAGE, sendMsgObject);
-					setState((prevState) => ({ ...prevState, chatMessagesArray: [...chatArray, sendMsgObject] }));
+					setState((prevState) => ({ ...prevState, showImageDisapperModal: false, chatMessagesArray: [...chatArray, sendMsgObject] }));
 				};
 			},
 			error(err) {
@@ -799,6 +810,10 @@ function Index() {
 		return <div>{renderMobileView()}</div>;
 	};
 
+	const handleToggleConnectToStrangers = () => {
+		setState((prevState) => ({...prevState, connectWithAnyone: !prevState.connectWithAnyone}))
+	}
+
 	const renderCorrectTab = () => {
 		if (state.tabIndex === 0) {
 			return (
@@ -818,6 +833,14 @@ function Index() {
 								{tab}
 							</div>
 						))}
+					</div>
+
+					<div className={styles.chatContainer__settingsTitle}>
+						Connect with anyone if interests not avialable?
+					</div>
+					<div style={{ display: "flex", marginTop: "10px" }}>
+						<div className={styles.chatContainer__radioToggle}><input onClick={handleToggleConnectToStrangers} type="radio" checked={state.connectWithAnyone}/> Yes </div>
+						<div className={styles.chatContainer__radioToggle}><input onClick={handleToggleConnectToStrangers} type="radio" checked={!state.connectWithAnyone}/> No </div>
 					</div>
 
 					<div className={styles.chatContainer__settingsTitle}>Add Common Interests</div>
@@ -933,6 +956,55 @@ function Index() {
 							})}
 						</div>	
 					}
+					{state.showImageDisapperModal && 
+						<div className={styles.chatContainer__smartReplyMenu} id="smartReplyMenu"> 
+							<div className={styles.chatContainer__settingsTitle} style={{ marginTop: "unset", padding: "12px" }}>In how much time should this Image disapper?</div>
+							<div style={{ display: "flex" }}>
+								<div
+									style={{ color: "#474663", margin: "5px", border: "1px solid #405068" }}
+									onClick={() => handleFileUpload(30, true)}
+									className={styles.chatContainer__smartReplyItem}
+								>
+									30 secs
+								</div>
+								<div
+									style={{ color: "#474663", margin: "5px", border: "1px solid #405068" }}
+									onClick={() => handleFileUpload(60, true)}
+									className={styles.chatContainer__smartReplyItem}
+								>
+									1 min
+								</div>
+								<div
+									style={{ color: "#474663", margin: "5px", border: "1px solid #405068" }}
+									onClick={() => handleFileUpload(120, true)}
+									className={styles.chatContainer__smartReplyItem}
+								>
+									2 min
+								</div>
+								<div
+									style={{ color: "#474663", margin: "5px", border: "1px solid #405068" }}
+									onClick={() => handleFileUpload(300, true)}
+									className={styles.chatContainer__smartReplyItem}
+								>
+									5 min
+								</div>
+								<div
+									style={{ color: "#474663", margin: "5px", border: "1px solid #405068" }}
+									onClick={() => handleFileUpload(NaN, false)}
+									className={styles.chatContainer__smartReplyItem}
+								>
+									Never 
+								</div>
+							</div>
+							<div
+								style={{ margin: "5px" }}
+								onClick={() => setState((prevState) => ({...prevState, showImageDisapperModal: false, imageFile: null }))}
+								className={styles.chatContainer__startSession}
+							>
+								<button>Cancel</button>
+							</div>
+						</div>	
+					}
 					{state.isNewSessionStatus === "New" && (
 						<div className={styles.chatContainer__newSessionScreen} onClick={handleChangeSessionStatus}>
 							<div className={styles.chatContainer__rulesUpArrow} style={{ marginLeft: isMobileView? "85%" : "94%", marginTop: isMobileView? "62px": "90px" }}></div>
@@ -983,7 +1055,7 @@ function Index() {
 					</div>
 					<div className={styles.chatContainer__input} style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null }}>
 						<div className={styles.chatContainer__inputImageSelector}>
-							<input type="file" onChange={(e) => handleFileUpload(e)} accept="image/*" />
+							<input type="file" onChange={(e) => handleConfirmImage(e, true)} accept="image/*" />
 							<Image src={ImageIcon.src} alt="image-icon" width={25} height={25} />
 						</div>
 

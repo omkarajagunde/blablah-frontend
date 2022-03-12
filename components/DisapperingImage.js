@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import styles from "../styles/live.module.scss";
 function DisapperingImage(props) {
 
-    const [time, setTime] = useState(30);
+    const [time, setTime] = useState(props.msg.disappearSecs);
     const imgRef = useRef(null);
 
     useEffect(() => {
@@ -13,13 +13,15 @@ function DisapperingImage(props) {
     }, [])
 
     useEffect(() => {
-        if (time === 0){
-            if (imgRef.current)
-            imgRef.current.style.filter = "blur(4px)";
-        }else {
-            setTimeout(() => {
-                setTime(time - 1)
-            }, 1000);
+        if (props.msg.shouldDisappear){
+            if (time === 0){
+                if (imgRef.current)
+                imgRef.current.style.filter = "blur(4px)";
+            }else {
+                setTimeout(() => {
+                    setTime(time - 1)
+                }, 1000);
+            }
         }
     }, [time])
 
