@@ -1010,7 +1010,7 @@ function Index() {
 						</div>	
 					}
 					{state.showPrivacyModal && state.isNewSessionStatus !== "New" &&
-						<div className={styles.chatContainer__smartReplyMenu} id="smartReplyMenu" style={{ height: "65vh" }}> 
+						<div className={styles.chatContainer__smartReplyMenu} id="smartReplyMenu" style={{ height: "60vh" }}> 
 							<div className={styles.chatContainer__settingsTitle} style={{ marginTop: "unset" }}>Guidelines for usage (Scroll till end to close this dialog)</div>
 							<PrivacyText />
 							<div
