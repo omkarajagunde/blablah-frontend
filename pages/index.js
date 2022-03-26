@@ -90,7 +90,7 @@ export default function Home() {
 				</div>
 
 				<div>
-					Don{`'`}t just timepass <br /> Make memories
+					Don{`'`}t just pass time <br /> Make memories
 				</div>
 				<div className={styles.mainContainer_tagLineButtonsContainer}>
 					<button>Create Quiz</button>  
@@ -109,12 +109,12 @@ export default function Home() {
 			<div className={styles.mainContainer_features}>
 				<div className={styles.mainContainer_featureItem}>
 					<Image src={Tick.src} width={30} height={30} alt="" />
-					<div>We don’t save your chat logs</div>
+					<div>We don’t save your chat</div>
 				</div>
 
 				<div className={styles.mainContainer_featureItem}>
 					<Image src={Tick.src} width={30} height={30} alt="" />
-					<div>Anonymous safe random chats</div>
+					<div>Safe random chats</div>
 				</div>
 
 				<div className={styles.mainContainer_featureItem}>

@@ -429,6 +429,8 @@ function Index() {
 			if (scrollElem) scrollElem.scrollIntoView();
 		}, 200);
 
+		if (window.navigator) window.navigator.vibrate(400) 
+
 		// Update height flag to remove position: absolute on chatContainer
 
 		return () => {

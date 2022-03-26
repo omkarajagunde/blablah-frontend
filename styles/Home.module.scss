@@ -11,8 +11,9 @@
 	transition: all 400ms ease;
 
 	&_features{
-		display: block;
+		display: flex;
 		margin-top: 40px;
+		flex-wrap: wrap;
 	}
 
 	&_featureItem{
@@ -22,6 +23,7 @@
 		font-size: 1em;
 		font-weight: 500;
 		margin-bottom: 18px;
+		width: 300px;
 		color: $color2;
 		div{
 			margin-left: 20px;
@@ -34,6 +36,7 @@
 		padding: 50px;
 		box-sizing: border-box;
 		position: relative;
+		padding-left: 130px;
 	}
 
 	&_navScreen {
