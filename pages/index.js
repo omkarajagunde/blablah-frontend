@@ -198,6 +198,8 @@ export default function Home() {
 
 	return (
 		<div className={styles.mainContainer}>
+			{/* Tracking Umami is code */}
+			<Script data-website-id="d4634d7b-1b45-40e8-a1ba-559d3478a814" strategy="lazyOnload" src="http://144.126.255.37:3000/umami.js" />
 			<Head>
 				<title>BlaBla</title>
 				<meta name="description" content="Please update the Favicion" />
@@ -208,9 +210,6 @@ export default function Home() {
 				<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
 				<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
 				<link rel="manifest" href="/site.webmanifest" />
-
-				{/* Tracking Umami is code */}
-				<Script data-website-id="d4634d7b-1b45-40e8-a1ba-559d3478a814" strategy="lazyOnload" src="http://144.126.255.37:3000/umami.js" />
 			</Head>
 			{/* Logic to show full screen navbar if on mobile */}
 			{state.isNavOpen && (
