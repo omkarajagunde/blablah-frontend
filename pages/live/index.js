@@ -404,6 +404,13 @@ function Index() {
 		// Record pageview
 		ReactGA.pageview(window.location.pathname + window.location.search);
 
+		window.onbeforeunload = function(e) {
+			// Cancel the event
+			e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+			// Chrome requires returnValue to be set
+			e.returnValue = "Your chat partner will be disconnected, Are you Sure?"
+		};
+
 		// Get my ip location from server
 		dispatch(IsServerOperational());
 		
@@ -1088,6 +1095,7 @@ function Index() {
 									onFocus={() => handleSocketEvent(PEER_STARTED_TYPING)}
 									onBlur={() => handleSocketEvent(PEER_STOPPED_TYPING)}
 									id="inputText"
+									maxLength={400}
 									placeholder="your message here"
 									className={styles.chatContainer__textarea}
 									onKeyPress={(e) => e.key === "Enter"? handleSendClick(e): ""}
