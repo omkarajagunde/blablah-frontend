@@ -6,6 +6,7 @@ import styles from "../styles/Home.module.scss";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
+import Script from "next/script";
 
 // Icons !
 import SiteLogoBlack from "../Resources/SiteLogoBlack.svg";
@@ -209,7 +210,7 @@ export default function Home() {
 				<link rel="manifest" href="/site.webmanifest" />
 
 				{/* Tracking Umami is code */}
-				<script async defer data-website-id="d4634d7b-1b45-40e8-a1ba-559d3478a814" src="http://144.126.255.37:3000/umami.js"></script>
+				<Script data-website-id="d4634d7b-1b45-40e8-a1ba-559d3478a814" strategy="beforeInteractive" src="http://144.126.255.37:3000/umami.js" />
 			</Head>
 			{/* Logic to show full screen navbar if on mobile */}
 			{state.isNavOpen && (
