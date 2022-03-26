@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
-import ReactGA from '../api/reactga'
 
 import styles from "../styles/Home.module.scss";
 import Head from "next/head";
@@ -36,10 +35,6 @@ export default function Home() {
 			else setIsMobileViewDebouncer(false);
 		});
 
-		// Reecord landing page view
-		ReactGA.pageview(window.location.pathname + window.location.search);
-
-
 		return () => {
 			window.removeEventListener("resize", () => {});
 		};
@@ -56,10 +51,7 @@ export default function Home() {
 	};
 
 	const handleMeetPeopleClick = () => {
-		ReactGA.event({
-			category: 'ClickEvent',
-			action: 'Landing page Meet People button clicked'
-		});
+		//
 	}
 
 	const renderLeftSection = () => (
@@ -199,7 +191,7 @@ export default function Home() {
 	return (
 		<div className={styles.mainContainer}>
 			{/* Tracking Umami is code */}
-			<Script data-website-id="d4634d7b-1b45-40e8-a1ba-559d3478a814" strategy="lazyOnload" src="http://144.126.255.37:3000/umami.js" />
+			<Script data-website-id={process.env.NEXT_UMAMI_WEB_ID} strategy="lazyOnload" src={process.env.NEXT_PUBLIC_ANALYTICS_URL} />
 			<Head>
 				<title>BlaBla</title>
 				<meta name="description" content="Please update the Favicion" />

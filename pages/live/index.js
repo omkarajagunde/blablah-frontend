@@ -8,8 +8,8 @@ import AwesomeDebouncePromise from "awesome-debounce-promise";
 import socketIOClient from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
+import Script from "next/script";
 import Link from "next/link";
-import ReactGA from '../../api/reactga'
 import IdentityTab from "../../components/IdentityTab";
 import useUpdateEffect from "../../components/_helpers/useUpdateEffect";
 import AudioRecording from "../../components/AudioRecording";
@@ -401,9 +401,6 @@ function Index() {
 			setState((prevState) => ({...prevState, commonInterestsArray: interestCopy}))
 		}
 
-		// Record pageview
-		ReactGA.pageview(window.location.pathname + window.location.search);
-
 		window.onbeforeunload = function(e) {
 			// Cancel the event
 			e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
@@ -647,10 +644,6 @@ function Index() {
 	const handleChangeSessionStatus = () => {
 		if (state.isNewSessionStatus === "New") {
 			handleSocketEvent(CLIENT_INTRODUCTION);
-			ReactGA.event({
-				category: 'ClickEvent',
-				action: 'Start new session button Clicked'
-			});
 		}
 		if (state.isNewSessionStatus === "Skip") setState((prevState) => ({ ...prevState, isNewSessionStatus: "Really" }));
 		if (state.isNewSessionStatus === "Really") {
@@ -664,10 +657,6 @@ function Index() {
 	};
 
 	const handleSettingsTabChange = (index) => {
-		ReactGA.event({
-			category: 'ClickEvent',
-			action: 'Gender Filter Clicked'
-		});
 		let myGender = LiveChatSelector.identityObj?.gender;
 		console.log(myGender);
 		if (myGender !== "any") setState((prevState) => ({ ...prevState, settingsTabIndex: index, isMyGenderSpecified: true }));
@@ -747,11 +736,6 @@ function Index() {
 	};
 
 	const handleAdCampaignClick = () => {
-		ReactGA.event({
-			category: 'AdsClickEvent',
-			action: 'LiveChat text ad Clicked',
-			label: "Blablah default ad"
-		});
 		window.open("/ads", "_blank");
 	}
 
@@ -1121,6 +1105,8 @@ function Index() {
 	const { isMobileView } = state;
 	return (
 		<div style={{ height: "100%" }}>
+			{/* Tracking Umami is code */}
+			<Script data-website-id={process.env.NEXT_UMAMI_WEB_ID} strategy="lazyOnload" src={process.env.NEXT_PUBLIC_ANALYTICS_URL} />
 			<Head>
 				<meta name="theme-color" content="#474663" />
 			</Head>
