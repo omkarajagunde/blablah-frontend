@@ -210,7 +210,7 @@ export default function Home() {
 				<link rel="manifest" href="/site.webmanifest" />
 
 				{/* Tracking Umami is code */}
-				<Script data-website-id="d4634d7b-1b45-40e8-a1ba-559d3478a814" strategy="beforeInteractive" src="http://144.126.255.37:3000/umami.js" />
+				<Script data-website-id="d4634d7b-1b45-40e8-a1ba-559d3478a814" strategy="lazyOnload" src="http://144.126.255.37:3000/umami.js" />
 			</Head>
 			{/* Logic to show full screen navbar if on mobile */}
 			{state.isNavOpen && (
