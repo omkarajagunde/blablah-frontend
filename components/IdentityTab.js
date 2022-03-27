@@ -5,7 +5,6 @@ import useUpdateEffect from "./_helpers/useUpdateEffect";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import Loader from "../components/_helpers/Loader";
-import ReactGA from "../api/reactga";
 // Icons
 import RefreshIcon from "../Resources/Refresh.svg";
 
@@ -59,11 +58,6 @@ function IdentityTab() {
 	}, [LiveChatSelector.detectedGenderStatus]);
 
 	const handleVerifyIndetity = (eve) => {
-
-		ReactGA.event({
-			category: 'ClickEvent',
-			action: 'Gender Verification box Clicked'
-		});
 		setState((prevState) => ({ ...prevState, isUserImageCaptured: true }));
 		new Compressor(eve.target.files[0], {
 			quality: 0.4,
@@ -97,10 +91,7 @@ function IdentityTab() {
 	};
 
 	const handleAddName = (eve) => {
-		ReactGA.event({
-			category: 'ClickEvent',
-			action: 'Name Save button Clicked'
-		});
+		
 		let elem = document.getElementById("NameInput");
 		if (elem.value.trim().length > 0) {
 			dispatch(HandleIdentityChange(state.identityObj));
@@ -109,10 +100,7 @@ function IdentityTab() {
 	};
 
 	const handleAgeChange = (eve) => {
-		ReactGA.event({
-			category: 'ClickEvent',
-			action: 'Age Save button Clicked'
-		});
+		
 		let value = eve.target.value.trim();
 		if (value.length > 0) {
 			setState((prevState) => ({ ...prevState, identityObj: { ...state.identityObj, age: value } }));
