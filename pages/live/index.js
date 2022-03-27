@@ -551,6 +551,8 @@ function Index() {
 			
 			})
 			.catch((e) => {
+				// Click event
+				window.umami("Failed to send message")
 				alert("We could not send your message");
 				console.log(e);
 				setState((prevState) => ({ ...prevState, isMicBlocked: false, isMicRecording: false, isMicPressed: false }));
@@ -582,6 +584,8 @@ function Index() {
 	};
 
 	const handleSmartReplyClick = (reply) => {
+		// Click event
+		window.umami("Smart Reply Click")
 		setState((prevState)=>({...prevState, expandSmartReply: false}))
 		let chatArray = [...state.chatMessagesArray];
 		chatArray.map((msg, index) => {
@@ -644,6 +648,8 @@ function Index() {
 	const handleChangeSessionStatus = () => {
 		if (state.isNewSessionStatus === "New") {
 			handleSocketEvent(CLIENT_INTRODUCTION);
+			// Click event
+			window.umami("Start new session Click")
 		}
 		if (state.isNewSessionStatus === "Skip") setState((prevState) => ({ ...prevState, isNewSessionStatus: "Really" }));
 		if (state.isNewSessionStatus === "Really") {
@@ -653,6 +659,8 @@ function Index() {
 	};
 
 	const handleTabChange = (index) => {
+		// Click event
+		window.umami("Tab Change Event")
 		setState((prevState) => ({ ...prevState, tabIndex: index }));
 	};
 
@@ -683,6 +691,8 @@ function Index() {
 	};
 
 	const handleConfirmImage = (e) => {
+		// Click event
+		window.umami("Image Share Event")
 		setState((prevState) => ({...prevState, imageFile: e, showImageDisapperModal: true }))
 	}
 
@@ -736,6 +746,8 @@ function Index() {
 	};
 
 	const handleAdCampaignClick = () => {
+		// Click event
+		window.umami("Contextual Ad Click")
 		window.open("/ads", "_blank");
 	}
 

@@ -51,7 +51,8 @@ export default function Home() {
 	};
 
 	const handleMeetPeopleClick = () => {
-		//
+		// Click event
+		window.umami("Meet People Button Click")
 	}
 
 	const renderLeftSection = () => (
@@ -188,7 +189,6 @@ export default function Home() {
 		</div>
 	);
 
-	console.log(process.env.NEXT_PUBLIC_ANALYTICS_URL, process.env.NEXT_PUBLIC_UMAMI_WEB_ID);
 	return (
 		<div className={styles.mainContainer}>
 			{/* Tracking Umami is code */}

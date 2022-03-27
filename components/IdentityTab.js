@@ -40,6 +40,7 @@ function IdentityTab() {
 
 	useUpdateEffect(() => {
 		if (LiveChatSelector.detectedGenderStatus === 200) {
+			window.umami("Gender detected successfully")
 			dispatch(ClearLiveChatLogs());
 			setState((prevState) => ({
 				...prevState,
@@ -58,6 +59,8 @@ function IdentityTab() {
 	}, [LiveChatSelector.detectedGenderStatus]);
 
 	const handleVerifyIndetity = (eve) => {
+		// Click event
+		window.umami("Gender detection tried")
 		setState((prevState) => ({ ...prevState, isUserImageCaptured: true }));
 		new Compressor(eve.target.files[0], {
 			quality: 0.4,
@@ -91,7 +94,8 @@ function IdentityTab() {
 	};
 
 	const handleAddName = (eve) => {
-		
+		// Click event
+		window.umami("Name typed")
 		let elem = document.getElementById("NameInput");
 		if (elem.value.trim().length > 0) {
 			dispatch(HandleIdentityChange(state.identityObj));
@@ -100,7 +104,6 @@ function IdentityTab() {
 	};
 
 	const handleAgeChange = (eve) => {
-		
 		let value = eve.target.value.trim();
 		if (value.length > 0) {
 			setState((prevState) => ({ ...prevState, identityObj: { ...state.identityObj, age: value } }));
@@ -108,6 +111,8 @@ function IdentityTab() {
 	};
 
 	const handleAddAge = (eve) => {
+		// Click event
+		window.umami("Age added")
 		let elem = document.getElementById("NameInput");
 		if (elem.value.trim().length > 0) {
 			dispatch(HandleIdentityChange(state.identityObj));
