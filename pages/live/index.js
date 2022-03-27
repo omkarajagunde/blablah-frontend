@@ -9,7 +9,6 @@ import socketIOClient from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import Script from "next/script";
-import Link from "next/link";
 import IdentityTab from "../../components/IdentityTab";
 import useUpdateEffect from "../../components/_helpers/useUpdateEffect";
 import AudioRecording from "../../components/AudioRecording";
@@ -193,6 +192,8 @@ function Index() {
 		}
 
 		if (eve === SEND_MESSAGE) {
+			if (window.umami) window.umami("INFO Message Sent")
+			if (window.navigator) window.navigator.vibrate(400) 
 			socketRef.current.emit(SEND_MESSAGE, {
 				socketId: socketRef.current.id,
 				action: SEND_MESSAGE,
@@ -253,6 +254,7 @@ function Index() {
 		});
 
 		socketRef.current.on(CLIENT_INTRODUCTION, (data) => {
+			if (window.umami) window.umami("INFO Total Sessions Started")
 			console.log(data);
 
 			let time = new Date();
@@ -295,6 +297,7 @@ function Index() {
 		});
 
 		socketRef.current.on(SEND_MESSAGE, (data) => {
+			if (window.umami) window.umami("INFO Message Received")
 			setState((prevState) => ({ ...prevState, chatMessagesArray: [...prevState.chatMessagesArray, data.chatData] }));
 		});
 
@@ -433,8 +436,6 @@ function Index() {
 			if (scrollElem) scrollElem.scrollIntoView();
 		}, 200);
 
-		if (window.navigator) window.navigator.vibrate(400) 
-
 		// Update height flag to remove position: absolute on chatContainer
 
 		return () => {
@@ -552,7 +553,7 @@ function Index() {
 			})
 			.catch((e) => {
 				// Click event
-				window.umami("Failed to send message")
+				if (window.umami) window.umami("Failed to send message")
 				alert("We could not send your message");
 				console.log(e);
 				setState((prevState) => ({ ...prevState, isMicBlocked: false, isMicRecording: false, isMicPressed: false }));
@@ -585,7 +586,7 @@ function Index() {
 
 	const handleSmartReplyClick = (reply) => {
 		// Click event
-		window.umami("Smart Reply Click")
+		if (window.umami) window.umami("Smart Reply Click")
 		setState((prevState)=>({...prevState, expandSmartReply: false}))
 		let chatArray = [...state.chatMessagesArray];
 		chatArray.map((msg, index) => {
@@ -649,7 +650,7 @@ function Index() {
 		if (state.isNewSessionStatus === "New") {
 			handleSocketEvent(CLIENT_INTRODUCTION);
 			// Click event
-			window.umami("Start new session Click")
+			if (window.umami) window.umami("Start new session Click")
 		}
 		if (state.isNewSessionStatus === "Skip") setState((prevState) => ({ ...prevState, isNewSessionStatus: "Really" }));
 		if (state.isNewSessionStatus === "Really") {
@@ -660,7 +661,7 @@ function Index() {
 
 	const handleTabChange = (index) => {
 		// Click event
-		window.umami("Tab Change Event")
+		if (window.umami) window.umami("Tab Change Event")
 		setState((prevState) => ({ ...prevState, tabIndex: index }));
 	};
 
@@ -692,7 +693,7 @@ function Index() {
 
 	const handleConfirmImage = (e) => {
 		// Click event
-		window.umami("Image Share Event")
+		if (window.umami) window.umami("Image Share Event")
 		setState((prevState) => ({...prevState, imageFile: e, showImageDisapperModal: true }))
 	}
 
@@ -747,7 +748,7 @@ function Index() {
 
 	const handleAdCampaignClick = () => {
 		// Click event
-		window.umami("Contextual Ad Click")
+		if (window.umami) window.umami("Contextual Ad Click")
 		window.open("/ads", "_blank");
 	}
 
@@ -1121,6 +1122,7 @@ function Index() {
 			<Script data-website-id={process.env.NEXT_UMAMI_WEB_ID} strategy="lazyOnload" src={process.env.NEXT_PUBLIC_ANALYTICS_URL} />
 			<Head>
 				<meta name="theme-color" content="#474663" />
+				<title> Meet new people </title>
 			</Head>
 			{isMobileView ? renderMobileView() : renderDesktopView()}
 		</div>
