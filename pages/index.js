@@ -52,7 +52,7 @@ export default function Home() {
 
 	const handleMeetPeopleClick = () => {
 		// Click event
-		window.umami("Meet People Button Click")
+		if (window.umami) window.umami("Meet People Button Click")
 	}
 
 	const renderLeftSection = () => (
