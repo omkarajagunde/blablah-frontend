@@ -193,7 +193,6 @@ function Index() {
 
 		if (eve === SEND_MESSAGE) {
 			if (window.umami) window.umami("INFO Message Sent")
-			if (window.navigator) window.navigator.vibrate(400) 
 			socketRef.current.emit(SEND_MESSAGE, {
 				socketId: socketRef.current.id,
 				action: SEND_MESSAGE,
@@ -298,6 +297,7 @@ function Index() {
 
 		socketRef.current.on(SEND_MESSAGE, (data) => {
 			if (window.umami) window.umami("INFO Message Received")
+			if (window.navigator) window.navigator.vibrate(400) 
 			setState((prevState) => ({ ...prevState, chatMessagesArray: [...prevState.chatMessagesArray, data.chatData] }));
 		});
 

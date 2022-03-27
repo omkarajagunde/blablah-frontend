@@ -189,6 +189,7 @@ export default function Home() {
 		</div>
 	);
 
+	console.log(process.env.NEXT_PUBLIC_UMAMI_WEB_ID);
 	return (
 		<div className={styles.mainContainer}>
 			{/* Tracking Umami is code */}
