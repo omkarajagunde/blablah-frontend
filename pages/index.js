@@ -191,7 +191,7 @@ export default function Home() {
 	return (
 		<div className={styles.mainContainer}>
 			{/* Tracking Umami is code */}
-			<Script data-website-id={process.env.NEXT_UMAMI_WEB_ID} strategy="lazyOnload" src={process.env.NEXT_PUBLIC_ANALYTICS_URL} />
+			<Script data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEB_ID} strategy="lazyOnload" src={process.env.NEXT_PUBLIC_ANALYTICS_URL} />
 			<Head>
 				<title>BlaBla</title>
 				<meta name="description" content="Please update the Favicion" />
