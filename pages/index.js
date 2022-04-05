@@ -52,8 +52,8 @@ export default function Home() {
 
 	const handleMeetPeopleClick = () => {
 		// Click event
-		if (window.umami) window.umami("Meet People Button Click")
-	}
+		if (window.umami) window.umami("Meet People Button Click");
+	};
 
 	const renderLeftSection = () => (
 		<div className={styles.mainContainer_leftSection}>
@@ -87,7 +87,7 @@ export default function Home() {
 					Don{`'`}t just pass time <br /> Make memories
 				</div>
 				<div className={styles.mainContainer_tagLineButtonsContainer}>
-					<button>Create Quiz</button>  
+					<button>Create Quiz</button>
 					<button onClick={handleMeetPeopleClick}>
 						<Link
 							href={{
@@ -195,11 +195,24 @@ export default function Home() {
 			{/* Tracking Umami is code */}
 			<Script data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEB_ID} strategy="lazyOnload" src={process.env.NEXT_PUBLIC_ANALYTICS_URL} />
 			<Head>
-				<title>BlaBla</title>
-				<meta name="description" content="Please update the Favicion" />
+				<title>BlaBla - Meet new people</title>
 				<link rel="icon" href="/favicon.ico" />
 
-				
+				<meta name="theme-color" content="#474663" />
+				<meta name="title" content="Talk with beautiful girls and handsome men" />
+				<meta
+					name="description"
+					content="Do you also feel lonely? How many time you wanted to share something but you were afraid of getting judged by others?  start an interesting conversation with, someone Unknown, someone Caring, someone Funny, but someone Real, and someone who won't judge you, Head onto Blablah.app/live and meet new people rightaway"
+				/>
+				<meta
+					name="keywords"
+					content="anonymous random chat app,anonymous random video chat app,random anonymous voice chat,anonymous stranger chat app,best anonymous chat site,chat anonymously,chat anonymously online,anonymous chat with strangers,anonymous chat online,online anonymous chatting,india anonymous chat,"
+				/>
+				<meta name="robots" content="index, follow" />
+				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+				<meta name="language" content="English" />
+				<meta name="revisit-after" content="7 days" />
+
 				<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 				<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
 				<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />

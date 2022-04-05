@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Head from "next/head";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import _ from "lodash";
 import Compressor from "compressorjs";
 import TextareaAutosize from "react-textarea-autosize";
@@ -12,10 +12,9 @@ import Script from "next/script";
 import IdentityTab from "../../components/IdentityTab";
 import useUpdateEffect from "../../components/_helpers/useUpdateEffect";
 import AudioRecording from "../../components/AudioRecording";
-import DisapperingImage from '../../components/DisapperingImage'
+import DisapperingImage from "../../components/DisapperingImage";
 import PrivacyText from "../../components/PrivacyText";
 import MicRecorder from "mic-recorder-to-mp3";
-
 
 // Images
 import SiteLogoWhite from "../../Resources/SiteLogoWhite.svg";
@@ -23,7 +22,7 @@ import SendIcon from "../../Resources/SendIcon.svg";
 import ImageIcon from "../../Resources/ImageIcon.svg";
 import MicIcon from "../../Resources/MicIcon.svg";
 import MicCancel from "../../Resources/MicCancel.svg";
-import ExpandCollapse from '../../Resources/expandCollapse.svg'
+import ExpandCollapse from "../../Resources/expandCollapse.svg";
 
 // Actions
 import { ClearLiveChatLogs, IsServerOperational, GetTrends } from "../../actions/liveChatActions";
@@ -48,7 +47,7 @@ const recorder = new MicRecorder({
 
 function Index() {
 	const dispatch = useDispatch();
-	const router = useRouter()
+	const router = useRouter();
 	const LiveChatSelector = useSelector((state) => state.liveChat, _.isEqual);
 	const [state, setState] = useState({
 		isMobileView: false,
@@ -112,19 +111,19 @@ function Index() {
 	}, [state.userFoundFlag]);
 
 	useUpdateEffect(() => {
-		if ( LiveChatSelector.identityObj.fullname !== null) {
+		if (LiveChatSelector.identityObj.fullname !== null) {
 			dispatch(ClearLiveChatLogs());
-			setState((prevState) => ({ ...prevState, username:  LiveChatSelector.identityObj.fullname }));
+			setState((prevState) => ({ ...prevState, username: LiveChatSelector.identityObj.fullname }));
 		}
 
-		if ( LiveChatSelector.identityObj.gender !== "any") {
+		if (LiveChatSelector.identityObj.gender !== "any") {
 			dispatch(ClearLiveChatLogs());
-			setState((prevState) => ({ ...prevState, isMyGenderSpecified: true}));
+			setState((prevState) => ({ ...prevState, isMyGenderSpecified: true }));
 		}
 	}, [LiveChatSelector]);
 
 	const handleSocketEvent = (eve, data) => {
-		setState((prevState)=>({...prevState, expandSmartReply: false}))
+		setState((prevState) => ({ ...prevState, expandSmartReply: false }));
 		if (eve === CLIENT_INTRODUCTION) {
 			socketRef.current.emit(CLIENT_INTRODUCTION, {
 				mySocketId: socketRef.current.id,
@@ -140,14 +139,14 @@ function Index() {
 					myGender: LiveChatSelector.identityObj?.gender,
 					myAge: LiveChatSelector.identityObj?.age,
 					myName: LiveChatSelector.identityObj?.fullname,
-					connectWithAnyone: state.commonInterestsArray.length !== 0? state.connectWithAnyone : true
+					connectWithAnyone: state.commonInterestsArray.length !== 0 ? state.connectWithAnyone : true,
 				},
 			});
 		}
 
 		if (eve === PEER_STARTED_TYPING) {
 			let elemsArray = document.querySelectorAll("#chatMessage");
-			let typingContainer = document.querySelector("#typingContainer")
+			let typingContainer = document.querySelector("#typingContainer");
 			let scrollElem = elemsArray[elemsArray.length - 1];
 			// On mobile scroll to fix scrollIntoView we call it in setTimeOut when default keyboard is closed
 			setTimeout(() => {
@@ -170,7 +169,7 @@ function Index() {
 
 		if (eve === PEER_STOPPED_TYPING) {
 			let elemsArray = document.querySelectorAll("#chatMessage");
-			let typingContainer = document.querySelector("#typingContainer")
+			let typingContainer = document.querySelector("#typingContainer");
 			let scrollElem = elemsArray[elemsArray.length - 1];
 			// On mobile scroll to fix scrollIntoView we call it in setTimeOut when default keyboard is closed
 			setTimeout(() => {
@@ -192,7 +191,7 @@ function Index() {
 		}
 
 		if (eve === SEND_MESSAGE) {
-			if (window.umami) window.umami("INFO Message Sent")
+			if (window.umami) window.umami("INFO Message Sent");
 			socketRef.current.emit(SEND_MESSAGE, {
 				socketId: socketRef.current.id,
 				action: SEND_MESSAGE,
@@ -253,7 +252,7 @@ function Index() {
 		});
 
 		socketRef.current.on(CLIENT_INTRODUCTION, (data) => {
-			if (window.umami) window.umami("INFO Total Sessions Started")
+			if (window.umami) window.umami("INFO Total Sessions Started");
 			console.log(data);
 
 			let time = new Date();
@@ -296,14 +295,14 @@ function Index() {
 		});
 
 		socketRef.current.on(SEND_MESSAGE, (data) => {
-			if (window.umami) window.umami("INFO Message Received")
-			if (window.navigator) window.navigator.vibrate(400) 
+			if (window.umami) window.umami("INFO Message Received");
+			if (window.navigator) window.navigator.vibrate(400);
 			setState((prevState) => ({ ...prevState, chatMessagesArray: [...prevState.chatMessagesArray, data.chatData] }));
 		});
 
 		socketRef.current.on(PEER_STARTED_TYPING, (data) => {
 			let elemsArray = document.querySelectorAll("#chatMessage");
-			let typingContainer = document.querySelector("#typingContainer")
+			let typingContainer = document.querySelector("#typingContainer");
 			let scrollElem = elemsArray[elemsArray.length - 1];
 			// On mobile scroll to fix scrollIntoView we call it in setTimeOut when default keyboard is closed
 			setTimeout(() => {
@@ -318,7 +317,7 @@ function Index() {
 
 		socketRef.current.on(PEER_STOPPED_TYPING, (data) => {
 			let elemsArray = document.querySelectorAll("#chatMessage");
-			let typingContainer = document.querySelector("#typingContainer")
+			let typingContainer = document.querySelector("#typingContainer");
 			let scrollElem = elemsArray[elemsArray.length - 1];
 			// On mobile scroll to fix scrollIntoView we call it in setTimeOut when default keyboard is closed
 			setTimeout(() => {
@@ -347,42 +346,38 @@ function Index() {
 				showPrivacyModal: false,
 			}));
 		});
-	}
+	};
 
 	useUpdateEffect(() => {
-
 		if (LiveChatSelector.isServerOperationalStatus === 200) {
 			dispatch(ClearLiveChatLogs());
 			// Get trending trends
-			dispatch(GetTrends())
-			handleInitSocketEvents()
+			dispatch(GetTrends());
+			handleInitSocketEvents();
 			setState((prevState) => ({ ...prevState, myInfo: LiveChatSelector.isServerOperationalData }));
 		}
 
 		if (LiveChatSelector.isServerOperationalStatus === 600) {
 			dispatch(ClearLiveChatLogs());
-			if (confirm("Please check your internet connection, Click OK to refresh"))
-				window.location.reload()
+			if (confirm("Please check your internet connection, Click OK to refresh")) window.location.reload();
 		}
 
 		if (LiveChatSelector.detectedGenderStatus === 600) {
 			dispatch(ClearLiveChatLogs());
-			if (confirm("Please check your internet connection, Click OK to refresh"))
-				window.location.reload()
+			if (confirm("Please check your internet connection, Click OK to refresh")) window.location.reload();
 		}
 
-		if (LiveChatSelector.trendsStatus === 200){
+		if (LiveChatSelector.trendsStatus === 200) {
 			dispatch(ClearLiveChatLogs());
 			setState((prevState) => ({ ...prevState, smartRepliesArray: LiveChatSelector.trendsData.data }));
 		}
-
 	}, [LiveChatSelector]);
 
 	// Run only first time when component loads
 	useEffect(() => {
 		// set initial level
 		setState((prevState) => ({ ...prevState, username: LiveChatSelector.identityObj.fullname, age: LiveChatSelector.identityObj.age, gender: LiveChatSelector.identityObj.gender }));
-		
+
 		userFoundRef.current = false;
 		if (window.innerWidth <= 768) setState((prevState) => ({ ...prevState, isMobileView: true }));
 		else setState((prevState) => ({ ...prevState, isMobileView: false }));
@@ -393,27 +388,26 @@ function Index() {
 		});
 
 		const urlParams = new URLSearchParams(window.location.search);
-		let interests = urlParams.get('interests');
-		if (interests){
-			interests = interests.split(",")
-			let interestCopy = []
-			interests.forEach(interest => {
-				if (interest.length > 0)
-				interestCopy.push(interest.toLowerCase())
-			})
-			setState((prevState) => ({...prevState, commonInterestsArray: interestCopy}))
+		let interests = urlParams.get("interests");
+		if (interests) {
+			interests = interests.split(",");
+			let interestCopy = [];
+			interests.forEach((interest) => {
+				if (interest.length > 0) interestCopy.push(interest.toLowerCase());
+			});
+			setState((prevState) => ({ ...prevState, commonInterestsArray: interestCopy }));
 		}
 
-		window.onbeforeunload = function(e) {
+		window.onbeforeunload = function (e) {
 			// Cancel the event
 			e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
 			// Chrome requires returnValue to be set
-			e.returnValue = "Your chat partner will be disconnected, Are you Sure?"
+			e.returnValue = "Your chat partner will be disconnected, Are you Sure?";
 		};
 
 		// Get my ip location from server
 		dispatch(IsServerOperational());
-		
+
 		return () => {
 			handleSocketEvent(END_CURRENT_SESSION, null);
 			socketRef.current.disconnect();
@@ -421,7 +415,7 @@ function Index() {
 	}, []);
 
 	useUpdateEffect(() => {
-		handleInitSocketEvents()
+		handleInitSocketEvents();
 	}, [state.myInfo]);
 
 	// see chatMessageArray updates
@@ -475,35 +469,35 @@ function Index() {
 	};
 
 	const handleMicClick = () => {
-		if (!state.isMicPressed ) {
+		if (!state.isMicPressed) {
 			console.log(navigator.mediaDevices.getUserMedia);
-			
+
 			// Start recording. Browser will request permission to use your microphone.
-			navigator.getUserMedia({ audio: true },
+			navigator.getUserMedia(
+				{ audio: true },
 				() => {
 					recorder
-					.start()
-					.then(() => {
-						setState((prevState) => ({ ...prevState, isMicRecording: true, isMicBlocked: false }));
-					})
-					.catch((e) => {
-						console.error(e);
-						setState((prevState) => ({ ...prevState, isMicRecording: false, isMicBlocked: false }));
-					});
+						.start()
+						.then(() => {
+							setState((prevState) => ({ ...prevState, isMicRecording: true, isMicBlocked: false }));
+						})
+						.catch((e) => {
+							console.error(e);
+							setState((prevState) => ({ ...prevState, isMicRecording: false, isMicBlocked: false }));
+						});
 				},
 				(err) => {
 					console.log(err);
 					alert("You have blocked your mic access, please unblock audio from site settings");
 					setState((prevState) => ({ ...prevState, isMicBlocked: true, isMicRecording: false, isMicPressed: false }));
 				}
-				
 			);
 		} else recorder.stop();
 		setState((prevState) => ({ ...prevState, isMicPressed: !prevState.isMicPressed }));
 	};
 
 	const handleSendClick = (e) => {
-		if (e) e.preventDefault()
+		if (e) e.preventDefault();
 		let chatArray = [...state.chatMessagesArray];
 		chatArray.map((msg, index) => {
 			msg.newlyAdded = false;
@@ -512,52 +506,51 @@ function Index() {
 		if (state.isMicPressed && state.isMicRecording && !state.isMicBlocked) {
 			// Once you are done singing your best song, stop and get the mp3.
 			recorder
-			.stop()
-			.getMp3()
-			.then(([buffer, blob]) => {
-				let time = new Date();
-				const file = new File(buffer, "audio-message.mp3", {
-					type: blob.type,
-					lastModified: Date.now(),
-				});
-				var reader = new FileReader();
-				reader.readAsDataURL(file);
-				reader.onload = (e) => {
-					let sendMsgObject = {
-						type: "sent",
-						isImage: false,
-						isAudio: true,
-						msg: e.target.result,
-						senderName: state.username || null,
-						senderAge: state.age || null,
-						timeStamp: `${time.getHours()}:${time.getMinutes()}, ${time.toDateString()}`,
-						newlyAdded: true,
+				.stop()
+				.getMp3()
+				.then(([buffer, blob]) => {
+					let time = new Date();
+					const file = new File(buffer, "audio-message.mp3", {
+						type: blob.type,
+						lastModified: Date.now(),
+					});
+					var reader = new FileReader();
+					reader.readAsDataURL(file);
+					reader.onload = (e) => {
+						let sendMsgObject = {
+							type: "sent",
+							isImage: false,
+							isAudio: true,
+							msg: e.target.result,
+							senderName: state.username || null,
+							senderAge: state.age || null,
+							timeStamp: `${time.getHours()}:${time.getMinutes()}, ${time.toDateString()}`,
+							newlyAdded: true,
+						};
+
+						console.log("Audio message size in mb : ", Buffer.byteLength(JSON.stringify(sendMsgObject)) / 1e6);
+						if (Buffer.byteLength(JSON.stringify(sendMsgObject)) / 1e6 >= 6) alert("Max Audio length can be 2 mins, Try with audio message less than 2 mins");
+						else {
+							// Send Audio message
+							handleSocketEvent(SEND_MESSAGE, sendMsgObject);
+						}
+
+						setState((prevState) => ({
+							...prevState,
+							chatMessagesArray: [...chatArray, sendMsgObject],
+							isMicBlocked: false,
+							isMicRecording: false,
+							isMicPressed: false,
+						}));
 					};
-
-					console.log("Audio message size in mb : ", Buffer.byteLength(JSON.stringify(sendMsgObject)) / 1e6);
-					if (Buffer.byteLength(JSON.stringify(sendMsgObject)) / 1e6 >= 6) alert("Max Audio length can be 2 mins, Try with audio message less than 2 mins");
-					else {
-						// Send Audio message
-						handleSocketEvent(SEND_MESSAGE, sendMsgObject);
-					}
-
-					setState((prevState) => ({
-						...prevState,
-						chatMessagesArray: [...chatArray, sendMsgObject],
-						isMicBlocked: false,
-						isMicRecording: false,
-						isMicPressed: false,
-					}));
-				};
-			
-			})
-			.catch((e) => {
-				// Click event
-				if (window.umami) window.umami("Failed to send message")
-				alert("We could not send your message");
-				console.log(e);
-				setState((prevState) => ({ ...prevState, isMicBlocked: false, isMicRecording: false, isMicPressed: false }));
-			});
+				})
+				.catch((e) => {
+					// Click event
+					if (window.umami) window.umami("Failed to send message");
+					alert("We could not send your message");
+					console.log(e);
+					setState((prevState) => ({ ...prevState, isMicBlocked: false, isMicRecording: false, isMicPressed: false }));
+				});
 		} else {
 			// Send Text Message
 			let elem = document.getElementById("inputText");
@@ -586,8 +579,8 @@ function Index() {
 
 	const handleSmartReplyClick = (reply) => {
 		// Click event
-		if (window.umami) window.umami("Smart Reply Click")
-		setState((prevState)=>({...prevState, expandSmartReply: false}))
+		if (window.umami) window.umami("Smart Reply Click");
+		setState((prevState) => ({ ...prevState, expandSmartReply: false }));
 		let chatArray = [...state.chatMessagesArray];
 		chatArray.map((msg, index) => {
 			msg.newlyAdded = false;
@@ -650,7 +643,7 @@ function Index() {
 		if (state.isNewSessionStatus === "New") {
 			handleSocketEvent(CLIENT_INTRODUCTION);
 			// Click event
-			if (window.umami) window.umami("Start new session Click")
+			if (window.umami) window.umami("Start new session Click");
 		}
 		if (state.isNewSessionStatus === "Skip") setState((prevState) => ({ ...prevState, isNewSessionStatus: "Really" }));
 		if (state.isNewSessionStatus === "Really") {
@@ -661,7 +654,7 @@ function Index() {
 
 	const handleTabChange = (index) => {
 		// Click event
-		if (window.umami) window.umami("Tab Change Event")
+		if (window.umami) window.umami("Tab Change Event");
 		setState((prevState) => ({ ...prevState, tabIndex: index }));
 	};
 
@@ -675,14 +668,14 @@ function Index() {
 	const setURLSearchParam = (key, value) => {
 		const url = new URL(window.location.href);
 		url.searchParams.set(key, value);
-		window.history.pushState({ path: url.href }, '', url.href);
-	}
+		window.history.pushState({ path: url.href }, "", url.href);
+	};
 
 	const handleAddInterest = (e) => {
 		let value = e.target.value;
 		if (e.key === "Enter" && value.trim().length > 0) {
-			let commonInterestsArray = [...state.commonInterestsArray, value.trim().toLowerCase()]
-			setURLSearchParam("interests", commonInterestsArray)
+			let commonInterestsArray = [...state.commonInterestsArray, value.trim().toLowerCase()];
+			setURLSearchParam("interests", commonInterestsArray);
 			setState((prevState) => ({
 				...prevState,
 				commonInterestsArray,
@@ -693,16 +686,16 @@ function Index() {
 
 	const handleConfirmImage = (e) => {
 		// Click event
-		if (window.umami) window.umami("Image Share Event")
-		setState((prevState) => ({...prevState, imageFile: e, showImageDisapperModal: true }))
-	}
+		if (window.umami) window.umami("Image Share Event");
+		setState((prevState) => ({ ...prevState, imageFile: e, showImageDisapperModal: true }));
+	};
 
 	const handleFileUpload = (disappearImageSecs, flag) => {
 		let chatArray = [...state.chatMessagesArray];
 		chatArray.map((msg, index) => {
 			msg.newlyAdded = false;
 		});
-		let e = state.imageFile
+		let e = state.imageFile;
 		new Compressor(e.target.files[0], {
 			quality: 0.4,
 
@@ -738,8 +731,8 @@ function Index() {
 	};
 
 	const handleRemoveInterest = (interestIndex) => {
-		let commonInterestsArray = state.commonInterestsArray.filter((val, index) => interestIndex !== index)
-		setURLSearchParam("interests", commonInterestsArray)
+		let commonInterestsArray = state.commonInterestsArray.filter((val, index) => interestIndex !== index);
+		setURLSearchParam("interests", commonInterestsArray);
 		setState((prevState) => ({
 			...prevState,
 			commonInterestsArray,
@@ -748,16 +741,16 @@ function Index() {
 
 	const handleAdCampaignClick = () => {
 		// Click event
-		if (window.umami) window.umami("Contextual Ad Click")
+		if (window.umami) window.umami("Contextual Ad Click");
 		window.open("/ads", "_blank");
-	}
+	};
 
 	const renderChatMessages = () => {
 		return state.chatMessagesArray.map((msg, index) => {
 			if (msg.isImage) {
 				return (
 					<div className={styles.chatContainer__msgContainer} id="chatMessage" key={`${msg.msg}-${index}`} style={{ justifyContent: msg.type === "received" ? "flex-start" : "flex-end" }}>
-						<DisapperingImage msg={msg} index={index} state={state}/>
+						<DisapperingImage msg={msg} index={index} state={state} />
 					</div>
 				);
 			}
@@ -773,7 +766,7 @@ function Index() {
 								<audio controls controlsList="nodownload novolume nofullscreen noremoteplayback noplaybackrate" src={msg.msg}></audio>
 							</div>
 							<div className={styles.chatContainer__receivedMsgName}>
-								<b>{msg.senderName}</b> <br/>  {msg.timeStamp}
+								<b>{msg.senderName}</b> <br /> {msg.timeStamp}
 							</div>
 						</div>
 					</div>
@@ -800,7 +793,7 @@ function Index() {
 						<div className={styles.chatContainer__receivedMsgName}>
 							{!msg.retracted && (
 								<>
-									<b>{msg.senderName}</b> <br/>  {msg.timeStamp}
+									<b>{msg.senderName}</b> <br /> {msg.timeStamp}
 								</>
 							)}
 						</div>
@@ -811,8 +804,8 @@ function Index() {
 	};
 
 	const handleSmartReplyExpander = () => {
-		setState((prevState) => ({...prevState, expandSmartReply: !prevState.expandSmartReply}))
-	}
+		setState((prevState) => ({ ...prevState, expandSmartReply: !prevState.expandSmartReply }));
+	};
 
 	// rendering desktop view
 	const renderDesktopView = () => {
@@ -820,19 +813,25 @@ function Index() {
 	};
 
 	const handleToggleConnectToStrangers = () => {
-		setState((prevState) => ({...prevState, connectWithAnyone: !prevState.connectWithAnyone}))
-	}
+		setState((prevState) => ({ ...prevState, connectWithAnyone: !prevState.connectWithAnyone }));
+	};
 
 	const renderCorrectTab = () => {
 		if (state.tabIndex === 0) {
 			return (
 				<div className={styles.chatContainer__settings}>
 					<div className={styles.chatContainer__settingsTitle}>Connect With</div>
-					<div className={styles.chatContainer__settingsSubTitle} >
-						{state.isMyGenderSpecified ? "Select the gender you want to chat with" : <>To use this confirm your gender by <b onClick={() => handleTabChange(1)}>clicking here</b></> }
+					<div className={styles.chatContainer__settingsSubTitle}>
+						{state.isMyGenderSpecified ? (
+							"Select the gender you want to chat with"
+						) : (
+							<>
+								To use this confirm your gender by <b onClick={() => handleTabChange(1)}>clicking here</b>
+							</>
+						)}
 					</div>
-					
-					<div style={{ opacity: !state.isMyGenderSpecified ? "0.4": "1" }} className={styles.chatContainer__settingsTabView}>
+
+					<div style={{ opacity: !state.isMyGenderSpecified ? "0.4" : "1" }} className={styles.chatContainer__settingsTabView}>
 						{state.settingsTabViewOptions.map((tab, index) => (
 							<div
 								style={{ backgroundColor: state.settingsTabIndex === index ? "#e56b9f" : null, color: state.settingsTabIndex === index ? "white" : null }}
@@ -844,13 +843,15 @@ function Index() {
 						))}
 					</div>
 
-					<div className={styles.chatContainer__settingsTitle}>
-						Connect with anyone?
-					</div>
+					<div className={styles.chatContainer__settingsTitle}>Connect with anyone?</div>
 					<div className={styles.chatContainer__settingsSubTitle}>Connect with anyone if interests not avialable?</div>
 					<div style={{ display: "flex", marginTop: "10px" }}>
-						<div className={styles.chatContainer__radioToggle}><input onClick={handleToggleConnectToStrangers} type="radio" checked={state.connectWithAnyone}/> Yes </div>
-						<div className={styles.chatContainer__radioToggle}><input onClick={handleToggleConnectToStrangers} type="radio" checked={!state.connectWithAnyone}/> No </div>
+						<div className={styles.chatContainer__radioToggle}>
+							<input onClick={handleToggleConnectToStrangers} type="radio" checked={state.connectWithAnyone} /> Yes{" "}
+						</div>
+						<div className={styles.chatContainer__radioToggle}>
+							<input onClick={handleToggleConnectToStrangers} type="radio" checked={!state.connectWithAnyone} /> No{" "}
+						</div>
 					</div>
 
 					<div className={styles.chatContainer__settingsTitle}>Add Common Interests</div>
@@ -865,15 +866,29 @@ function Index() {
 					</div>
 
 					<div className={styles.chatContainer__startSession}>
-						<div>Want to advertise on blabla? - <span style={{fontWeight: "500", textDecoration:"underline"}} onClick={handleAdCampaignClick}>Read here</span> </div>
+						<div>
+							Want to advertise on blabla? -{" "}
+							<span style={{ fontWeight: "500", textDecoration: "underline" }} onClick={handleAdCampaignClick}>
+								Read here
+							</span>{" "}
+						</div>
 						<button onClick={handleChangeSessionStatus} disabled={state.userSearchTryingCount !== 0}>
 							Start session
 						</button>
-						{state.userFoundFlag !== "" && !state.userFoundFlag ? <div style={{ marginTop: "10px", fontSize: "0.9em" }} className={styles.chatContainer__settingsSubTitle}>Searching... new user to chat!</div> : ""}
+						{state.userFoundFlag !== "" && !state.userFoundFlag ? (
+							<div style={{ marginTop: "10px", fontSize: "0.9em" }} className={styles.chatContainer__settingsSubTitle}>
+								Searching... new user to chat!
+							</div>
+						) : (
+							""
+						)}
 					</div>
 
-					{state.isChatEnded && <div style={{ marginTop: "10px" }} className={styles.chatContainer__settingsSubTitle}>{state.isChatEndedWithError ? state.isChatEndedWithError : `Chat ended with ${state?.isChatEndedWith}` } </div>}
-					
+					{state.isChatEnded && (
+						<div style={{ marginTop: "10px" }} className={styles.chatContainer__settingsSubTitle}>
+							{state.isChatEndedWithError ? state.isChatEndedWithError : `Chat ended with ${state?.isChatEndedWith}`}{" "}
+						</div>
+					)}
 				</div>
 			);
 		}
@@ -889,7 +904,7 @@ function Index() {
 			<div className={styles.chatContainer} id="chatContainer" style={{ overflowY: state.isRulesViewOpen ? "hidden" : null }}>
 				{state.isRulesViewOpen && (
 					<div className={styles.chatContainer__rulesView} onClick={handleToggleRules}>
-						<div className={styles.chatContainer__rulesUpArrow} style={{ marginLeft: isMobileView? "66%" : "71%" }}></div>
+						<div className={styles.chatContainer__rulesUpArrow} style={{ marginLeft: isMobileView ? "66%" : "71%" }}></div>
 						<div className={styles.chatContainer__rulesScreen} onClick={handleStopRulesScreenPropagation}>
 							<div className={styles.chatContainer__rulesTitle}>
 								This is a <b>restricted mode</b> where the following words can’t be used while chatting (click to remove)
@@ -943,32 +958,32 @@ function Index() {
 					</div>
 				)}
 
-				
-
 				<div className={styles.chatContainer__controls}>
-					{state.expandSmartReply && 
-						<div className={styles.chatContainer__smartReplyMenu} id="smartReplyMenu"> 
+					{state.expandSmartReply && (
+						<div className={styles.chatContainer__smartReplyMenu} id="smartReplyMenu">
 							{state.smartRepliesArray.map((reply, index) => {
-								let renderIdx = state.isMobileView? 2 : 6
-								if (index >= renderIdx){
+								let renderIdx = state.isMobileView ? 2 : 6;
+								if (index >= renderIdx) {
 									return (
 										<div
-										style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null, color: "#474663", margin: "5px", border: "1px solid #405068" }}
-										onClick={() => handleSmartReplyClick(reply.text)}
-										className={styles.chatContainer__smartReplyItem}
-										key={`${index}-${reply.text}`}
+											style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null, color: "#474663", margin: "5px", border: "1px solid #405068" }}
+											onClick={() => handleSmartReplyClick(reply.text)}
+											className={styles.chatContainer__smartReplyItem}
+											key={`${index}-${reply.text}`}
 										>
 											{reply.text}
 										</div>
-									)
+									);
 								}
-								return ""
+								return "";
 							})}
-						</div>	
-					}
-					{state.showImageDisapperModal && 
-						<div className={styles.chatContainer__smartReplyMenu} id="smartReplyMenu"> 
-							<div className={styles.chatContainer__settingsTitle} style={{ marginTop: "unset", padding: "12px" }}>In how much time should this Image disapper?</div>
+						</div>
+					)}
+					{state.showImageDisapperModal && (
+						<div className={styles.chatContainer__smartReplyMenu} id="smartReplyMenu">
+							<div className={styles.chatContainer__settingsTitle} style={{ marginTop: "unset", padding: "12px" }}>
+								In how much time should this Image disapper?
+							</div>
 							<div style={{ display: "flex" }}>
 								<div
 									style={{ color: "#474663", margin: "5px", border: "1px solid #405068" }}
@@ -1003,36 +1018,36 @@ function Index() {
 									onClick={() => handleFileUpload(NaN, false)}
 									className={styles.chatContainer__smartReplyItem}
 								>
-									Never 
+									Never
 								</div>
 							</div>
 							<div
 								style={{ margin: "5px" }}
-								onClick={() => setState((prevState) => ({...prevState, showImageDisapperModal: false, imageFile: null }))}
+								onClick={() => setState((prevState) => ({ ...prevState, showImageDisapperModal: false, imageFile: null }))}
 								className={styles.chatContainer__startSession}
 							>
 								<button>Cancel</button>
 							</div>
-						</div>	
-					}
-					{state.showPrivacyModal && state.isNewSessionStatus !== "New" &&
-						<div className={styles.chatContainer__smartReplyMenu} id="smartReplyMenu" style={{ height: "60vh" }}> 
-							<div className={styles.chatContainer__settingsTitle} style={{ marginTop: "unset" }}>Guidelines for usage (Scroll till end to close this dialog)</div>
+						</div>
+					)}
+					{state.showPrivacyModal && state.isNewSessionStatus !== "New" && (
+						<div className={styles.chatContainer__smartReplyMenu} id="smartReplyMenu" style={{ height: "60vh" }}>
+							<div className={styles.chatContainer__settingsTitle} style={{ marginTop: "unset" }}>
+								Guidelines for usage (Scroll till end to close this dialog)
+							</div>
 							<PrivacyText />
-							<div
-								style={{ margin: "5px" }}
-								onClick={() => setState((prevState) => ({...prevState, showPrivacyModal: false }))}
-								className={styles.chatContainer__startSession}
-							>
+							<div style={{ margin: "5px" }} onClick={() => setState((prevState) => ({ ...prevState, showPrivacyModal: false }))} className={styles.chatContainer__startSession}>
 								<button>Cancel</button>
 							</div>
-						</div>	
-					}
+						</div>
+					)}
 					{state.isNewSessionStatus === "New" && (
 						<div className={styles.chatContainer__newSessionScreen} onClick={handleChangeSessionStatus}>
-							<div className={styles.chatContainer__rulesUpArrow} style={{ marginLeft: isMobileView? "85%" : "94%", marginTop: isMobileView? "62px": "90px" }}></div>
-							<div className={styles.chatContainer__newSessionOptions} style={{ marginTop:"unset" }} onClick={(e) => e.stopPropagation()}>
-								<div className={styles.chatContainer__newAd} onClick={handleAdCampaignClick}>Your banner ad can be here - check out</div>
+							<div className={styles.chatContainer__rulesUpArrow} style={{ marginLeft: isMobileView ? "85%" : "94%", marginTop: isMobileView ? "62px" : "90px" }}></div>
+							<div className={styles.chatContainer__newSessionOptions} style={{ marginTop: "unset" }} onClick={(e) => e.stopPropagation()}>
+								<div className={styles.chatContainer__newAd} onClick={handleAdCampaignClick}>
+									Your banner ad can be here - check out
+								</div>
 								<div className={styles.chatContainer__newTabs}>
 									{state.newTabs.map((tab, index) => (
 										<div
@@ -1045,34 +1060,42 @@ function Index() {
 									))}
 								</div>
 								{socketRef.current && state.mySocketId && renderCorrectTab()}
-								{!socketRef.curent && !state.mySocketId && <div className={styles.chatContainer__initLoader}><Loader width={40} height={20} style={{marginRight: "40px"}} color={"#474663"} /></div>}
+								{!socketRef.curent && !state.mySocketId && (
+									<div className={styles.chatContainer__initLoader}>
+										<Loader width={40} height={20} style={{ marginRight: "40px" }} color={"#474663"} />
+									</div>
+								)}
 							</div>
 						</div>
 					)}
 					<div className={styles.chatContainer__chatAd}>
-						Place your text Ads here  -
+						Place your text Ads here -
 						<div className={styles.chatContainer__adAction} onClick={handleAdCampaignClick}>
 							Know more
 						</div>
 					</div>
 					<div className={styles.chatContainer__smartReply}>
 						{state.smartRepliesArray.map((reply, index) => {
-							let renderIdx = state.isMobileView? 2 : 6
-							if (index < renderIdx){
+							let renderIdx = state.isMobileView ? 2 : 6;
+							if (index < renderIdx) {
 								return (
 									<div
-									style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null }}
-									onClick={() => handleSmartReplyClick(reply.text)}
-									className={styles.chatContainer__smartReplyItem}
-									key={`${index}-${reply.text}`}
+										style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null }}
+										onClick={() => handleSmartReplyClick(reply.text)}
+										className={styles.chatContainer__smartReplyItem}
+										key={`${index}-${reply.text}`}
 									>
 										{reply.text}
 									</div>
-								)
+								);
 							}
-							return ""
+							return "";
 						})}
-						<div className={styles.chatContainer__smartReplyExpandCollapse} onClick={handleSmartReplyExpander} style={{ transform: state.expandSmartReply? "rotate(180deg)": "rotate(0deg)" }} > 
+						<div
+							className={styles.chatContainer__smartReplyExpandCollapse}
+							onClick={handleSmartReplyExpander}
+							style={{ transform: state.expandSmartReply ? "rotate(180deg)" : "rotate(0deg)" }}
+						>
 							<Image src={ExpandCollapse.src} alt="image-icon" width={25} height={25} />
 						</div>
 					</div>
@@ -1095,7 +1118,7 @@ function Index() {
 									maxLength={400}
 									placeholder="your message here"
 									className={styles.chatContainer__textarea}
-									onKeyPress={(e) => e.key === "Enter"? handleSendClick(e): ""}
+									onKeyPress={(e) => (e.key === "Enter" ? handleSendClick(e) : "")}
 								/>
 							)}
 
@@ -1123,6 +1146,19 @@ function Index() {
 			<Head>
 				<meta name="theme-color" content="#474663" />
 				<title> Meet new people </title>
+				<meta name="title" content="Talk with beautiful girls and handsome men" />
+				<meta
+					name="description"
+					content="Do you also feel lonely? How many time you wanted to share something but you were afraid of getting judged by others?  start an interesting conversation with, someone Unknown, someone Caring, someone Funny, but someone Real, and someone who won't judge you, Head onto Blablah.app/live and meet new people rightaway"
+				/>
+				<meta
+					name="keywords"
+					content="anonymous random chat app,anonymous random video chat app,random anonymous voice chat,anonymous stranger chat app,best anonymous chat site,chat anonymously,chat anonymously online,anonymous chat with strangers,anonymous chat online,online anonymous chatting,india anonymous chat,"
+				/>
+				<meta name="robots" content="index, follow" />
+				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+				<meta name="language" content="English" />
+				<meta name="revisit-after" content="7 days" />
 			</Head>
 			{isMobileView ? renderMobileView() : renderDesktopView()}
 		</div>
