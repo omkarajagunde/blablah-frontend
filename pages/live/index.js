@@ -78,7 +78,7 @@ function Index() {
 		expandSmartReply: false,
 		showImageDisapperModal: false,
 		showPrivacyModal: true,
-		connectWithAnyone: false,
+		connectWithAnyone: true,
 
 		// Audio related state vars
 		isMicPressed: false,
@@ -876,7 +876,7 @@ function Index() {
 							Start session
 						</button>
 						{state.userFoundFlag !== "" && !state.userFoundFlag ? (
-							<div style={{ marginTop: "10px", fontSize: "0.9em" }} className={styles.chatContainer__settingsSubTitle}>
+							<div style={{ marginTop: "10px", fontSize: "12px" }} className={styles.chatContainer__settingsSubTitle}>
 								Searching... new user to chat!
 							</div>
 						) : (
@@ -1156,7 +1156,7 @@ function Index() {
 					content="anonymous random chat app,anonymous random video chat app,random anonymous voice chat,anonymous stranger chat app,best anonymous chat site,chat anonymously,chat anonymously online,anonymous chat with strangers,anonymous chat online,online anonymous chatting,india anonymous chat,"
 				/>
 				<meta name="robots" content="index, follow" />
-				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+				<meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
 				<meta name="language" content="English" />
 				<meta name="revisit-after" content="7 days" />
 			</Head>

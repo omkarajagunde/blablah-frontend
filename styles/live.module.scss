@@ -304,7 +304,7 @@
 
 	&__newAd {
 		width: 100%;
-		height: 100px;
+		height: 75px;
 		border: 2px solid $color2;
 		padding: 10px;
 		font-size: 0.8rem;
@@ -325,7 +325,7 @@
 			margin-right: 5px;
 			user-select: none;
 			border: 2px solid $color6;
-			font-size: 0.9rem;
+			font-size: 12px;
 			white-space: nowrap;
 			&:active {
 				opacity: 0.6;
@@ -336,7 +336,7 @@
 	&__settingsTitle {
 		margin-top: 20px;
 		color: $color6;
-		font-size: 1.2rem;
+		font-size: 16px;
 		font-weight: 600;
 	}
 
@@ -344,16 +344,16 @@
 		display: flex;
 		align-items: center;
 		margin-right: 25px;
+		font-size: 14px;
 		input{
-			margin-right: 10px;
-			width: 20px;
-			height: 20px;
-			font-size: 1.4rem;
+			margin-right: 6px;
+			width: 14px;
+			height: 14px;
 		}
 	}
 
 	&__settingsSubTitle {
-		font-size: 0.8rem;
+		font-size: 12px;
 	}
 
 	&__startSession {
@@ -394,6 +394,7 @@
 			border: 2px solid $color1;
 			padding: 5px 10px 5px 10px;
 			margin-right: 5px;
+			font-size: 12px;
 		}
 	}
 
@@ -420,6 +421,7 @@
 			height: 40px;
 			align-items: center;
 			padding-left: 10px;
+			font-size: 14px;
 		}
 		div {
 			background-color: $color8;
@@ -428,7 +430,7 @@
 			margin-bottom: 5px;
 			color: $color0;
 			white-space: nowrap;
-			font-size: 0.9rem;
+			font-size: 12px;
 			&:active {
 				opacity: 0.5;
 			}
