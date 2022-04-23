@@ -23,6 +23,7 @@ function IdentityTab() {
 		genderFlag: null,
 		genderFlagMessage: false,
 		saveOrEditFlagFullname: LiveChatSelector.identityObj.fullname !== "",
+		saveOrEditFlagAge: LiveChatSelector.identityObj.age !== "",
 		identityObj: LiveChatSelector.identityObj,
 	});
 
@@ -88,7 +89,7 @@ function IdentityTab() {
 
 	const handleNameChange = (eve) => {
 		let value = eve.target.value.trim();
-		if (value.length > 0) {
+		if (value.length < 25) {
 			setState((prevState) => ({ ...prevState, identityObj: { ...state.identityObj, fullname: value } }));
 		}
 	};
