@@ -1,6 +1,60 @@
 @import "./variables";
 @import "./animations";
 
+.blogHome{
+	&__title{
+		max-width: 800px;
+		margin: auto;
+		font-size: 2rem;
+		color: $color5;
+		font-weight: 600;
+		opacity: 0.7;
+		text-align: center;
+		margin-top: 30px;
+	}
+
+	&__subtitle{
+		background: $color4;
+		margin-top: 20px;
+		width: 100%;
+	}
+
+	&__subtitleContainer{
+		max-width: 800px;
+		margin: auto;
+		display: flex;
+		height: 100px;
+		div:nth-child(1) {
+			width: 70%;
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			text-align: end;
+			padding: 15px;
+			box-sizing: border-box;
+		}
+		
+		div:nth-child(2) {
+			width: 30%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+	}
+
+	&__fullView{
+		max-width: 1100px;
+		margin: auto;
+		margin-top: 40px;
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	&__viewCard{
+		width: 50%;
+	}
+}
+
 .blogCard {
 	display: flex;
 	width: 95%;
@@ -71,20 +125,26 @@
 	&__socialShares {
 		display: flex;
 		background: $color4;
-
 		width: 100%;
-		padding: 5%;
+		padding: 20px;
 		justify-content: center;
 		div {
 			margin-right: 15px;
 		}
 	}
 
+	&__liveCardDiv{
+		display: flex;
+	}
+
 	&__liveCard {
 		background: $color4;
-
+		display: flex;
 		width: 100%;
-		padding: 5%;
+		padding: 20px;
+		margin: auto;
+		justify-content: center;
+		align-items: center;
 		div {
 			margin-right: 20px;
 			font-size: 0.8rem;
@@ -97,7 +157,7 @@
 		align-items: center;
 		div {
 			margin-right: 5px;
-			font-size: 0.8rem;
+			font-size: 1.2rem;
 		}
 	}
 
@@ -105,7 +165,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		width: 100%;
+		width: 300px;
 		button {
 			all: unset;
 			height: 30px;
@@ -211,10 +271,55 @@
 }
 
 @media only screen and (max-width: 768px) {
+	.blogHome {
+
+		&__fullView {
+			display: flex;
+			flex-direction: column;
+			margin-top: 20px;
+		}
+	
+		&__viewCard {
+			width: 95%;
+			margin: auto;
+		}
+	}
 	.blogContainer {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+
+		&__liveCardDiv {
+			display: block;
+		}
+		
+		&__liveCardLine {
+			div {
+				font-size: .8rem;
+			}
+		}
+		
+		&__liveCardButton {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+		
+			button {
+				all: unset;
+				height: 30px;
+				background: $color0;
+				border: 2px solid $color2;
+				width: 70%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+		
+				&:active {
+					opacity: 0.6;
+				}
+			}
+		}
 
 		&__blogBigImage {
 			img {
