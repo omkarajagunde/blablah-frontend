@@ -21,6 +21,7 @@ a {
 	--color6: #474663;
 	--color7: #58b12e;
 	--color8: #405068;
+	--color9: #b4b5ba;
 }
 
 * {
@@ -74,24 +75,24 @@ a {
 
 .watermarked::before {
 	position: absolute;
-    top: 56%;
-    left: -20%;
-    display: block;
-    height: 250%;
-    width: 260%;
-    transform: rotate(-11deg);
-    content: attr(data-watermark);
-    opacity: 0.7;
-    line-height: 50px;
-    font-size: 24px;
-    letter-spacing: 6px;
-    color: var(--color6);
-    font-weight: 400;
-    color: white;
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-}	
+	top: 56%;
+	left: -20%;
+	display: block;
+	height: 250%;
+	width: 260%;
+	transform: rotate(-11deg);
+	content: attr(data-watermark);
+	opacity: 0.7;
+	line-height: 50px;
+	font-size: 24px;
+	letter-spacing: 6px;
+	color: var(--color6);
+	font-weight: 400;
+	color: white;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
 
-.privacyPolicy{
+.privacyPolicy {
 	padding: 50px;
 }
 
@@ -101,7 +102,7 @@ a {
 		line-height: 25px;
 	}
 
-	.privacyPolicy{
+	.privacyPolicy {
 		padding: 15px;
 	}
 }
