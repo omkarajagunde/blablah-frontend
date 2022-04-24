@@ -121,7 +121,7 @@ function admin() {
 			<>
 				<NavBar />
 
-				<div className={styles.adminContainer} style={{ marginBottom: "30px", maxWidth: "400px", padding: "10px", height: "70vh" }}>
+				<div className={styles.adminContainer} style={{ marginBottom: "30px", maxWidth: "400px", padding: "10px", height: "500px" }}>
 					{state.logInError && show && (
 						<Alert variant="danger" onClose={() => setShow(false)} dismissible>
 							<Alert.Heading>Oh error!</Alert.Heading>
@@ -144,7 +144,6 @@ function admin() {
 						Submit
 					</Button>
 				</div>
-				<Footer />
 			</>
 		);
 	}
