@@ -141,7 +141,7 @@ function admin() {
 						<Form.Control id="password" type="password" placeholder="Password" />
 					</Form.Group>
 					<Button variant="primary" type="submit" onClick={handleLogin}>
-						Submit
+						Login
 					</Button>
 				</div>
 			</>
