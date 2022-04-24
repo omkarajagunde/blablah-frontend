@@ -1,0 +1,33 @@
+@import "./variables";
+@import "./animations";
+
+.adminContainer{
+    max-width: 800px;
+    margin: auto;
+
+    &__title{
+        max-width: 800px;
+        margin: auto;
+        font-size: 2rem;
+        color: $color5;
+        font-weight: 600;
+        opacity: 0.7;
+        text-align: start;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    &__newBlogEditor{
+        margin-top: 30px;
+    }
+
+    &__newBlogControls{
+        margin-top: 10px;
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 10px;
+        button{
+            margin-left: 10px;
+        }
+    }
+}
