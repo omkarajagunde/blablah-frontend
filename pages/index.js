@@ -44,9 +44,7 @@ export default function Home() {
 					<Image src={Polygon4.src} width={state.isMobileView ? 200 : 190} height={state.isMobileView ? 200 : 190} alt="" />
 				</div>
 
-				<div>
-					Don{`'`}t just pass time <br /> Make memories
-				</div>
+				<div>Don{`'`}t just pass time Make memories</div>
 				<div className={styles.mainContainer_tagLineButtonsContainer}>
 					<button>Create Quiz</button>
 					<button onClick={handleMeetPeopleClick}>
