@@ -96,7 +96,7 @@ function admin() {
 				reader.onload = (e) => {
 					body.blogImage = e.target.result;
 					axios
-						.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/blog`, body)
+						.post(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog`, body)
 						.then((response) => {
 							// blog saved successfully
 							console.log(response);

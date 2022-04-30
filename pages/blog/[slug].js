@@ -280,7 +280,7 @@ function Slug(props) {
 
 export async function getStaticPaths() {
 	// Call an external API endpoint to get posts
-	let response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/blog?topics=0`);
+	let response = await axios.get(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog?topics=0`);
 	const blogTopics = response.data.data;
 	console.log(blogTopics);
 	// Get the paths we want to pre-render based on posts
@@ -301,7 +301,7 @@ export async function getStaticPaths() {
 
 // This also gets called at build time
 export async function getStaticProps({ params }) {
-	let response = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/blog/${params.slug}`);
+	let response = await axios.get(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog/${params.slug}`);
 	const blogTopic = response.data.data;
 	// Pass ] data to the page via props
 	return { props: { blogTopic: blogTopic }, revalidate: 1 };
