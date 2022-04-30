@@ -2,7 +2,10 @@ import React, { useRef, useState } from "react";
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import dynamic from "next/dynamic";
+import axios from "axios";
+import Compressor from "compressorjs";
 import { Tabs, Tab, Button, Form, Alert } from "react-bootstrap";
+import ViewBlogs from "../../components/ViewBlogs";
 import admins from "../../Resources/blog-admin-list";
 import "suneditor/dist/css/suneditor.min.css";
 // Styles!
@@ -57,17 +60,62 @@ function admin() {
 		blogKeywords: "",
 		blogShortDesc: "",
 		blogImageFile: null,
-		loggedIn: false,
+		loggedIn: true,
 		logInError: null,
+		newBlogAdded: false,
 	});
 
 	// The sunEditor parameter will be set to the core suneditor instance when this function is called
 	const getSunEditorInstance = (sunEditor) => {
 		editor.current = sunEditor;
 	};
+
 	const handleSave = () => {
+		let keywordsArr = state.blogKeywords.split(",");
+		keywordsArr.forEach((kwd) => kwd.trim());
 		console.log(state);
+		let img = document.getElementById("captionImage");
+
+		let body = {
+			blogTitle: state.blogTitle,
+			metaKeywords: keywordsArr,
+			shortDesc: state.blogShortDesc,
+			blogHtml: state.editorContent,
+			blogImage: "",
+		};
+
+		new Compressor(state.blogImageFile, {
+			quality: 0.8,
+
+			// The compression process is asynchronous,
+			// which means you have to access the `result` in the `success` hook function.
+			success(result) {
+				let time = new Date();
+				var reader = new FileReader();
+				reader.readAsDataURL(result);
+				reader.onload = (e) => {
+					body.blogImage = e.target.result;
+					axios
+						.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/blog`, body)
+						.then((response) => {
+							// blog saved successfully
+							console.log(response);
+							setState((prevState) => ({ ...prevState, newBlogAdded: true }));
+							setTimeout(() => {
+								window.location.reload();
+							}, 1000);
+						})
+						.catch((err) => {
+							// Error saving blog...handle here
+						});
+				};
+			},
+			error(err) {
+				console.log(err.message);
+			},
+		});
 	};
+
 	const handleBlogBlur = (event, content) => {
 		setState((prevState) => ({ ...prevState, editorContent: content }));
 	};
@@ -158,16 +206,15 @@ function admin() {
 						<Tab eventKey="newBlog" title="New Blog">
 							<Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
 								<Form.Label>Enter Blog Title</Form.Label>
-								<Form.Control value={state.blogTitle} maxLength={300} onBlur={handleTitleBlur} placeholder="e.g. This is a catchy blog title which would be 20 -40 words long" />
+								<Form.Control maxLength={300} onBlur={handleTitleBlur} placeholder="e.g. This is a catchy blog title which would be 20 -40 words long" />
 							</Form.Group>
 							<Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
 								<Form.Label>Enter Meta keywords (comma seperated ",")</Form.Label>
-								<Form.Control value={state.blogKeywords} maxLength={800} onBlur={handleMetaKeywordsBlur} placeholder="e.g. programming, science, digital marketing" />
+								<Form.Control maxLength={800} onBlur={handleMetaKeywordsBlur} placeholder="e.g. programming, science, digital marketing" />
 							</Form.Group>
 							<Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
 								<Form.Label>Enter short description</Form.Label>
 								<Form.Control
-									value={state.blogShortDesc}
 									onBlur={handleShortDescBlur}
 									placeholder="e.g. Enter a freeform short 100 - 120 words description that would be shown as a caption of blog"
 									as="textarea"
@@ -178,7 +225,7 @@ function admin() {
 
 							<Form.Group>
 								<Form.Label>Image selector</Form.Label>
-								<Form.Control onChange={handleFileUploadChange} type="file" accept="image/*" />
+								<Form.Control onChange={handleFileUploadChange} type="file" accept="image/*" id="captionImage" />
 							</Form.Group>
 							<div className={styles.adminContainer__newBlogEditor} id="editor">
 								<SunEditor
@@ -198,9 +245,16 @@ function admin() {
 									Save Blog
 								</Button>
 							</div>
+							<div className={styles.adminContainer__newBlogAddedAlert}>
+								{state.newBlogAdded && (
+									<Alert variant="success" onClose={() => setShow(false)} dismissible>
+										<Alert.Heading>New Blog added successfully, refreshing window</Alert.Heading>
+									</Alert>
+								)}
+							</div>
 						</Tab>
 						<Tab eventKey="viewBlog" title="View Blogs">
-							View Blogs
+							<ViewBlogs />
 						</Tab>
 					</Tabs>
 				</div>
