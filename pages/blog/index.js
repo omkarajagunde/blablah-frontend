@@ -98,11 +98,11 @@ function index(props) {
 }
 
 // This also gets called at build time
-// export async function getStaticProps({ params }) {
-// 	let response = await axios.get(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog?topics=true`);
-// 	const blogTopics = response.data.data;
-// 	// Pass ] data to the page via props
-// 	return { props: { blogTopics: [...blogTopics] }, revalidate: 1 };
-// }
+export async function getStaticProps({ params }) {
+	let response = await axios.get(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog?topics=true`);
+	const blogTopics = response.data.data;
+	// Pass ] data to the page via props
+	return { props: { blogTopics: [...blogTopics] }, revalidate: 1 };
+}
 
 export default index;
