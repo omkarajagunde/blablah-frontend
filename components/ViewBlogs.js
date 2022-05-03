@@ -46,6 +46,9 @@ function ViewBlogs() {
 				.catch((error) => {
 					// Uh-oh, an error occurred!
 					window.alert(error.toString());
+					axios.delete(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog?deleteId=${deleteId}`).then((response) => {
+						setState((prevState) => ({ ...prevState, blogCardsArr: state.blogCardsArr.filter((blog) => blog._id !== deleteId) }));
+					});
 				});
 		}
 	};

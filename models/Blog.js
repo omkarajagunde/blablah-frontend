@@ -43,6 +43,11 @@ const BlogSchema = new mongoose.Schema({
 
 		type: String,
 	},
+	blogHtml: {
+		/* The text data of your blog html */
+
+		type: String,
+	},
 	publishedAt: {
 		/** The date published for the blog */
 

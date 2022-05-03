@@ -141,6 +141,8 @@ function Slug(props) {
 			else setIsMobileViewDebouncer(false);
 		});
 
+		console.log(props);
+
 		return () => {
 			window.removeEventListener("resize", () => {});
 		};

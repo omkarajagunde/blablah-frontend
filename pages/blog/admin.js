@@ -78,7 +78,7 @@ function admin() {
 		const storage = getStorage(firebase);
 		const storageRef = ref(storage, state.blogImageFile.name);
 
-		// 'file' comes from the Blob or File API
+		//'file' comes from the Blob or File API
 		uploadBytes(storageRef, state.blogImageFile).then(async (snapshot) => {
 			let url = await getDownloadURL(snapshot.ref);
 			console.log("Uploaded a blob or file!", snapshot, url);
@@ -89,6 +89,8 @@ function admin() {
 				blogHtml: state.editorContent,
 				blogImage: url,
 			};
+			console.log(state, body);
+
 			axios
 				.post(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog`, body)
 				.then((response) => {
@@ -96,7 +98,7 @@ function admin() {
 					console.log(response);
 					setState((prevState) => ({ ...prevState, newBlogAdded: true }));
 					setTimeout(() => {
-						window.location.reload();
+						//window.location.reload();
 					}, 1000);
 				})
 				.catch((err) => {
