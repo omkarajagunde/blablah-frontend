@@ -1,68 +1,16 @@
 import dbConnect from "../../../apiHelpers/DBConnect";
 import Blog from "../../../models/Blog";
+import initMiddleware from "../../../lib/middleware";
+import Cors from "cors";
 
-const dummyData = [
-	{
-		title: "How to find friends online, How to find friends online",
-		blogImageUrl: "https://thumbs.dreamstime.com/b/blog-information-website-concept-workplace-background-text-view-above-127465079.jpg",
-		blogImageAlt: "blog-image",
-		subTitle:
-			"10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself",
-		publishedText: "14 Apr 2022",
-		readTime: "8 mins",
-		blogLink: "/url",
-	},
-	{
-		title: "How to find friends online, How to find friends online",
-		blogImageUrl: "https://thumbs.dreamstime.com/b/blog-information-website-concept-workplace-background-text-view-above-127465079.jpg",
-		blogImageAlt: "blog-image",
-		subTitle:
-			"10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself",
-		publishedText: "14 Apr 2022",
-		readTime: "8 mins",
-		blogLink: "/url",
-	},
-	{
-		title: "How to find friends online, How to find friends online",
-		blogImageUrl: "https://thumbs.dreamstime.com/b/blog-information-website-concept-workplace-background-text-view-above-127465079.jpg",
-		blogImageAlt: "blog-image",
-		subTitle:
-			"10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself",
-		publishedText: "14 Apr 2022",
-		readTime: "8 mins",
-		blogLink: "/url",
-	},
-	{
-		title: "How to find friends online, How to find friends online",
-		blogImageUrl: "https://thumbs.dreamstime.com/b/blog-information-website-concept-workplace-background-text-view-above-127465079.jpg",
-		blogImageAlt: "blog-image",
-		subTitle:
-			"10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself",
-		publishedText: "14 Apr 2022",
-		readTime: "8 mins",
-		blogLink: "/url",
-	},
-	{
-		title: "How to find friends online, How to find friends online",
-		blogImageUrl: "https://thumbs.dreamstime.com/b/blog-information-website-concept-workplace-background-text-view-above-127465079.jpg",
-		blogImageAlt: "blog-image",
-		subTitle:
-			"10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself",
-		publishedText: "14 Apr 2022",
-		readTime: "8 mins",
-		blogLink: "/url",
-	},
-	{
-		title: "How to find friends online, How to find friends online, , How to find friends online , How to find friends online ashgdashjdgas",
-		blogImageUrl: "https://thumbs.dreamstime.com/b/blog-information-website-concept-workplace-background-text-view-above-127465079.jpg",
-		blogImageAlt: "blog-image",
-		subTitle:
-			"10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself",
-		publishedText: "14 Apr 2022",
-		readTime: "8 mins",
-		blogLink: "/url",
-	},
-];
+// Initialize the cors middleware
+const cors = initMiddleware(
+	// You can read more about the available options here: https://github.com/expressjs/cors#configuration-options
+	Cors({
+		// Only allow requests with GET, POST and OPTIONS
+		methods: ["GET", "OPTIONS", "PATCH", "DELETE", "POST", "PUT"],
+	})
+);
 
 function convertToSlug(Text) {
 	return Text.toLowerCase()
@@ -71,6 +19,7 @@ function convertToSlug(Text) {
 }
 
 export default async function handler(req, res) {
+	await cors(req, res);
 	const { method, body, query } = req;
 	const { topics, deleteId } = query;
 	await dbConnect();
