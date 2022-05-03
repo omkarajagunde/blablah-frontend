@@ -1,8 +1,17 @@
-import Server from "../api/jwtserver";
+import Server from "../apiHelpers/jwtserver";
 
-import {GET_TRENDS_SUCCESS, GET_TRENDS_FAILURE, DETECT_GENDER_SUCCESS, DETECT_GENDER_FAILURE, CLEAR_LIVE_CHAT_LOGS, HANDLE_IDENTITY_CHANGE, SERVER_IS_OPERATIONAL_FAILURE, SERVER_IS_OPERATIONAL_SUCCESS } from "./types";
+import {
+	GET_TRENDS_SUCCESS,
+	GET_TRENDS_FAILURE,
+	DETECT_GENDER_SUCCESS,
+	DETECT_GENDER_FAILURE,
+	CLEAR_LIVE_CHAT_LOGS,
+	HANDLE_IDENTITY_CHANGE,
+	SERVER_IS_OPERATIONAL_FAILURE,
+	SERVER_IS_OPERATIONAL_SUCCESS,
+} from "./types";
 
-let networkErrObj = { data: { status: 600, message: "Please check your network connection" } }
+let networkErrObj = { data: { status: 600, message: "Please check your network connection" } };
 
 const DetectGender = (params) => {
 	return async (dispatch, getState) => {
@@ -13,8 +22,7 @@ const DetectGender = (params) => {
 				payload: response,
 			});
 		} catch (e) {
-
-			if (e.response){
+			if (e.response) {
 				dispatch({
 					type: DETECT_GENDER_FAILURE,
 					payload: e.response,
@@ -22,7 +30,7 @@ const DetectGender = (params) => {
 			} else {
 				dispatch({
 					type: DETECT_GENDER_FAILURE,
-					payload: networkErrObj ,
+					payload: networkErrObj,
 				});
 			}
 		}
@@ -38,8 +46,7 @@ const GetTrends = (params) => {
 				payload: response,
 			});
 		} catch (e) {
-
-			if (e.response){
+			if (e.response) {
 				dispatch({
 					type: GET_TRENDS_FAILURE,
 					payload: e.response,
@@ -72,8 +79,7 @@ const IsServerOperational = (params) => {
 				payload: response,
 			});
 		} catch (e) {
-
-			if (e.response){
+			if (e.response) {
 				dispatch({
 					type: SERVER_IS_OPERATIONAL_FAILURE,
 					payload: e.response,
