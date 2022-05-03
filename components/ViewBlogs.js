@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
+import { getStorage, ref, deleteObject } from "firebase/storage";
 
 // Styles!
 import styles from "../styles/Blog.module.scss";
@@ -10,6 +11,7 @@ import Image from "next/image";
 import LinkIcon from "../Resources/link.svg";
 import EditIcon from "../Resources/edit.svg";
 import DeleteIcon from "../Resources/delete.svg";
+import { firebase } from "../apiHelpers/firebase";
 
 function ViewBlogs() {
 	const [state, setState] = useState({
@@ -27,11 +29,24 @@ function ViewBlogs() {
 		return "8 mins";
 	};
 
-	const handleBlogDelete = (deleteId) => {
+	const handleBlogDelete = (deleteId, imageUrl) => {
 		if (window.confirm("Are you sure you want to delete this Blog?")) {
-			axios.delete(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog?deleteId=${deleteId}`).then((response) => {
-				setState((prevState) => ({ ...prevState, blogCardsArr: state.blogCardsArr.filter((blog) => blog._id !== deleteId) }));
-			});
+			const storage = getStorage(firebase);
+			// Create a reference to the file to delete
+			const imgRef = ref(storage, imageUrl);
+			// Delete the file
+			deleteObject(imgRef)
+				.then((obj) => {
+					// File deleted successfully
+					console.log("image deleted - ", obj);
+					axios.delete(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog?deleteId=${deleteId}`).then((response) => {
+						setState((prevState) => ({ ...prevState, blogCardsArr: state.blogCardsArr.filter((blog) => blog._id !== deleteId) }));
+					});
+				})
+				.catch((error) => {
+					// Uh-oh, an error occurred!
+					window.alert(error.toString());
+				});
 		}
 	};
 
@@ -61,14 +76,14 @@ function ViewBlogs() {
 										<Image src={EditIcon.src} alt="go-to-blog" width={25} height={25} />
 									</div>
 									<div>
-										<Image onClick={() => handleBlogDelete(blog._id)} src={DeleteIcon.src} alt="go-to-blog" width={25} height={25} />
+										<Image onClick={() => handleBlogDelete(blog._id, blog.blogImage)} src={DeleteIcon.src} alt="go-to-blog" width={25} height={25} />
 									</div>
 								</div>
 								<div className={styles.blogCard__title} style={{ maxWidth: "100%", fontSize: "1rem" }}>
 									{blog.blogTitle}
 								</div>
 								<div className={styles.blogCard__timestamp} style={{ maxWidth: "100%", fontSize: ".7rem" }}>
-									<div>{blog.publishedAt}</div>
+									<div>{new Date(blog.publishedAt).toDateString()}</div>
 									<div>{getTimeToRead(blog.blogHtml)}</div>
 								</div>
 								<div className={styles.blogCard__subtitle} style={{ maxWidth: "100%", fontSize: ".8rem", WebkitLineClamp: state.isMobileView ? 2 : 3 }}>

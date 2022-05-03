@@ -78,7 +78,7 @@ export default async function handler(req, res) {
 	// Get a blog or blogtopics based on query param topics=true/false
 	if (method === "GET") {
 		try {
-			const blogs = await Blog.find({}, { blogHtml: 0, blogImage: 0 });
+			const blogs = await Blog.find({}, { blogHtml: 0 });
 			res.status(200).json({ data: blogs || dummyData, status: 200, message: "Blog topics sent successfully" });
 		} catch (error) {
 			console.log("Error - ", error);

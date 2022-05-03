@@ -19,7 +19,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "firebase": "^9.6.10",
+    "firebase": "^9.7.0",
     "lodash": "^4.17.21",
     "mic-recorder-to-mp3": "^2.2.2",
     "mongoose": "^6.3.1",

@@ -3,7 +3,8 @@ import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import dynamic from "next/dynamic";
 import axios from "axios";
-import Compressor from "compressorjs";
+import { firebase } from "../../apiHelpers/firebase";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Tabs, Tab, Button, Form, Alert } from "react-bootstrap";
 import ViewBlogs from "../../components/ViewBlogs";
 import admins from "../../Resources/blog-admin-list";
@@ -73,46 +74,34 @@ function admin() {
 	const handleSave = () => {
 		let keywordsArr = state.blogKeywords.split(",");
 		keywordsArr.forEach((kwd) => kwd.trim());
-		console.log(state);
-		let img = document.getElementById("captionImage");
 
-		let body = {
-			blogTitle: state.blogTitle,
-			metaKeywords: keywordsArr,
-			shortDesc: state.blogShortDesc,
-			blogHtml: state.editorContent,
-			blogImage: "",
-		};
+		const storage = getStorage(firebase);
+		const storageRef = ref(storage, state.blogImageFile.name);
 
-		new Compressor(state.blogImageFile, {
-			quality: 0.8,
-
-			// The compression process is asynchronous,
-			// which means you have to access the `result` in the `success` hook function.
-			success(result) {
-				let time = new Date();
-				var reader = new FileReader();
-				reader.readAsDataURL(result);
-				reader.onload = (e) => {
-					body.blogImage = e.target.result;
-					axios
-						.post(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog`, body)
-						.then((response) => {
-							// blog saved successfully
-							console.log(response);
-							setState((prevState) => ({ ...prevState, newBlogAdded: true }));
-							setTimeout(() => {
-								window.location.reload();
-							}, 1000);
-						})
-						.catch((err) => {
-							// Error saving blog...handle here
-						});
-				};
-			},
-			error(err) {
-				console.log(err.message);
-			},
+		// 'file' comes from the Blob or File API
+		uploadBytes(storageRef, state.blogImageFile).then(async (snapshot) => {
+			let url = await getDownloadURL(snapshot.ref);
+			console.log("Uploaded a blob or file!", snapshot, url);
+			let body = {
+				blogTitle: state.blogTitle,
+				metaKeywords: keywordsArr,
+				shortDesc: state.blogShortDesc,
+				blogHtml: state.editorContent,
+				blogImage: url,
+			};
+			axios
+				.post(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog`, body)
+				.then((response) => {
+					// blog saved successfully
+					console.log(response);
+					setState((prevState) => ({ ...prevState, newBlogAdded: true }));
+					setTimeout(() => {
+						window.location.reload();
+					}, 1000);
+				})
+				.catch((err) => {
+					// Error saving blog...handle here
+				});
 		});
 	};
 

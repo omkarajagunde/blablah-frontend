@@ -141,8 +141,6 @@ function Slug(props) {
 			else setIsMobileViewDebouncer(false);
 		});
 
-		console.log(props);
-
 		return () => {
 			window.removeEventListener("resize", () => {});
 		};
@@ -282,7 +280,6 @@ export async function getStaticPaths() {
 	// Call an external API endpoint to get posts
 	let response = await axios.get(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog?topics=0`);
 	const blogTopics = response.data.data;
-	console.log(blogTopics);
 	// Get the paths we want to pre-render based on posts
 	const paths = blogTopics.map((blog) => ({
 		params: { slug: blog.blogSlug, blogTitle: blog.blogTitle },
