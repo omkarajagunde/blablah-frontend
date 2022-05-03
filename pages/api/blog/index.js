@@ -50,15 +50,15 @@ export default async function handler(req, res) {
 	}
 
 	// Update existing Blog
-	if (method === "PUT") {
-		try {
-			const blogs = await Blog.find({});
-			res.status(200).json({ data: blogs, status: 200, message: "Blog topics sent successfully" });
-		} catch (error) {
-			console.log("Error - ", error);
-			res.status(500).json({ status: 500, message: error, data: [] });
-		}
-	}
+	// if (method === "PUT") {
+	// 	try {
+	// 		const blogs = await Blog.find({});
+	// 		res.status(200).json({ data: blogs, status: 200, message: "Blog topics sent successfully" });
+	// 	} catch (error) {
+	// 		console.log("Error - ", error);
+	// 		res.status(500).json({ status: 500, message: error, data: [] });
+	// 	}
+	// }
 
 	// Delete existing Blog
 	if (method === "DELETE") {
