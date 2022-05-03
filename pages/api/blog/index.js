@@ -1,6 +1,24 @@
 import dbConnect from "../../../apiHelpers/DBConnect";
 import Blog from "../../../models/Blog";
+import Cors from "cors";
+// Initializing the cors middleware
+const cors = Cors({
+	methods: ["GET", "POST", "OPTIONS", "DELETE"],
+});
 
+// Helper method to wait for a middleware to execute before continuing
+// And to throw an error when an error happens in a middleware
+function runMiddleware(req, res, fn) {
+	return new Promise((resolve, reject) => {
+		fn(req, res, (result) => {
+			if (result instanceof Error) {
+				return reject(result);
+			}
+
+			return resolve(result);
+		});
+	});
+}
 function convertToSlug(Text) {
 	return Text.toLowerCase()
 		.replace(/ /g, "-")
@@ -8,13 +26,11 @@ function convertToSlug(Text) {
 }
 
 export default async function handler(req, res) {
+	// Run the middleware
+	await runMiddleware(req, res, cors);
 	const { method, body, query } = req;
 	const { topics, deleteId } = query;
 	await dbConnect();
-
-	if (method === "OPTIONS") {
-		return res.status(200).send("ok");
-	}
 
 	// Get a blog or blogtopics based on query param topics=true/false
 	if (method === "GET") {
