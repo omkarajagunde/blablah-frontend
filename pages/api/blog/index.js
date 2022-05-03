@@ -1,4 +1,4 @@
-import dbConnect from "../../../api/DBConnect";
+import dbConnect from "../../../apiHelpers/DBConnect";
 import Blog from "../../../models/Blog";
 
 const dummyData = [
