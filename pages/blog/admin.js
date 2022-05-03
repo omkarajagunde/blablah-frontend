@@ -98,7 +98,7 @@ function admin() {
 					console.log(response);
 					setState((prevState) => ({ ...prevState, newBlogAdded: true }));
 					setTimeout(() => {
-						//window.location.reload();
+						window.location.reload();
 					}, 1000);
 				})
 				.catch((err) => {
