@@ -21,6 +21,10 @@ export default async function handler(req, res) {
 	const { topics, deleteId } = query;
 	await dbConnect();
 
+	if (method === "OPTIONS") {
+		return res.status(200).send("ok");
+	}
+
 	// Get a blog or blogtopics based on query param topics=true/false
 	if (method === "GET") {
 		try {
