@@ -61,7 +61,7 @@ function admin() {
 		blogKeywords: "",
 		blogShortDesc: "",
 		blogImageFile: null,
-		loggedIn: true,
+		loggedIn: false,
 		logInError: null,
 		newBlogAdded: false,
 	});
