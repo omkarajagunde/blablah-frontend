@@ -20,7 +20,7 @@ function ViewBlogs() {
 	});
 
 	useEffect(async () => {
-		let response = await axios.get(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog?topics=0`);
+		let response = await axios.get(`/api/blog?topics=0`);
 		const blogTopics = response.data.data;
 		setState((prevState) => ({ ...prevState, blogCardsArr: blogTopics, blogsLoading: false }));
 	}, []);
@@ -39,14 +39,14 @@ function ViewBlogs() {
 				.then((obj) => {
 					// File deleted successfully
 					console.log("image deleted - ", obj);
-					axios.delete(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog?deleteId=${deleteId}`).then((response) => {
+					axios.delete(`/api/blog?deleteId=${deleteId}`).then((response) => {
 						setState((prevState) => ({ ...prevState, blogCardsArr: state.blogCardsArr.filter((blog) => blog._id !== deleteId) }));
 					});
 				})
 				.catch((error) => {
 					// Uh-oh, an error occurred!
 					window.alert(error.toString());
-					axios.delete(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog?deleteId=${deleteId}`).then((response) => {
+					axios.delete(`/api/blog?deleteId=${deleteId}`).then((response) => {
 						setState((prevState) => ({ ...prevState, blogCardsArr: state.blogCardsArr.filter((blog) => blog._id !== deleteId) }));
 					});
 				});
