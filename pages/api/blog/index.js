@@ -50,7 +50,6 @@ export default async function handler(req, res) {
 
 	// Create new Blog
 	if (method === "POST") {
-		console.log("IN POST METHOD");
 		// Validating data
 		if (!body) return res.status(400).send({ status: 400, message: "POST body cannot be empty", data: [] });
 

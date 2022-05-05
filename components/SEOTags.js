@@ -2,12 +2,10 @@ import Head from 'next/head';
 import React from 'react'
 
 function SEOTags(props) {
-    console.log(props);
 
     const { blogTitle, blogImage, shortDesc, publishedAt, metaKeywords, blogSlug } = props.blog
   return (
     <Head>
-        <meta charset="utf-8"/>
         <title>{blogTitle}</title>
         {/** Search Engine */}
         <meta name="description" content={shortDesc}/>
