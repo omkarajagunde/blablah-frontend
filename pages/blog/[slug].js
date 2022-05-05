@@ -146,9 +146,8 @@ function Slug(props) {
 			{state.blogCardsArr.map((blog) => (
 						blog._id !== props.blogTopic._id && <div className={styles.blogHome__viewCard}>
 							<Link
-								href={{
-									pathname: "/blog/" + blog.blogSlug,
-								}}
+								href="/blog/[slug]"
+								as={"/blog/" + blog.blogSlug}
 							>
 								<div className={styles.blogCard}>
 									<div className={styles.blogCard__image}>
