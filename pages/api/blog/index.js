@@ -4,6 +4,7 @@ import Cors from "cors";
 // Initializing the cors middleware
 const cors = Cors({
 	methods: ["GET", "POST", "OPTIONS", "DELETE"],
+	origin: "*"
 });
 
 // Helper method to wait for a middleware to execute before continuing
@@ -31,7 +32,6 @@ export default async function handler(req, res) {
 	const { method, body, query } = req;
 	const { topics, deleteId } = query;
 	await dbConnect();
-
 	// Get a blog or blogtopics based on query param topics=true/false
 	if (method === "GET") {
 		try {
@@ -45,6 +45,7 @@ export default async function handler(req, res) {
 
 	// Create new Blog
 	if (method === "POST") {
+		console.log("IN POST METHOD");
 		// Validating data
 		if (!body) return res.status(400).send({ status: 400, message: "POST body cannot be empty", data: [] });
 
@@ -56,7 +57,7 @@ export default async function handler(req, res) {
 			res.status(200).json({ data: savedBlog, status: 200, message: "Blog saved successfully" });
 		} catch (error) {
 			console.log("Error - ", error);
-			res.status(500).json({ status: 500, message: error, data: [] });
+			res.status(500).json({ status: 500, message: error.toString(), data: [] });
 		}
 	}
 
