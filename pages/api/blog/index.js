@@ -33,9 +33,6 @@ export default async function handler(req, res) {
 	const { topics, deleteId } = query;
 	await dbConnect();
 
-	res.header("Access-Control-Allow-Origin", "https://www.blablah.app"); // update to match the domain you will make the request from
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-
 	if (method === "OPTIONS") {
 		return res.status(200).send("ok");
 	}
