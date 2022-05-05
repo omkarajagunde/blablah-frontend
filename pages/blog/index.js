@@ -79,7 +79,7 @@ function index(props) {
 											{blog.blogTitle}
 										</div>
 										<div className={styles.blogCard__timestamp} style={{ maxWidth: "100%", fontSize: ".7rem" }}>
-											<div>{blog.publishedAt}</div>
+											<div>{new Date(blog.publishedAt).toDateString()}</div>
 											<div>{getTimeToRead(blog.blogHtml)}</div>
 										</div>
 										<div className={styles.blogCard__subtitle} style={{ maxWidth: "100%", fontSize: ".8rem", WebkitLineClamp: state.isMobileView ? 3 : 5 }}>

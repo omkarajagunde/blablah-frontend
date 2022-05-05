@@ -120,7 +120,7 @@ function Slug(props) {
 			<NavBar />
 			<div className={styles.blogContainer} ref={target}>
 				<div className={styles.blogContainer__publishedTitle}>
-					<div>Published January 13, 2021</div>
+					<div>{new Date(props.blogTopic.publishedAt).toDateString()}</div>
 					<div>
 						<Image src={TimeIcon.src} width={state.isMobileView ? 20 : 20} height={state.isMobileView ? 25 : 25} alt="estimated-time-icon" />
 						<div style={{ marginLeft: "10px" }}>8 mins read</div>
@@ -159,7 +159,7 @@ function Slug(props) {
 											{blog.blogTitle}
 										</div>
 										<div className={styles.blogCard__timestamp} style={{ maxWidth: "100%", fontSize: ".7rem" }}>
-											<div>{blog.publishedAt}</div>
+											<div>{new Date(blog.publishedAt).toISOString()}</div>
 											<div>{getTimeToRead(blog.blogHtml)}</div>
 										</div>
 										<div className={styles.blogCard__subtitle} style={{ maxWidth: "100%", fontSize: ".8rem", WebkitLineClamp: state.isMobileView ? 3 : 5 }}>
