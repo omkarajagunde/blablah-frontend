@@ -28,15 +28,18 @@ function convertToSlug(Text) {
 
 export default async function handler(req, res) {
 	// Run the middleware
-	await runMiddleware(req, res, cors);
+	//await runMiddleware(req, res, cors);
 	const { method, body, query } = req;
 	const { topics, deleteId } = query;
 	await dbConnect();
 
+	res.header("Access-Control-Allow-Origin", "https://www.blablah.app"); // update to match the domain you will make the request from
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
 	if (method === "OPTIONS") {
 		return res.status(200).send("ok");
 	}
-	
+
 	// Get a blog or blogtopics based on query param topics=true/false
 	if (method === "GET") {
 		try {
