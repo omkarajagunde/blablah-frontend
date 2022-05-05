@@ -5,14 +5,9 @@ import ReadingProgress from "../../components/ReadingProgress";
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import Image from "next/image";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import axios from "axios";
-import "suneditor/dist/css/suneditor.min.css";
-const SunEditor = dynamic(() => import("suneditor-react"), {
-	//besure to import dynamically
-	ssr: false,
-});
+
 
 // Styles!
 import styles from "../../styles/Blog.module.scss";
@@ -29,7 +24,6 @@ import LiveIcon from "../../Resources/live-icon.png";
 
 function Slug(props) {
 	const router = useRouter();
-	const editor = useRef();
 	const { slug } = router.query;
 	const target = useRef(null);
 	const [state, setState] = useState({
@@ -40,68 +34,7 @@ function Slug(props) {
 		blogImageUrl: props.blogTopic.blogImage,
 		blogShortDesc: props.blogTopic.shortDesc,
 		blogImageAlt: "blog-image",
-		blogCardsArr: [
-			{
-				title: "How to find friends online, How to find friends online",
-				blogImageUrl: "https://thumbs.dreamstime.com/b/blog-information-website-concept-workplace-background-text-view-above-127465079.jpg",
-				blogImageAlt: "blog-image",
-				subTitle:
-					"10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself",
-				publishedText: "14 Apr 2022",
-				readTime: "8 mins",
-				blogLink: "/url",
-			},
-			{
-				title: "How to find friends online, How to find friends online",
-				blogImageUrl: "https://thumbs.dreamstime.com/b/blog-information-website-concept-workplace-background-text-view-above-127465079.jpg",
-				blogImageAlt: "blog-image",
-				subTitle:
-					"10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself",
-				publishedText: "14 Apr 2022",
-				readTime: "8 mins",
-				blogLink: "/url",
-			},
-			{
-				title: "How to find friends online, How to find friends online",
-				blogImageUrl: "https://thumbs.dreamstime.com/b/blog-information-website-concept-workplace-background-text-view-above-127465079.jpg",
-				blogImageAlt: "blog-image",
-				subTitle:
-					"10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself",
-				publishedText: "14 Apr 2022",
-				readTime: "8 mins",
-				blogLink: "/url",
-			},
-			{
-				title: "How to find friends online, How to find friends online",
-				blogImageUrl: "https://thumbs.dreamstime.com/b/blog-information-website-concept-workplace-background-text-view-above-127465079.jpg",
-				blogImageAlt: "blog-image",
-				subTitle:
-					"10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself",
-				publishedText: "14 Apr 2022",
-				readTime: "8 mins",
-				blogLink: "/url",
-			},
-			{
-				title: "How to find friends online, How to find friends online",
-				blogImageUrl: "https://thumbs.dreamstime.com/b/blog-information-website-concept-workplace-background-text-view-above-127465079.jpg",
-				blogImageAlt: "blog-image",
-				subTitle:
-					"10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself",
-				publishedText: "14 Apr 2022",
-				readTime: "8 mins",
-				blogLink: "/url",
-			},
-			{
-				title: "How to find friends online, How to find friends online, , How to find friends online , How to find friends online ashgdashjdgas",
-				blogImageUrl: "https://thumbs.dreamstime.com/b/blog-information-website-concept-workplace-background-text-view-above-127465079.jpg",
-				blogImageAlt: "blog-image",
-				subTitle:
-					"10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself, 10 ways how we can find friends online and express ourself",
-				publishedText: "14 Apr 2022",
-				readTime: "8 mins",
-				blogLink: "/url",
-			},
-		],
+		blogCardsArr: props.blogCardsArr,
 		blogSocialShares: [
 			{
 				logoRes: InstagramLogo,
@@ -158,17 +91,6 @@ function Slug(props) {
 		return type.type;
 	};
 
-	// The sunEditor parameter will be set to the core suneditor instance when this function is called
-	const getSunEditorInstance = (sunEditor) => {
-		editor.current = sunEditor;
-	};
-
-	const handleEditorOnLoad = () => {
-		editor.current.readOnly(true);
-		editor.current.setContents(state.editorContent);
-		editor.current.disable();
-	};
-
 	const renderSocialShare = () => {
 		return (
 			<div className={styles.blogContainer__socialShares}>
@@ -188,24 +110,8 @@ function Slug(props) {
 		);
 	};
 
-	const renderLiveChatInitmation = () => {
-		return (
-			<div className={styles.blogContainer__liveCard}>
-				<div className={styles.blogContainer__liveCardDiv}>
-					<div className={styles.blogContainer__liveCardLine}>
-						<div>
-							<Image src={LiveIcon.src} height={60} width={80} alt="" />
-						</div>{" "}
-						<div>
-							<b>234</b> people chatting live
-						</div>
-					</div>
-					<div className={styles.blogContainer__liveCardButton}>
-						<button>Start chatting now</button>
-					</div>
-				</div>
-			</div>
-		);
+	const getTimeToRead = (text) => {
+		return "8 mins";
 	};
 
 	return (
@@ -232,46 +138,38 @@ function Slug(props) {
 				<div className={styles.blogContainer__blogBigHeadline}>{state.blogShortDesc}</div>
 
 				<div className={styles.blogContainer__blogContent} dangerouslySetInnerHTML={{ __html: state.editorContent }}>
-					{/* <SunEditor
-						width="100%"
-						value={state.editorContent}
-						onLoad={handleEditorOnLoad}
-						getSunEditorInstance={getSunEditorInstance}
-						setOptions={{ height: "max-content" }}
-						setDefaultStyle="font-family:'Montserrat', sans-serif"
-					/> */}
 				</div>
-				{renderLiveChatInitmation()}
 			</div>
 			{renderSocialShare()}
+			<div className={styles.blogContainer__blogTitle}>Other Similar Blogs!</div>
 			<div className={styles.blogHome__fullView}>
-				{state.blogCardsArr.map((blog) => (
-					<div className={styles.blogHome__viewCard}>
-						<Link
-							href={{
-								pathname: blog.blogUrl,
-							}}
-						>
-							<div className={styles.blogCard}>
-								<div className={styles.blogCard__image}>
-									<img src={blog.blogImageUrl} alt={blog.imageAlt} />
+			{state.blogCardsArr.map((blog) => (
+						blog._id !== props.blogTopic._id && <div className={styles.blogHome__viewCard}>
+							<Link
+								href={{
+									pathname: "/blog/" + blog.blogSlug,
+								}}
+							>
+								<div className={styles.blogCard}>
+									<div className={styles.blogCard__image}>
+										<img src={blog.blogImage} alt={blog.blogImageAlt || ""} />
+									</div>
+									<div className={styles.blogCard__text}>
+										<div className={styles.blogCard__title} style={{ maxWidth: "100%", fontSize: "1rem" }}>
+											{blog.blogTitle}
+										</div>
+										<div className={styles.blogCard__timestamp} style={{ maxWidth: "100%", fontSize: ".7rem" }}>
+											<div>{blog.publishedAt}</div>
+											<div>{getTimeToRead(blog.blogHtml)}</div>
+										</div>
+										<div className={styles.blogCard__subtitle} style={{ maxWidth: "100%", fontSize: ".8rem", WebkitLineClamp: state.isMobileView ? 3 : 5 }}>
+											{blog.shortDesc}
+										</div>
+									</div>
 								</div>
-								<div className={styles.blogCard__text}>
-									<div className={styles.blogCard__title} style={{ maxWidth: "100%", fontSize: "1rem" }}>
-										{blog.title}
-									</div>
-									<div className={styles.blogCard__timestamp} style={{ maxWidth: "100%", fontSize: ".7rem" }}>
-										<div>{blog.publishedText}</div>
-										<div>{blog.readTime}</div>
-									</div>
-									<div className={styles.blogCard__subtitle} style={{ maxWidth: "100%", fontSize: ".8rem", WebkitLineClamp: 5 }}>
-										{blog.subTitle}
-									</div>
-								</div>
-							</div>
-						</Link>
-					</div>
-				))}
+							</Link>
+						</div>
+					))}
 			</div>
 			<Footer />
 		</div>
@@ -302,8 +200,11 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
 	let response = await axios.get(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog/${params.slug}`);
 	const blogTopic = response.data.data;
+
+	let resp = await axios.get(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog?topics=true`);
+	const blogCards = resp.data.data;
 	// Pass ] data to the page via props
-	return { props: { blogTopic: blogTopic }, revalidate: 1 };
+	return { props: { blogTopic: blogTopic, blogCardsArr: blogCards }, revalidate: 1 };
 }
 
 export default Slug;
