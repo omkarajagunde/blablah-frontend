@@ -48,6 +48,10 @@ function index(props) {
 		return "8 mins";
 	};
 
+	const redirectToPage = (slug) => {
+		window.location.replace(slug)
+	}
+
 	return (
 		<div>
 			<ReadingProgress target={target} />
@@ -67,6 +71,7 @@ function index(props) {
 						<div className={styles.blogHome__viewCard}>
 							<Link
 								href={"/blog/" + blog.blogSlug}
+								onClick={() => redirectToPage("/blog/" + blog.blogSlug)}
 							>
 								<div className={styles.blogCard}>
 									<div className={styles.blogCard__image}>

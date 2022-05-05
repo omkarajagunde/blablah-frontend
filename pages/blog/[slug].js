@@ -115,6 +115,10 @@ function Slug(props) {
 		return "8 mins";
 	};
 
+	const redirectToPage = (slug) => {
+		window.location.replace(slug)
+	}
+
 	return (
 		<div>
 			<SEOTags blog={props.blogTopic}/>
@@ -149,6 +153,7 @@ function Slug(props) {
 						blog._id !== props.blogTopic._id && <div className={styles.blogHome__viewCard}>
 							<Link
 								href={"/blog/" + blog.blogSlug}
+								onClick={() => redirectToPage("/blog/" + blog.blogSlug)}
 							>
 								<div className={styles.blogCard}>
 									<div className={styles.blogCard__image}>
