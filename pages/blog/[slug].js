@@ -21,6 +21,7 @@ import TwitterLogo from "../../Resources/logo-twitter.svg";
 import WhatsappLogo from "../../Resources/logo-whatsapp.svg";
 import CopyLogo from "../../Resources/copy-outline.svg";
 import LiveIcon from "../../Resources/live-icon.png";
+import SEOTags from "../../components/SEOTags";
 
 function Slug(props) {
 	const router = useRouter();
@@ -116,6 +117,7 @@ function Slug(props) {
 
 	return (
 		<div>
+			<SEOTags blog={props.blogTopic}/>
 			<ReadingProgress target={target} />
 			<NavBar />
 			<div className={styles.blogContainer} ref={target}>
