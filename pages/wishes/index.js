@@ -26,9 +26,9 @@ function Index(props) {
 	const [state, setState] = useState({
 		isMobileView: false,
 		isExpanded: false,
-		templates: props.templates,
-		categories: props.categories,
-		selectedTemplateId: props.categories[0]._id,
+		templates: props.templates || [],
+		categories: props.categories || [],
+		selectedTemplateId: props.categories[0]?._id,
 		mouseHoveredIndex: null
 	});
 
@@ -172,21 +172,21 @@ function Index(props) {
 }
 
 // This also gets called at build time
-export async function getStaticProps({ params }) {
-	let responseCategories = await axios.get(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/category`);
-	const categories = responseCategories.data.data;
+// export async function getStaticProps({ params }) {
+// 	let responseCategories = await axios.get(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/category`);
+// 	const categories = responseCategories.data.data;
 
-	let responseTemplates = await axios.get(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/wishes-template?onlyMetaData=true`);
-	const wishesTemplates = responseTemplates.data.data;
-	// Pass data to the page via props
-	return {
-		props: {
-			templates: wishesTemplates,
-			categories: categories
-		},
-		// 12 hrs === 43200 secs to revalidate
-		revalidate: 43200
-	};
-}
+// 	let responseTemplates = await axios.get(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/wishes-template?onlyMetaData=true`);
+// 	const wishesTemplates = responseTemplates.data.data;
+// 	// Pass data to the page via props
+// 	return {
+// 		props: {
+// 			templates: wishesTemplates,
+// 			categories: categories
+// 		},
+// 		// 12 hrs === 43200 secs to revalidate
+// 		revalidate: 43200
+// 	};
+// }
 
 export default Index;
