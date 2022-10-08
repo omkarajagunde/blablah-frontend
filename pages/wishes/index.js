@@ -22,44 +22,43 @@ import DownIcon from "../../Resources/DownIcon.svg";
 // Jsons !
 
 function Index(props) {
-	const target = useRef(null);
-	const [state, setState] = useState({
-		isMobileView: false,
-		isExpanded: false,
-		templates: props.templates || [],
-		categories: props.categories || [],
-		selectedTemplateId: props?.categories[0]?._id || 0,
-		mouseHoveredIndex: null
-	});
+	// const target = useRef(null);
+	// const [state, setState] = useState({
+	// 	isMobileView: false,
+	// 	isExpanded: false,
+	// 	templates: props.templates || [],
+	// 	categories: props.categories || [],
+	// 	selectedTemplateId: props?.categories[0]?._id || 0,
+	// 	mouseHoveredIndex: null
+	// });
 
-	useEffect(() => {
-		console.log(state);
-	}, [state]);
+	// useEffect(() => {
+	// 	console.log(state);
+	// }, [state]);
 
-	const handleSelectCategory = (template, index) => {
-		let elem = document.getElementById("templates");
-		if (elem) {
-			elem.scrollIntoView();
-		}
-		setState((prevState) => ({ ...prevState, selectedTemplateId: template._id }));
-	};
+	// const handleSelectCategory = (template, index) => {
+	// 	let elem = document.getElementById("templates");
+	// 	if (elem) {
+	// 		elem.scrollIntoView();
+	// 	}
+	// 	setState((prevState) => ({ ...prevState, selectedTemplateId: template._id }));
+	// };
 
-	const handleExpandCategories = () => {
-		setState((prevState) => ({ ...prevState, isExpanded: !prevState.isExpanded }));
-	};
+	// const handleExpandCategories = () => {
+	// 	setState((prevState) => ({ ...prevState, isExpanded: !prevState.isExpanded }));
+	// };
 
-	const handleTemplateMouseToggle = (idx, flag) => {
-		setState((prevState) => ({ ...prevState, mouseHoveredIndex: flag ? idx : null }));
-	};
+	// const handleTemplateMouseToggle = (idx, flag) => {
+	// 	setState((prevState) => ({ ...prevState, mouseHoveredIndex: flag ? idx : null }));
+	// };
 
-	const handleGotoTemplate = (template) => {
-		window.location.pathname = `/wishes/${template.slug}`;
-	};
+	// const handleGotoTemplate = (template) => {
+	// 	window.location.pathname = `/wishes/${template.slug}`;
+	// };
 
 	return (
 		<div>
-			<ReadingProgress target={target} />
-			{/* Tracking Umami is code */}
+			{/* <ReadingProgress target={target} />
 			<Script data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEB_ID} strategy="lazyOnload" src={process.env.NEXT_PUBLIC_ANALYTICS_URL} />
 			<Head>
 				<title>{SEO.wishes.pageTitle}</title>
@@ -165,7 +164,7 @@ function Index(props) {
 					</div>
 				</div>
 			</div>
-			<Footer />
+			<Footer /> */}
 		</div>
 	);
 }
