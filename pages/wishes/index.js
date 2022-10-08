@@ -28,7 +28,7 @@ function Index(props) {
 		isExpanded: false,
 		templates: props.templates || [],
 		categories: props.categories || [],
-		selectedTemplateId: props.categories[0]?._id,
+		selectedTemplateId: props?.categories[0]?._id || 0,
 		mouseHoveredIndex: null
 	});
 
@@ -139,7 +139,6 @@ function Index(props) {
 								state.templates
 									.filter((temp) => temp.category === state.selectedTemplateId)
 									.map((template, idx) => {
-										console.log(template);
 										return (
 											<div
 												className={styles.wishes__template}
