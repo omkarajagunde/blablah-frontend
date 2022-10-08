@@ -44,7 +44,7 @@ export async function getStaticProps({ params }) {
 	const templateData = response.data.data;
 
 	// Pass ] data to the page via props
-	return { props: { template: templateData }, revalidate: 1 };
+	return { props: { template: templateData }, revalidate: 60 };
 }
 
 export default Slug;

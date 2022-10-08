@@ -184,7 +184,7 @@ export async function getStaticProps({ params }) {
 			categories: categories
 		},
 		// 12 hrs === 43200 secs to revalidate
-		revalidate: 43200
+		revalidate: 60
 	};
 }
 
