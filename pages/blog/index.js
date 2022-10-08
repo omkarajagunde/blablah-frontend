@@ -17,7 +17,7 @@ function index(props) {
 	const target = useRef(null);
 	const [state, setState] = useState({
 		isMobileView: false,
-		blogCardsArr: props.blogTopics,
+		blogCardsArr: props.blogTopics
 	});
 
 	// Run only first time when component loads
@@ -49,8 +49,8 @@ function index(props) {
 	};
 
 	const redirectToPage = (slug) => {
-		window.location.replace(slug)
-	}
+		window.location.replace(slug);
+	};
 
 	return (
 		<div>
@@ -62,17 +62,19 @@ function index(props) {
 					<div className={styles.blogHome__subtitleContainer}>
 						<div>This is the blog, hope you find it very useful</div>
 						<div>
-							<Image src={TitleIcon.src} width={state.isMobileView ? 75 : 150} height={state.isMobileView ? 75 : 150} alt={`the-blog-icon`} />
+							<Image
+								src={TitleIcon.src}
+								width={state.isMobileView ? 75 : 150}
+								height={state.isMobileView ? 75 : 150}
+								alt={`the-blog-icon`}
+							/>
 						</div>
 					</div>
 				</div>
 				<div className={styles.blogHome__fullView}>
 					{state.blogCardsArr.map((blog) => (
 						<div className={styles.blogHome__viewCard}>
-							<Link
-								href={"/blog/" + blog.blogSlug}
-								onClick={() => redirectToPage("/blog/" + blog.blogSlug)}
-							>
+							<Link href={"/blog/" + blog.blogSlug} onClick={() => redirectToPage("/blog/" + blog.blogSlug)}>
 								<div className={styles.blogCard}>
 									<div className={styles.blogCard__image}>
 										<img src={blog.blogImage} alt={blog.blogImageAlt || ""} />
@@ -85,7 +87,14 @@ function index(props) {
 											<div>{new Date(blog.publishedAt).toDateString()}</div>
 											<div>{getTimeToRead(blog.blogHtml)}</div>
 										</div>
-										<div className={styles.blogCard__subtitle} style={{ maxWidth: "100%", fontSize: ".8rem", WebkitLineClamp: state.isMobileView ? 3 : 5 }}>
+										<div
+											className={styles.blogCard__subtitle}
+											style={{
+												maxWidth: "100%",
+												fontSize: ".8rem",
+												WebkitLineClamp: state.isMobileView ? 3 : 5
+											}}
+										>
 											{blog.shortDesc}
 										</div>
 									</div>

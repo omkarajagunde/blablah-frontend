@@ -1,19 +1,21 @@
 import React, { useRef, useState } from "react";
-import Footer from "../../components/Footer";
-import NavBar from "../../components/NavBar";
+import Footer from "../components/Footer";
+import NavBar from "../components/NavBar";
 import dynamic from "next/dynamic";
 import axios from "axios";
-import { firebase } from "../../apiHelpers/firebase";
+import { firebase } from "../apiHelpers/firebase";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Tabs, Tab, Button, Form, Alert } from "react-bootstrap";
-import ViewBlogs from "../../components/ViewBlogs";
-import admins from "../../Resources/blog-admin-list";
+import ViewBlogs from "../components/ViewBlogs";
+import NewTemplate from "../components/NewTemplate";
+import ViewTemplates from "../components/ViewTemplates";
+import { admins } from "../Resources/json-res";
 import "suneditor/dist/css/suneditor.min.css";
 // Styles!
-import styles from "../../styles/Admin.module.scss";
+import styles from "../styles/Admin.module.scss";
 const SunEditor = dynamic(() => import("suneditor-react"), {
 	//besure to import dynamically
-	ssr: false,
+	ssr: false
 });
 
 const plugins = [
@@ -47,9 +49,9 @@ const plugins = [
 		"fullScreen",
 		"showBlocks",
 		"codeView",
-		"preview",
+		"preview"
 		/** 'dir', 'dir_ltr', 'dir_rtl' */ // "dir": Toggle text direction, "dir_ltr": Right to Left, "dir_rtl": Left to Right
-	],
+	]
 ];
 
 function admin() {
@@ -61,9 +63,9 @@ function admin() {
 		blogKeywords: "",
 		blogShortDesc: "",
 		blogImageFile: null,
-		loggedIn: false,
+		loggedIn: true,
 		logInError: null,
-		newBlogAdded: false,
+		newBlogAdded: false
 	});
 
 	// The sunEditor parameter will be set to the core suneditor instance when this function is called
@@ -87,12 +89,14 @@ function admin() {
 				metaKeywords: keywordsArr,
 				shortDesc: state.blogShortDesc,
 				blogHtml: state.editorContent,
-				blogImage: url,
+				blogImage: url
 			};
 			console.log(state, body);
 
 			axios
-				.post(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog`, body, {'Content-Type': 'application/x-www-form-urlencoded'})
+				.post(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/blog`, body, {
+					"Content-Type": "application/x-www-form-urlencoded"
+				})
 				.then((response) => {
 					// blog saved successfully
 					console.log(response);
@@ -117,24 +121,44 @@ function admin() {
 	};
 
 	const handleMetaKeywordsBlur = (event) => {
-		setState((prevState) => ({ ...prevState, blogKeywords: event.target.value }));
+		setState((prevState) => ({
+			...prevState,
+			blogKeywords: event.target.value
+		}));
 	};
 
 	const handleShortDescBlur = (event) => {
-		setState((prevState) => ({ ...prevState, blogShortDesc: event.target.value }));
+		setState((prevState) => ({
+			...prevState,
+			blogShortDesc: event.target.value
+		}));
 	};
 
 	const handleFileUploadChange = (event) => {
-		setState((prevState) => ({ ...prevState, blogImageFile: event.target.files[0] }));
+		setState((prevState) => ({
+			...prevState,
+			blogImageFile: event.target.files[0]
+		}));
 	};
 
 	const handleOnClear = () => {
-		setState((prevState) => ({ ...prevState, blogImageFile: null, blogShortDesc: "", blogKeywords: "", blogTitle: "", editorContent: "" }));
+		setState((prevState) => ({
+			...prevState,
+			blogImageFile: null,
+			blogShortDesc: "",
+			blogKeywords: "",
+			blogTitle: "",
+			editorContent: ""
+		}));
 		editor.current.setContents("");
 	};
 
 	const handleLogin = () => {
-		setState((prevState) => ({ ...prevState, loggedIn: false, logInError: null }));
+		setState((prevState) => ({
+			...prevState,
+			loggedIn: false,
+			logInError: null
+		}));
 		setShow(false);
 		let email = document.getElementById("email");
 		let password = document.getElementById("password");
@@ -142,16 +166,28 @@ function admin() {
 			// make a api call to login the user ...and set loggenIn user as true in state
 			admins.forEach((admin) => {
 				if (admin.email === email.value.trim() && admin.password === password.value.trim()) {
-					setState((prevState) => ({ ...prevState, loggedIn: true, logInError: null }));
+					setState((prevState) => ({
+						...prevState,
+						loggedIn: true,
+						logInError: null
+					}));
 				} else {
 					// Wrong username password
-					setState((prevState) => ({ ...prevState, loggedIn: false, logInError: "Wrong email and/or password provided" }));
+					setState((prevState) => ({
+						...prevState,
+						loggedIn: false,
+						logInError: "Wrong email and/or password provided"
+					}));
 					setShow(true);
 				}
 			});
 		} else {
 			// Wrong username password
-			setState((prevState) => ({ ...prevState, loggedIn: false, logInError: "Enter valid email/password, both should be ateast 4 letters" }));
+			setState((prevState) => ({
+				...prevState,
+				loggedIn: false,
+				logInError: "Enter valid email/password, both should be ateast 4 letters"
+			}));
 			setShow(true);
 		}
 	};
@@ -161,7 +197,15 @@ function admin() {
 			<>
 				<NavBar />
 
-				<div className={styles.adminContainer} style={{ marginBottom: "30px", maxWidth: "400px", padding: "10px", height: "500px" }}>
+				<div
+					className={styles.adminContainer}
+					style={{
+						marginBottom: "30px",
+						maxWidth: "400px",
+						padding: "10px",
+						height: "500px"
+					}}
+				>
 					{state.logInError && show && (
 						<Alert variant="danger" onClose={() => setShow(false)} dismissible>
 							<Alert.Heading>Oh error!</Alert.Heading>
@@ -193,16 +237,24 @@ function admin() {
 			<>
 				<NavBar />
 				<div className={styles.adminContainer}>
-					<div className={styles.adminContainer__title}>Manage Blog</div>
+					<div className={styles.adminContainer__title}>Manage Blablah</div>
 					<Tabs defaultActiveKey="newBlog" id="uncontrolled-tab-example" className="mb-3">
 						<Tab eventKey="newBlog" title="New Blog">
 							<Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
 								<Form.Label>Enter Blog Title</Form.Label>
-								<Form.Control maxLength={300} onBlur={handleTitleBlur} placeholder="e.g. This is a catchy blog title which would be 20 -40 words long" />
+								<Form.Control
+									maxLength={300}
+									onBlur={handleTitleBlur}
+									placeholder="e.g. This is a catchy blog title which would be 20 -40 words long"
+								/>
 							</Form.Group>
 							<Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
 								<Form.Label>Enter Meta keywords (comma seperated ",")</Form.Label>
-								<Form.Control maxLength={800} onBlur={handleMetaKeywordsBlur} placeholder="e.g. programming, science, digital marketing" />
+								<Form.Control
+									maxLength={800}
+									onBlur={handleMetaKeywordsBlur}
+									placeholder="e.g. programming, science, digital marketing"
+								/>
 							</Form.Group>
 							<Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
 								<Form.Label>Enter short description</Form.Label>
@@ -247,6 +299,12 @@ function admin() {
 						</Tab>
 						<Tab eventKey="viewBlog" title="View Blogs">
 							<ViewBlogs />
+						</Tab>
+						<Tab eventKey="New template" title="New Template">
+							<NewTemplate />
+						</Tab>
+						<Tab eventKey="View templates" title="View Templates">
+							<ViewTemplates />
 						</Tab>
 					</Tabs>
 				</div>

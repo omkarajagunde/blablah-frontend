@@ -30,6 +30,7 @@ import { ClearLiveChatLogs, IsServerOperational, GetTrends } from "../../actions
 // Styles
 import styles from "../../styles/live.module.scss";
 import Loader from "../../components/_helpers/Loader";
+import { SEO } from "../../Resources/json-res";
 
 // Socket event strings
 const CLIENT_INTRODUCTION = "CLIENT_INTRODUCTION";
@@ -42,7 +43,7 @@ const CLIENT_INTRODUCTION_PAIR_NOT_FOUND = "CLIENT_INTRODUCTION_PAIR_NOT_FOUND";
 
 // New instance
 const recorder = new MicRecorder({
-	bitRate: 256,
+	bitRate: 256
 });
 
 function Index() {
@@ -67,7 +68,8 @@ function Index() {
 		tabIndex: 0,
 		commonInterestsArray: [],
 		smartRepliesArray: ["", "", "", ""],
-		restrictedModeKeywordsArray: typeof window !== "undefined" ? JSON.parse(localStorage.getItem("restrictedModeNewKeywordsArray")) || [] : [],
+		restrictedModeKeywordsArray:
+			typeof window !== "undefined" ? JSON.parse(localStorage.getItem("restrictedModeNewKeywordsArray")) || [] : [],
 		restrictedModeNewKeywordsArray: [],
 		peerNegativeKeywordsArray: [],
 		chatMessagesArray: [],
@@ -83,7 +85,7 @@ function Index() {
 		// Audio related state vars
 		isMicPressed: false,
 		isMicRecording: false,
-		isMicBlocked: false,
+		isMicBlocked: false
 	});
 	const socketRef = useRef();
 	const userFoundRef = useRef();
@@ -101,7 +103,7 @@ function Index() {
 			pairedUserData: null,
 			chatMessagesArray: [],
 			isChatEndedWithError: null,
-			showImageDisapperModal: false,
+			showImageDisapperModal: false
 		}));
 		document.getElementById("inputText").blur();
 	}, [state.mySocketId]);
@@ -139,8 +141,8 @@ function Index() {
 					myGender: LiveChatSelector.identityObj?.gender,
 					myAge: LiveChatSelector.identityObj?.age,
 					myName: LiveChatSelector.identityObj?.fullname,
-					connectWithAnyone: state.commonInterestsArray.length !== 0 ? state.connectWithAnyone : true,
-				},
+					connectWithAnyone: state.commonInterestsArray.length !== 0 ? state.connectWithAnyone : true
+				}
 			});
 		}
 
@@ -162,8 +164,8 @@ function Index() {
 				action: PEER_STARTED_TYPING,
 				data: {
 					typing: true,
-					peerSocketId: state.pairedUserData?.mySocketId,
-				},
+					peerSocketId: state.pairedUserData?.mySocketId
+				}
 			});
 		}
 
@@ -185,8 +187,8 @@ function Index() {
 				action: PEER_STOPPED_TYPING,
 				data: {
 					typing: false,
-					peerSocketId: state.pairedUserData?.mySocketId,
-				},
+					peerSocketId: state.pairedUserData?.mySocketId
+				}
 			});
 		}
 
@@ -197,8 +199,8 @@ function Index() {
 				action: SEND_MESSAGE,
 				data: {
 					chatData: data,
-					peerSocketId: state.pairedUserData?.mySocketId,
-				},
+					peerSocketId: state.pairedUserData?.mySocketId
+				}
 			});
 		}
 
@@ -209,8 +211,8 @@ function Index() {
 				data: {
 					username: state.username,
 					keywordsArray: state.restrictedModeKeywordsArray,
-					peerSocketId: state.pairedUserData?.mySocketId,
-				},
+					peerSocketId: state.pairedUserData?.mySocketId
+				}
 			});
 		}
 
@@ -220,8 +222,8 @@ function Index() {
 				socketId: socketRef.current.id,
 				action: END_CURRENT_SESSION,
 				data: {
-					peerSocketId: state.pairedUserData?.mySocketId,
-				},
+					peerSocketId: state.pairedUserData?.mySocketId
+				}
 			});
 		}
 	};
@@ -230,11 +232,16 @@ function Index() {
 		socketRef.current = socketIOClient(process.env.NEXT_PUBLIC_SERVER_URL, {
 			path: "/live",
 			query: { token: window.tkn },
-			transports: ["websocket", "polling", "flashsocket"],
+			transports: ["websocket", "polling", "flashsocket"]
 		});
 
 		socketRef.current.on("connect", () => {
-			setState((prevState) => ({ ...prevState, mySocketId: socketRef.current.id, isChatEnded: false, isChatEndedWithError: null }));
+			setState((prevState) => ({
+				...prevState,
+				mySocketId: socketRef.current.id,
+				isChatEnded: false,
+				isChatEndedWithError: null
+			}));
 		});
 
 		socketRef.current.on("connect_error", (err) => {
@@ -247,7 +254,7 @@ function Index() {
 				isChatEnded: true,
 				pairedUserData: null,
 				chatMessagesArray: [],
-				isChatEndedWithError: err + " Please check your network connection and try again ",
+				isChatEndedWithError: err + " Please check your network connection and try again "
 			}));
 		});
 
@@ -260,9 +267,11 @@ function Index() {
 			let mainMsg = "";
 			let subMsg = "";
 
-			if (data.data.intersectedInterests.length > 0) mainMsg = `Your interests \n` + `${data.data.intersectedInterests.map((interest) => `${interest}`)}\n`;
+			if (data.data.intersectedInterests.length > 0)
+				mainMsg = `Your interests \n` + `${data.data.intersectedInterests.map((interest) => `${interest}`)}\n`;
 
-			if (data.data.genderInterestFound && data.data.myName) subMsg = ` connected with ${data.data.myName}, ${data.data.myGender}`;
+			if (data.data.genderInterestFound && data.data.myName)
+				subMsg = ` connected with ${data.data.myName}, ${data.data.myGender}`;
 			else if (data.data.genderInterestFound) subMsg = ` connected with ${data.data.myGender}`;
 			else if (data.data.myName) subMsg = ` connected with ${data.data.myName}`;
 
@@ -278,11 +287,17 @@ function Index() {
 				senderName: "",
 				timeStamp: `${time.getHours()}:${time.getMinutes()}, ${time.toDateString()}`,
 				newlyAdded: true,
-				retracted: false,
+				retracted: false
 			};
 
 			let chatMessagesArray = [...state.chatMessagesArray, intersectedInterestsMessage];
-			setState((prevState) => ({ ...prevState, userFoundFlag: true, pairedUserData: data, isNewSessionStatus: "Skip", chatMessagesArray }));
+			setState((prevState) => ({
+				...prevState,
+				userFoundFlag: true,
+				pairedUserData: data,
+				isNewSessionStatus: "Skip",
+				chatMessagesArray
+			}));
 		});
 
 		socketRef.current.on(CLIENT_INTRODUCTION_PAIR_NOT_FOUND, (data) => {
@@ -343,7 +358,7 @@ function Index() {
 				chatMessagesArray: [],
 				isChatEndedWith: data.data.data.myName || data.data.data.mySocketId || "Stranger",
 				showImageDisapperModal: false,
-				showPrivacyModal: false,
+				showPrivacyModal: false
 			}));
 		});
 	};
@@ -376,7 +391,12 @@ function Index() {
 	// Run only first time when component loads
 	useEffect(() => {
 		// set initial level
-		setState((prevState) => ({ ...prevState, username: LiveChatSelector.identityObj.fullname, age: LiveChatSelector.identityObj.age, gender: LiveChatSelector.identityObj.gender }));
+		setState((prevState) => ({
+			...prevState,
+			username: LiveChatSelector.identityObj.fullname,
+			age: LiveChatSelector.identityObj.age,
+			gender: LiveChatSelector.identityObj.gender
+		}));
 
 		userFoundRef.current = false;
 		if (window.innerWidth <= 768) setState((prevState) => ({ ...prevState, isMobileView: true }));
@@ -512,7 +532,7 @@ function Index() {
 					let time = new Date();
 					const file = new File(buffer, "audio-message.mp3", {
 						type: blob.type,
-						lastModified: Date.now(),
+						lastModified: Date.now()
 					});
 					var reader = new FileReader();
 					reader.readAsDataURL(file);
@@ -525,11 +545,12 @@ function Index() {
 							senderName: state.username || null,
 							senderAge: state.age || null,
 							timeStamp: `${time.getHours()}:${time.getMinutes()}, ${time.toDateString()}`,
-							newlyAdded: true,
+							newlyAdded: true
 						};
 
 						console.log("Audio message size in mb : ", Buffer.byteLength(JSON.stringify(sendMsgObject)) / 1e6);
-						if (Buffer.byteLength(JSON.stringify(sendMsgObject)) / 1e6 >= 6) alert("Max Audio length can be 2 mins, Try with audio message less than 2 mins");
+						if (Buffer.byteLength(JSON.stringify(sendMsgObject)) / 1e6 >= 6)
+							alert("Max Audio length can be 2 mins, Try with audio message less than 2 mins");
 						else {
 							// Send Audio message
 							handleSocketEvent(SEND_MESSAGE, sendMsgObject);
@@ -540,7 +561,7 @@ function Index() {
 							chatMessagesArray: [...chatArray, sendMsgObject],
 							isMicBlocked: false,
 							isMicRecording: false,
-							isMicPressed: false,
+							isMicPressed: false
 						}));
 					};
 				})
@@ -566,7 +587,7 @@ function Index() {
 					senderAge: state.age || null,
 					timeStamp: `${time.getHours()}:${time.getMinutes()}, ${time.toDateString()}`,
 					newlyAdded: true,
-					retracted: helperDoesNegativeWordExists(elem.value),
+					retracted: helperDoesNegativeWordExists(elem.value)
 				};
 
 				// Send message
@@ -594,7 +615,7 @@ function Index() {
 			senderName: state.username || null,
 			senderAge: state.age || null,
 			timeStamp: `${time.getHours()}:${time.getMinutes()}, ${time.toDateString()}`,
-			newlyAdded: true,
+			newlyAdded: true
 		};
 		// Send message
 		handleSocketEvent(SEND_MESSAGE, sendMsgObject);
@@ -614,7 +635,7 @@ function Index() {
 		setState((prevState) => ({
 			...prevState,
 			restrictedModeNewKeywordsArray: [localNewKeywordsArray[index], ...state.restrictedModeNewKeywordsArray],
-			restrictedModeKeywordsArray: localNewKeywordsArray.filter((val, keyIndex) => keyIndex !== index),
+			restrictedModeKeywordsArray: localNewKeywordsArray.filter((val, keyIndex) => keyIndex !== index)
 		}));
 	};
 
@@ -623,7 +644,7 @@ function Index() {
 		setState((prevState) => ({
 			...prevState,
 			restrictedModeKeywordsArray: [...state.restrictedModeKeywordsArray, localNewKeywordsArray[index]],
-			restrictedModeNewKeywordsArray: localNewKeywordsArray.filter((val, keyIndex) => keyIndex !== index),
+			restrictedModeNewKeywordsArray: localNewKeywordsArray.filter((val, keyIndex) => keyIndex !== index)
 		}));
 	};
 
@@ -633,7 +654,7 @@ function Index() {
 		if (value.trim().length > 0) {
 			setState((prevState) => ({
 				...prevState,
-				restrictedModeKeywordsArray: [...state.restrictedModeKeywordsArray, value.trim().toLowerCase()],
+				restrictedModeKeywordsArray: [...state.restrictedModeKeywordsArray, value.trim().toLowerCase()]
 			}));
 			elem.value = "";
 		}
@@ -661,7 +682,8 @@ function Index() {
 	const handleSettingsTabChange = (index) => {
 		let myGender = LiveChatSelector.identityObj?.gender;
 		console.log(myGender);
-		if (myGender !== "any") setState((prevState) => ({ ...prevState, settingsTabIndex: index, isMyGenderSpecified: true }));
+		if (myGender !== "any")
+			setState((prevState) => ({ ...prevState, settingsTabIndex: index, isMyGenderSpecified: true }));
 		else setState((prevState) => ({ ...prevState, isMyGenderSpecified: false }));
 	};
 
@@ -678,7 +700,7 @@ function Index() {
 			setURLSearchParam("interests", commonInterestsArray);
 			setState((prevState) => ({
 				...prevState,
-				commonInterestsArray,
+				commonInterestsArray
 			}));
 			document.getElementById("interestInput").value = "";
 		}
@@ -717,16 +739,20 @@ function Index() {
 						senderName: state.username || null,
 						senderAge: state.age || null,
 						timeStamp: `${time.getHours()}:${time.getMinutes()}, ${time.toDateString()}`,
-						newlyAdded: true,
+						newlyAdded: true
 					};
 					// Send message
 					handleSocketEvent(SEND_MESSAGE, sendMsgObject);
-					setState((prevState) => ({ ...prevState, showImageDisapperModal: false, chatMessagesArray: [...chatArray, sendMsgObject] }));
+					setState((prevState) => ({
+						...prevState,
+						showImageDisapperModal: false,
+						chatMessagesArray: [...chatArray, sendMsgObject]
+					}));
 				};
 			},
 			error(err) {
 				console.log(err.message);
-			},
+			}
 		});
 	};
 
@@ -735,7 +761,7 @@ function Index() {
 		setURLSearchParam("interests", commonInterestsArray);
 		setState((prevState) => ({
 			...prevState,
-			commonInterestsArray,
+			commonInterestsArray
 		}));
 	};
 
@@ -749,7 +775,12 @@ function Index() {
 		return state.chatMessagesArray.map((msg, index) => {
 			if (msg.isImage) {
 				return (
-					<div className={styles.chatContainer__msgContainer} id="chatMessage" key={`${msg.msg}-${index}`} style={{ justifyContent: msg.type === "received" ? "flex-start" : "flex-end" }}>
+					<div
+						className={styles.chatContainer__msgContainer}
+						id="chatMessage"
+						key={`${msg.msg}-${index}`}
+						style={{ justifyContent: msg.type === "received" ? "flex-start" : "flex-end" }}
+					>
 						<DisapperingImage msg={msg} index={index} state={state} />
 					</div>
 				);
@@ -757,13 +788,26 @@ function Index() {
 
 			if (msg.isAudio) {
 				return (
-					<div className={styles.chatContainer__msgContainer} id="chatMessage" key={`${msg.msg}-${index}`} style={{ justifyContent: msg.type === "received" ? "flex-start" : "flex-end" }}>
+					<div
+						className={styles.chatContainer__msgContainer}
+						id="chatMessage"
+						key={`${msg.msg}-${index}`}
+						style={{ justifyContent: msg.type === "received" ? "flex-start" : "flex-end" }}
+					>
 						<div
 							style={{ animation: msg.newlyAdded ? "newMessage 500ms ease-in-out" : null }}
-							className={msg.type === "received" ? styles.chatContainer__receivedMsgContainer : styles.chatContainer__sentMsgContainer}
+							className={
+								msg.type === "received"
+									? styles.chatContainer__receivedMsgContainer
+									: styles.chatContainer__sentMsgContainer
+							}
 						>
 							<div className={styles.chatContainer__receivedMsg}>
-								<audio controls controlsList="nodownload novolume nofullscreen noremoteplayback noplaybackrate" src={msg.msg}></audio>
+								<audio
+									controls
+									controlsList="nodownload novolume nofullscreen noremoteplayback noplaybackrate"
+									src={msg.msg}
+								></audio>
 							</div>
 							<div className={styles.chatContainer__receivedMsgName}>
 								<b>{msg.senderName}</b> <br /> {msg.timeStamp}
@@ -776,7 +820,10 @@ function Index() {
 			if (msg.isMetadata) {
 				return (
 					<div className={styles.chatContainer__msgContainer} id="chatMessage" key={`${msg.msg}-${index}`}>
-						<div style={{ animation: msg.newlyAdded ? "newMessage 500ms ease-in-out" : null }} className={styles.chatContainer__metadata}>
+						<div
+							style={{ animation: msg.newlyAdded ? "newMessage 500ms ease-in-out" : null }}
+							className={styles.chatContainer__metadata}
+						>
 							{msg.msg}
 						</div>
 					</div>
@@ -784,12 +831,23 @@ function Index() {
 			}
 
 			return (
-				<div className={styles.chatContainer__msgContainer} id="chatMessage" key={`${msg.msg}-${index}`} style={{ justifyContent: msg.type === "received" ? "flex-start" : "flex-end" }}>
+				<div
+					className={styles.chatContainer__msgContainer}
+					id="chatMessage"
+					key={`${msg.msg}-${index}`}
+					style={{ justifyContent: msg.type === "received" ? "flex-start" : "flex-end" }}
+				>
 					<div
 						style={{ animation: msg.newlyAdded ? "newMessage 500ms ease-in-out" : null }}
-						className={msg.type === "received" ? styles.chatContainer__receivedMsgContainer : styles.chatContainer__sentMsgContainer}
+						className={
+							msg.type === "received"
+								? styles.chatContainer__receivedMsgContainer
+								: styles.chatContainer__sentMsgContainer
+						}
 					>
-						<div className={styles.chatContainer__receivedMsg}>{!msg.retracted ? msg.msg : "Oops some keyword in message is not allowed, hence message was retracted"}</div>
+						<div className={styles.chatContainer__receivedMsg}>
+							{!msg.retracted ? msg.msg : "Oops some keyword in message is not allowed, hence message was retracted"}
+						</div>
 						<div className={styles.chatContainer__receivedMsgName}>
 							{!msg.retracted && (
 								<>
@@ -831,10 +889,16 @@ function Index() {
 						)}
 					</div>
 
-					<div style={{ opacity: !state.isMyGenderSpecified ? "0.4" : "1" }} className={styles.chatContainer__settingsTabView}>
+					<div
+						style={{ opacity: !state.isMyGenderSpecified ? "0.4" : "1" }}
+						className={styles.chatContainer__settingsTabView}
+					>
 						{state.settingsTabViewOptions.map((tab, index) => (
 							<div
-								style={{ backgroundColor: state.settingsTabIndex === index ? "#e56b9f" : null, color: state.settingsTabIndex === index ? "white" : null }}
+								style={{
+									backgroundColor: state.settingsTabIndex === index ? "#e56b9f" : null,
+									color: state.settingsTabIndex === index ? "white" : null
+								}}
 								onClick={() => handleSettingsTabChange(index)}
 								key={tab}
 							>
@@ -855,7 +919,9 @@ function Index() {
 					</div>
 
 					<div className={styles.chatContainer__settingsTitle}>Add Common Interests</div>
-					<div className={styles.chatContainer__settingsSubTitle}>Add and press Enter e.g. Fitness, workout, science</div>
+					<div className={styles.chatContainer__settingsSubTitle}>
+						Add and press Enter e.g. Fitness, workout, science
+					</div>
 					<div className={styles.chatContainer__commonInterestsContainer}>
 						{state.commonInterestsArray.map((interest, index) => (
 							<div key={`${interest}-${index}`}>
@@ -901,17 +967,29 @@ function Index() {
 	// rendering the mobile view
 	const renderMobileView = () => {
 		return (
-			<div className={styles.chatContainer} id="chatContainer" style={{ overflowY: state.isRulesViewOpen ? "hidden" : null }}>
+			<div
+				className={styles.chatContainer}
+				id="chatContainer"
+				style={{ overflowY: state.isRulesViewOpen ? "hidden" : null }}
+			>
 				{state.isRulesViewOpen && (
 					<div className={styles.chatContainer__rulesView} onClick={handleToggleRules}>
-						<div className={styles.chatContainer__rulesUpArrow} style={{ marginLeft: isMobileView ? "66%" : "71%" }}></div>
+						<div
+							className={styles.chatContainer__rulesUpArrow}
+							style={{ marginLeft: isMobileView ? "66%" : "71%" }}
+						></div>
 						<div className={styles.chatContainer__rulesScreen} onClick={handleStopRulesScreenPropagation}>
 							<div className={styles.chatContainer__rulesTitle}>
-								This is a <b>restricted mode</b> where the following words can’t be used while chatting (click to remove)
+								This is a <b>restricted mode</b> where the following words can’t be used while chatting (click to
+								remove)
 							</div>
 							<div className={styles.chatContainer__keywordContainer}>
 								{state.restrictedModeKeywordsArray.map((keyword, index) => (
-									<div key={`${keyword}-${index}`} onClick={() => handleAddNewKeywordBackToRestrictedMode(index)} className={styles.chatContainer__keyword}>
+									<div
+										key={`${keyword}-${index}`}
+										onClick={() => handleAddNewKeywordBackToRestrictedMode(index)}
+										className={styles.chatContainer__keyword}
+									>
 										{keyword}
 									</div>
 								))}
@@ -919,7 +997,10 @@ function Index() {
 							<div className={styles.chatContainer__rulesTitle} style={{ marginTop: "20px" }}>
 								You can add more <b>keywords</b> to restricted mode from below (click to add)
 							</div>
-							<div className={styles.chatContainer__keywordContainer} style={{ overflowX: "scroll", flexWrap: "nowrap" }}>
+							<div
+								className={styles.chatContainer__keywordContainer}
+								style={{ overflowX: "scroll", flexWrap: "nowrap" }}
+							>
 								{state.restrictedModeNewKeywordsArray.map((keyword, index) => (
 									<div
 										key={`${keyword}-${index}`}
@@ -941,7 +1022,12 @@ function Index() {
 				)}
 				<div className={styles.chatContainer__topbar}>
 					<div className={styles.chatContainer__siteLogo}>
-						<Image src={SiteLogoWhite.src} alt="blabla-siteLogo.png" width={state.isMobileView ? 140 : 200} height={state.isMobileView ? 40 : 80} />
+						<Image
+							src={SiteLogoWhite.src}
+							alt="blabla-siteLogo.png"
+							width={state.isMobileView ? 140 : 200}
+							height={state.isMobileView ? 40 : 80}
+						/>
 					</div>
 					<div className={styles.chatContainer__chatOptions}>
 						<button onClick={handleToggleRules}>Rules</button>
@@ -966,7 +1052,12 @@ function Index() {
 								if (index >= renderIdx) {
 									return (
 										<div
-											style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null, color: "#474663", margin: "5px", border: "1px solid #405068" }}
+											style={{
+												pointerEvents: state.isNewSessionStatus === "New" ? "none" : null,
+												color: "#474663",
+												margin: "5px",
+												border: "1px solid #405068"
+											}}
 											onClick={() => handleSmartReplyClick(reply.text)}
 											className={styles.chatContainer__smartReplyItem}
 											key={`${index}-${reply.text}`}
@@ -1023,7 +1114,9 @@ function Index() {
 							</div>
 							<div
 								style={{ margin: "5px" }}
-								onClick={() => setState((prevState) => ({ ...prevState, showImageDisapperModal: false, imageFile: null }))}
+								onClick={() =>
+									setState((prevState) => ({ ...prevState, showImageDisapperModal: false, imageFile: null }))
+								}
 								className={styles.chatContainer__startSession}
 							>
 								<button>Cancel</button>
@@ -1036,22 +1129,36 @@ function Index() {
 								Guidelines for usage (Scroll till end to close this dialog)
 							</div>
 							<PrivacyText />
-							<div style={{ margin: "5px" }} onClick={() => setState((prevState) => ({ ...prevState, showPrivacyModal: false }))} className={styles.chatContainer__startSession}>
+							<div
+								style={{ margin: "5px" }}
+								onClick={() => setState((prevState) => ({ ...prevState, showPrivacyModal: false }))}
+								className={styles.chatContainer__startSession}
+							>
 								<button>Cancel</button>
 							</div>
 						</div>
 					)}
 					{state.isNewSessionStatus === "New" && (
 						<div className={styles.chatContainer__newSessionScreen} onClick={handleChangeSessionStatus}>
-							<div className={styles.chatContainer__rulesUpArrow} style={{ marginLeft: isMobileView ? "85%" : "94%", marginTop: isMobileView ? "62px" : "90px" }}></div>
-							<div className={styles.chatContainer__newSessionOptions} style={{ marginTop: "unset" }} onClick={(e) => e.stopPropagation()}>
+							<div
+								className={styles.chatContainer__rulesUpArrow}
+								style={{ marginLeft: isMobileView ? "85%" : "94%", marginTop: isMobileView ? "62px" : "90px" }}
+							></div>
+							<div
+								className={styles.chatContainer__newSessionOptions}
+								style={{ marginTop: "unset" }}
+								onClick={(e) => e.stopPropagation()}
+							>
 								<div className={styles.chatContainer__newAd} onClick={handleAdCampaignClick}>
 									Your banner ad can be here - check out
 								</div>
 								<div className={styles.chatContainer__newTabs}>
 									{state.newTabs.map((tab, index) => (
 										<div
-											style={{ backgroundColor: index === state.tabIndex ? "#474663" : null, color: index === state.tabIndex ? "white" : null }}
+											style={{
+												backgroundColor: index === state.tabIndex ? "#474663" : null,
+												color: index === state.tabIndex ? "white" : null
+											}}
 											onClick={() => handleTabChange(index)}
 											key={tab}
 										>
@@ -1099,14 +1206,23 @@ function Index() {
 							<Image src={ExpandCollapse.src} alt="image-icon" width={25} height={25} />
 						</div>
 					</div>
-					<div className={styles.chatContainer__input} style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null }}>
+					<div
+						className={styles.chatContainer__input}
+						style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null }}
+					>
 						<div className={styles.chatContainer__inputImageSelector}>
 							<input type="file" onChange={(e) => handleConfirmImage(e, true)} accept="image/*" />
 							<Image src={ImageIcon.src} alt="image-icon" width={25} height={25} />
 						</div>
 
 						<div>
-							<Image onClick={handleMicClick} src={state.isMicPressed ? MicCancel.src : MicIcon.src} alt="mic-icon" width={25} height={25} />
+							<Image
+								onClick={handleMicClick}
+								src={state.isMicPressed ? MicCancel.src : MicIcon.src}
+								alt="mic-icon"
+								width={25}
+								height={25}
+							/>
 						</div>
 
 						<div>
@@ -1142,19 +1258,17 @@ function Index() {
 	return (
 		<div style={{ height: "100%" }}>
 			{/* Tracking Umami is code */}
-			<Script data-website-id={process.env.NEXT_UMAMI_WEB_ID} strategy="lazyOnload" src={process.env.NEXT_PUBLIC_ANALYTICS_URL} />
+			<Script
+				data-website-id={process.env.NEXT_UMAMI_WEB_ID}
+				strategy="lazyOnload"
+				src={process.env.NEXT_PUBLIC_ANALYTICS_URL}
+			/>
 			<Head>
 				<meta name="theme-color" content="#474663" />
-				<title> Meet new people </title>
-				<meta name="title" content="Talk with beautiful girls and handsome men" />
-				<meta
-					name="description"
-					content="Do you also feel lonely? How many time you wanted to share something but you were afraid of getting judged by others?  start an interesting conversation with, someone Unknown, someone Caring, someone Funny, but someone Real, and someone who won't judge you, Head onto Blablah.app/live and meet new people rightaway"
-				/>
-				<meta
-					name="keywords"
-					content="anonymous random chat app,anonymous random video chat app,random anonymous voice chat,anonymous stranger chat app,best anonymous chat site,chat anonymously,chat anonymously online,anonymous chat with strangers,anonymous chat online,online anonymous chatting,india anonymous chat,"
-				/>
+				<title> {SEO.live.pageTitle} </title>
+				<meta name="title" content={SEO.live.metaTitle} />
+				<meta name="description" content={SEO.live.description} />
+				<meta name="keywords" content={SEO.live.keywords} />
 				<meta name="robots" content="index, follow" />
 				<meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
 				<meta name="language" content="English" />

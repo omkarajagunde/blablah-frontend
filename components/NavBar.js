@@ -9,28 +9,14 @@ import Image from "next/image";
 import SiteLogoBlack from "../Resources/SiteLogoBlack.svg";
 import SiteLogoWhite from "../Resources/SiteLogoWhite.svg";
 
+// jsons !
+import { navbarJson } from "../Resources/json-res";
+
 function NavBar() {
 	const [state, setState] = useState({
 		isMobileView: false,
 		isNavOpen: false,
-		headerLinks: [
-			{
-				link: "/ads",
-				title: "Buy Ads",
-			},
-			{
-				link: "/quiz",
-				title: "Create Quiz",
-			},
-			{
-				link: "/live",
-				title: "Live Chat",
-			},
-			{
-				link: "/blog",
-				title: "Blog",
-			},
-		],
+		headerLinks: JSON.parse(JSON.stringify(navbarJson))
 	});
 
 	// Run only first time when component loads
@@ -62,23 +48,37 @@ function NavBar() {
 	return (
 		<div className={styles.mainContainer_siteLogoNavBar}>
 			<div className={styles.mainContainer_siteLogo}>
-				<Image src={state.isNavOpen ? SiteLogoWhite.src : SiteLogoBlack.src} alt="blabla-siteLogo.png" width={state.isMobileView ? 140 : 200} height={state.isMobileView ? 80 : 80} />
+				<Image
+					src={state.isNavOpen ? SiteLogoWhite.src : SiteLogoBlack.src}
+					alt="blabla-siteLogo.png"
+					width={state.isMobileView ? 140 : 200}
+					height={state.isMobileView ? 80 : 80}
+				/>
 			</div>
 			<div className={styles.mainContainer_navbar}>
-				{state.headerLinks.map((header) => (
-					<div>
-						<Link
-							href={{
-								pathname: header.link,
-							}}
-						>
-							{header.title}
-						</Link>
-					</div>
-				))}
+				{state.headerLinks.map((header) => {
+					if (!header.hide) {
+						return (
+							<div className={styles.mainContainer__navMenuItem}>
+								<Link
+									href={{
+										pathname: header.link
+									}}
+								>
+									{header.title}
+								</Link>
+							</div>
+						);
+					}
+				})}
 			</div>
 			{state.isMobileView && (
-				<div className={state.isNavOpen ? styles.mainContainer_siteNavigationWhite : styles.mainContainer_siteNavigationBlue} onClick={handleNavigationToggle}>
+				<div
+					className={
+						state.isNavOpen ? styles.mainContainer_siteNavigationWhite : styles.mainContainer_siteNavigationBlue
+					}
+					onClick={handleNavigationToggle}
+				>
 					<div></div>
 					<div></div>
 				</div>
@@ -86,17 +86,21 @@ function NavBar() {
 			{/* Logic to show full screen navbar if on mobile */}
 			{state.isNavOpen && (
 				<div className={styles.mainContainer_navScreen}>
-					{state.headerLinks.map((header) => (
-						<div className={styles.mainContainer__navMenuItem}>
-							<Link
-								href={{
-									pathname: header.link,
-								}}
-							>
-								{header.title}
-							</Link>
-						</div>
-					))}
+					{state.headerLinks.map((header) => {
+						if (!header.hide) {
+							return (
+								<div className={styles.mainContainer__navMenuItem}>
+									<Link
+										href={{
+											pathname: header.link
+										}}
+									>
+										{header.title}
+									</Link>
+								</div>
+							);
+						}
+					})}
 				</div>
 			)}
 		</div>

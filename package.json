@@ -18,6 +18,7 @@
     "compressorjs": "^1.1.1",
     "cookie-parser": "^1.4.6",
     "dotenv": "^8.2.0",
+    "ffmpeg-extract-frames": "^2.0.2",
     "firebase": "^9.7.0",
     "lodash": "^4.17.21",
     "mic-recorder-to-mp3": "^2.2.2",
