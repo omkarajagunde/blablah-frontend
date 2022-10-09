@@ -113,13 +113,13 @@ canvas {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 90vh;
+    height: 100vh;
     max-width: 100vw;
     max-height: 100vh;
 }
 
 #canvasHolder{
-    height: 500vh;
+    height: 200vh;
 }
 
 #image{
