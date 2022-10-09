@@ -121,8 +121,8 @@ function Slug(props) {
 					ref={imageRef}
 					src={getCurrentFrame(currentIndex.current)}
 					alt="image"
-					width={typeof window !== "undefined" ? window.innerWidth : null}
-					height={typeof window !== "undefined" ? window.innerHeight : null}
+					width={typeof window !== "undefined" ? window.innerWidth : 100}
+					height={typeof window !== "undefined" ? window.innerHeight : 100}
 				/>
 			</div>
 			{/* <canvas ref={canvasRef} id="hero-lightpass" /> */}
