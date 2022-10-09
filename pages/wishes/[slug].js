@@ -11,14 +11,15 @@ function Slug(props) {
 	const [state, setState] = useState({
 		isMobileView: false,
 		templateData: props.template,
-		frameCount: 0
+		frameCount: 0,
+		ext: "16_9"
 	});
 	const canvasRef = useRef(null);
 	const canvasContextRef = useRef(null);
 	const imageRef = useRef(null);
 	const canvasHolderRef = useRef(null);
 	const frameCount = useRef("000");
-	const currentIndex = useRef(0);
+	const currentIndex = useRef("000");
 
 	useEffect(() => {
 		if (window.innerWidth <= 768) {
@@ -34,13 +35,14 @@ function Slug(props) {
 			else setIsMobileViewDebouncer(false);
 		});
 
-		//canvasContextRef.current = canvasRef.current.getContext("2d");
+		canvasContextRef.current = canvasRef.current.getContext("2d");
 
-		// imageRef.current = new Image();
-		// imageRef.current.src = getCurrentFrame(0);
-		// imageRef.current.onload = function () {
-		// 	canvasContextRef.current.drawImage(imageRef.current, 0, 0);
-		// };
+		console.log("imageRef.current - ", imageRef.current);
+		imageRef.current = new window.Image();
+		imageRef.current.src = getCurrentFrame("000");
+		imageRef.current.onload = function () {
+			canvasContextRef.current.drawImage(imageRef.current, 0, 0);
+		};
 
 		window.addEventListener("scroll", () => {
 			const scrollTop = document.documentElement.scrollTop;
@@ -52,14 +54,14 @@ function Slug(props) {
 				.padStart(state.isMobileView ? state.templateData.mobileImageSeq.length.toString().length : props.template.laptopImageSeq.length.toString().length, "0");
 			console.log("IMG - ", state.isMobileView ? state.templateData.mobileImageSeq.length.toString().length : props.template.laptopImageSeq.length.toString().length);
 			setState((prevState) => ({ ...prevState, idx: currentIndex.current }));
-			//requestAnimationFrame(() => updateImage(frameIndex + 1));
+			requestAnimationFrame(() => updateImage(frameIndex + 1));
 		});
 
-		//preloadImages();
+		preloadImages();
 	}, []);
 
 	useEffect(() => {
-		//preloadImages();
+		preloadImages();
 		console.log("call preload images");
 	}, [state.isMobileView]);
 
@@ -82,12 +84,12 @@ function Slug(props) {
 	const getCurrentFrame = (idx) => {
 		//console.log(state.templateData, idx);
 		//return state.isMobileView ? state.templateData.mobileImageSeq[idx] : props.template.laptopImageSeq[idx];
-		return `../../Diwali_16_9/Happy_Diwali_16_9${idx}.jpg`;
+		return `/Happy_Diwali_${state.ext}${currentIndex.current}.jpg`;
 	};
 
 	const preloadImages = async () => {
 		for (let i = 1; i < frameCount.current; i++) {
-			const img = new Image();
+			const img = new window.Image();
 			img.src = getCurrentFrame(i);
 			//console.log(getCurrentFrame(i));
 		}
@@ -103,15 +105,20 @@ function Slug(props) {
 		<div ref={canvasHolderRef} id="canvasHolder">
 			{" "}
 			{/* <Image src={`/Diwali_16_9/Happy_Diwali_16_9${currentIndex.current}.jpg`} alt="image" width={600} height={400} /> */}
-			<div id="image">
+			{/* <div id="image">
 				<img
 					src={`/Happy_Diwali_${state.ext}${currentIndex.current}.jpg`}
 					alt="image"
 					width={typeof window !== "undefined" ? window.innerWidth : null}
 					height={typeof window !== "undefined" ? window.innerHeight : null}
 				/>
-			</div>
-			{/* <canvas ref={canvasRef} id="hero-lightpass" /> */}
+			</div> */}
+			<canvas
+				ref={canvasRef}
+				id="hero-lightpass"
+				width={typeof window !== "undefined" ? window.innerWidth : null}
+				height={typeof window !== "undefined" ? window.innerHeight : null}
+			/>
 		</div>
 	);
 }
@@ -120,7 +127,6 @@ export async function getStaticPaths() {
 	// Call an external API endpoint to get posts
 	let response = await axios.get(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/wishes-template?onlyMetaData=true`);
 	const wishesTemplates = response.data.data;
-	console.log("wishesTemplates - ", wishesTemplates);
 	// Get the paths we want to pre-render based on posts
 	const paths = wishesTemplates.map((template) => ({
 		params: { slug: template.slug, title: template.title, templateId: template._id }
@@ -139,7 +145,6 @@ export async function getStaticPaths() {
 
 // This also gets called at build time
 export async function getStaticProps({ params }) {
-	console.log("params - ", params);
 	let response = await axios.get(`${process.env.NEXT_PUBLIC_BLABLAH_URL}/api/wishes-template/${params.slug}`);
 	const templateData = response.data.data;
 
