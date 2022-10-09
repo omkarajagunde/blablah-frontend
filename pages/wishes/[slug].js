@@ -19,7 +19,7 @@ function Slug(props) {
 	const imageRef = useRef(null);
 	const canvasHolderRef = useRef(null);
 	const frameCount = useRef("000");
-	const currentIndex = useRef("000");
+	const currentIndex = useRef("001");
 
 	useEffect(() => {
 		if (window.innerWidth <= 768) {
@@ -35,14 +35,15 @@ function Slug(props) {
 			else setIsMobileViewDebouncer(false);
 		});
 
-		canvasContextRef.current = canvasRef.current.getContext("2d");
+		// canvasContextRef.current = canvasRef.current.getContext("2d");
 
-		console.log("imageRef.current - ", imageRef.current);
-		imageRef.current = new window.Image();
-		imageRef.current.src = getCurrentFrame("000");
-		imageRef.current.onload = function () {
-			canvasContextRef.current.drawImage(imageRef.current, 0, 0);
-		};
+		// console.log("imageRef.current - ", imageRef.current);
+		// imageRef.current = new window.Image();
+		// imageRef.current.src = getCurrentFrame("000");
+		// imageRef.current.style.objectFit = "contain";
+		// imageRef.current.onload = function () {
+		// 	canvasContextRef.current.drawImage(imageRef.current, 0, 0);
+		// };
 
 		window.addEventListener("scroll", () => {
 			const scrollTop = document.documentElement.scrollTop;
@@ -54,14 +55,14 @@ function Slug(props) {
 				.padStart(state.isMobileView ? state.templateData.mobileImageSeq.length.toString().length : props.template.laptopImageSeq.length.toString().length, "0");
 			console.log("IMG - ", state.isMobileView ? state.templateData.mobileImageSeq.length.toString().length : props.template.laptopImageSeq.length.toString().length);
 			setState((prevState) => ({ ...prevState, idx: currentIndex.current }));
-			requestAnimationFrame(() => updateImage(frameIndex + 1));
+			//requestAnimationFrame(() => updateImage(frameIndex + 1));
 		});
 
-		preloadImages();
+		//preloadImages();
 	}, []);
 
 	useEffect(() => {
-		preloadImages();
+		//preloadImages();
 		console.log("call preload images");
 	}, [state.isMobileView]);
 
@@ -84,7 +85,10 @@ function Slug(props) {
 	const getCurrentFrame = (idx) => {
 		//console.log(state.templateData, idx);
 		//return state.isMobileView ? state.templateData.mobileImageSeq[idx] : props.template.laptopImageSeq[idx];
-		return `/Happy_Diwali_${state.ext}${currentIndex.current}.jpg`;
+		console.log(`/Happy_Diwali_${state.ext}${currentIndex.current}.jpg`);
+		//return state.isMobileView ? `/Happy_Diwali_9_16${currentIndex.current}.jpg` : `/Happy_Diwali_16_9${currentIndex.current}.jpg`;
+		//return state.isMobileView ? `/Happy_Diwali_9_16310.jpg` : `/Happy_Diwali_16_9310.jpg`;
+		return `/ezgif-frame-${currentIndex.current}.jpg`;
 	};
 
 	const preloadImages = async () => {
@@ -105,20 +109,32 @@ function Slug(props) {
 		<div ref={canvasHolderRef} id="canvasHolder">
 			{" "}
 			{/* <Image src={`/Diwali_16_9/Happy_Diwali_16_9${currentIndex.current}.jpg`} alt="image" width={600} height={400} /> */}
-			{/* <div id="image">
-				<img
-					src={`/Happy_Diwali_${state.ext}${currentIndex.current}.jpg`}
-					alt="image"
-					width={typeof window !== "undefined" ? window.innerWidth : null}
-					height={typeof window !== "undefined" ? window.innerHeight : null}
-				/>
-			</div> */}
-			<canvas
+			{!state.isMobileView && (
+				<div id="image">
+					<img
+						src={`/ezgif-frame-${currentIndex.current}.jpg`}
+						alt="image"
+						width={typeof window !== "undefined" ? window.innerWidth : null}
+						height={typeof window !== "undefined" ? window.innerHeight : null}
+					/>
+				</div>
+			)}
+			{state.isMobileView && (
+				<div id="image" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+					<img
+						src={`/ezgif-frame-${currentIndex.current}.jpg`}
+						alt="image"
+						width={typeof window !== "undefined" ? window.innerWidth : null}
+						height={typeof window !== "undefined" ? "300px" : null}
+					/>
+				</div>
+			)}
+			{/* <canvas
 				ref={canvasRef}
 				id="hero-lightpass"
 				width={typeof window !== "undefined" ? window.innerWidth : null}
 				height={typeof window !== "undefined" ? window.innerHeight : null}
-			/>
+			/> */}
 		</div>
 	);
 }
