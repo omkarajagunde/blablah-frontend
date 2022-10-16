@@ -9,7 +9,7 @@ function Slug(props) {
 		isMobileView: false,
 		templateData: props.template,
 		frameCount: 200,
-		drawOnCanvas: true
+		drawOnCanvas: false
 	});
 	const canvasRef = useRef(null);
 	const canvasContextRef = useRef(null);
@@ -19,7 +19,6 @@ function Slug(props) {
 	const currentIndex = useRef("001");
 
 	useEffect(() => {
-		console.log(slug);
 		if (state.drawOnCanvas) {
 			canvasContextRef.current = canvasRef.current.getContext("2d");
 			imageRef.current = new window.Image();
@@ -39,7 +38,7 @@ function Slug(props) {
 			currentIndex.current = frameIndex.toString().padStart(3, "0");
 
 			if (state.drawOnCanvas) {
-				requestAnimationFrame(() => updateImage(frameIndex + 1));
+				requestAnimationFrame(() => updateImage(currentIndex.current));
 			} else {
 				if (imageRef.current) imageRef.current.src = getCurrentFrame(currentIndex.current);
 			}
