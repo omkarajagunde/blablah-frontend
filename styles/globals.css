@@ -138,17 +138,25 @@ canvas {
     position: relative;
 }
 
-@keyframes rotator {
+@keyframes fader {
     0%{
-        transform: rotate(0deg);
-    }100%{
-        transform: rotate(360deg);
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
     }
 }
 
 .profileHolder{
     margin-left: 20px !important;
-    /* animation: rotator 1200ms ease infinite; */
+    animation: fader 1200ms ease infinite;
+}
+
+.profileIcon{
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    border-radius: 50%;
 }
 
 .nameHolder{
@@ -166,8 +174,6 @@ canvas {
     width: 170px;
     transform: rotate(100deg);
 }
-
-
 
 .scrollmagic-pin-spacer{
     margin-top: -100px;
@@ -189,4 +195,13 @@ canvas {
     border-bottom: 1px solid white;
     margin-right: 10px;
     padding-left: 50%;
+}
+
+.section-3{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    font-size: 2rem;
 }

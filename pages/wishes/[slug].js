@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import SpaceIcon from "../../Resources/Space.svg";
 import ArrowDownDir from "../../Resources/ArrowDownDir.svg";
+import OmkarIcon from "../../Resources/Omkar.jpeg";
 import { InView } from "react-intersection-observer";
 import Image from "next/image";
 
@@ -124,6 +125,7 @@ function Slug(props) {
 			<div className="section-1">
 				<Image className="profileHolder" src={SpaceIcon.src} width={300} height={300} />
 				<img className="arrowDown" src={ArrowDownDir.src} />
+				<img className="profileIcon" src={OmkarIcon.src} />
 				<div className="nameHolder">
 					Omkar Ajagunde <br /> presents
 				</div>
@@ -147,6 +149,7 @@ function Slug(props) {
 					{state.drawOnCanvas && <canvas ref={canvasRef} id="img-sequencer" />}
 				</div>
 			</InView>
+			<div className="section-3">Happy Diwali</div>
 		</div>
 	);
 }
