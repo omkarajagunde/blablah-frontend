@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { gsap } from "gsap/dist/gsap";
 import { InView } from "react-intersection-observer";
+import Image from "next/image";
 
 function Slug(props) {
 	const router = useRouter();
@@ -11,6 +11,7 @@ function Slug(props) {
 		isMobileView: false,
 		templateData: props.template,
 		frameCount: 200,
+		scrollSpeed: 1,
 		drawOnCanvas: false
 	});
 	const canvasRef = useRef(null);
@@ -27,7 +28,7 @@ function Slug(props) {
 				const controller = new ScrollMagic.Controller();
 
 				new ScrollMagic.Scene({
-					duration: `${frameCount.current + 2}%`, // the scene should last for a scroll distance of 100px
+					duration: `${frameCount.current + state.scrollSpeed}%`, // the scene should last for a scroll distance of 100px
 					offset: getViewport()[1] - 50 // start this scene after scrolling for 50px
 				})
 					.setPin("#canvasHolder") // pins the element for the the scene's duration
@@ -118,9 +119,12 @@ function Slug(props) {
 
 	return (
 		<div>
-			<div className="section-1">Loading || Scrolling || Profile</div>
+			<div className="section-1">{/* <Image src={ProfileLoaderIcon.src} width={300} height={300} /> */}</div>
 			<InView as="div" onChange={(inView, entry) => setScroller(inView)}>
 				<div ref={canvasHolderRef} id="canvasHolder">
+					<div className="keepScrolling">
+						<div className="keepScrolling-text">keep scrolling</div>
+					</div>
 					{!state.drawOnCanvas && (
 						<div id="img-sequencer">
 							<img
