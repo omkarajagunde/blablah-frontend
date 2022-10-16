@@ -9,7 +9,7 @@ function Slug(props) {
 		isMobileView: false,
 		templateData: props.template,
 		frameCount: 200,
-		drawOnCanvas: true
+		drawOnCanvas: false
 	});
 	const canvasRef = useRef(null);
 	const canvasContextRef = useRef(null);
