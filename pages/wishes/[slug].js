@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import SpaceIcon from "../../Resources/Space.svg";
+import ArrowDownDir from "../../Resources/ArrowDownDir.svg";
 import { InView } from "react-intersection-observer";
 import Image from "next/image";
 
@@ -119,7 +121,13 @@ function Slug(props) {
 
 	return (
 		<div>
-			<div className="section-1">{/* <Image src={ProfileLoaderIcon.src} width={300} height={300} /> */}</div>
+			<div className="section-1">
+				<Image className="profileHolder" src={SpaceIcon.src} width={300} height={300} />
+				<img className="arrowDown" src={ArrowDownDir.src} />
+				<div className="nameHolder">
+					Omkar Ajagunde <br /> presents
+				</div>
+			</div>
 			<InView as="div" onChange={(inView, entry) => setScroller(inView)}>
 				<div ref={canvasHolderRef} id="canvasHolder">
 					<div className="keepScrolling">

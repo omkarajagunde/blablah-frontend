@@ -135,7 +135,39 @@ canvas {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
+
+@keyframes rotator {
+    0%{
+        transform: rotate(0deg);
+    }100%{
+        transform: rotate(360deg);
+    }
+}
+
+.profileHolder{
+    margin-left: 20px !important;
+    /* animation: rotator 1200ms ease infinite; */
+}
+
+.nameHolder{
+    position: absolute;
+    bottom: 96px;
+    font-size: 1.5rem;
+    /* transform: rotate(352deg); */
+    left: 40px;
+}
+
+.arrowDown{
+    position: absolute;
+    bottom: 100px;
+    right: 10px;
+    width: 170px;
+    transform: rotate(100deg);
+}
+
+
 
 .scrollmagic-pin-spacer{
     margin-top: -100px;
