@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
-import AwesomeDebouncePromise from "awesome-debounce-promise";
 import axios from "axios";
-import useUpdateEffect from "../../components/_helpers/useUpdateEffect";
-import Image from "next/image";
 
 function Slug(props) {
 	const router = useRouter();
@@ -12,7 +9,7 @@ function Slug(props) {
 		isMobileView: false,
 		templateData: props.template,
 		frameCount: 200,
-		ext: "16_9"
+		drawOnCanvas: true
 	});
 	const canvasRef = useRef(null);
 	const canvasContextRef = useRef(null);
@@ -22,30 +19,16 @@ function Slug(props) {
 	const currentIndex = useRef("001");
 
 	useEffect(() => {
-		if (window.innerWidth <= 768) {
-			setState((prevState) => ({ ...prevState, isMobileView: true, ext: "9_16" }));
-			//frameCount.current = props.template.mobileImageSeq.length;
-			frameCount.current = 200;
-		} else {
-			setState((prevState) => ({ ...prevState, isMobileView: false, ext: "16_9" }));
-			//frameCount.current = props.template.laptopImageSeq.length;
-			frameCount.current = 200;
+		console.log(slug);
+		if (state.drawOnCanvas) {
+			canvasContextRef.current = canvasRef.current.getContext("2d");
+			imageRef.current = new window.Image();
+			imageRef.current.src = getCurrentFrame("000");
+			imageRef.current.onload = function () {
+				canvasContextRef.current.imageSmoothingEnabled = false;
+				canvasContextRef.current.drawImage(imageRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+			};
 		}
-
-		window.addEventListener("resize", () => {
-			if (window.innerWidth < 768) setIsMobileViewDebouncer(true);
-			else setIsMobileViewDebouncer(false);
-		});
-
-		// canvasContextRef.current = canvasRef.current.getContext("2d");
-
-		// imageRef.current = new window.Image();
-		// console.log("imageRef.current - ", imageRef.current);
-		// imageRef.current.src = getCurrentFrame("000");
-		// imageRef.current.onload = function () {
-		// 	canvasContextRef.current.imageSmoothingEnabled = false;
-		// 	canvasContextRef.current.drawImage(imageRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
-		// };
 
 		window.addEventListener("scroll", () => {
 			const scrollTop = document.documentElement.scrollTop;
@@ -55,77 +38,47 @@ function Slug(props) {
 			if (frameIndex === 0) frameIndex += 1;
 			currentIndex.current = frameIndex.toString().padStart(3, "0");
 
-			//setState((prevState) => ({ ...prevState, idx: currentIndex.current }));
-			//requestAnimationFrame(() => updateImage(frameIndex + 1));
-			// console.log(imageRef.current);
-			if (imageRef.current) imageRef.current.src = getCurrentFrame(currentIndex.current);
+			if (state.drawOnCanvas) {
+				requestAnimationFrame(() => updateImage(frameIndex + 1));
+			} else {
+				if (imageRef.current) imageRef.current.src = getCurrentFrame(currentIndex.current);
+			}
 		});
 
 		preloadImages();
 	}, []);
 
-	useEffect(() => {
-		preloadImages();
-		console.log("call preload images");
-	}, [state.isMobileView]);
-
-	useEffect(() => {
-		console.log(state);
-	}, [state]);
-
-	// Debouncing resize event
-	const setIsMobileViewDebouncer = AwesomeDebouncePromise((flag) => {
-		if (flag) {
-			//frameCount.current = props.template.mobileImageSeq.length;
-			frameCount.current = 200;
-			setState((prevState) => ({ ...prevState, isMobileView: flag, ext: "9_16" }));
-		} else {
-			//frameCount.current = props.template.laptopImageSeq.length;
-			frameCount.current = 200;
-			setState((prevState) => ({ ...prevState, isMobileView: flag, ext: "16_9" }));
-		}
-		console.log("resize event triggered, updating local component state");
-	}, 500);
-
 	const getCurrentFrame = (idx) => {
-		//console.log(state.templateData, idx);
-		//return state.isMobileView ? state.templateData.mobileImageSeq[idx] : props.template.laptopImageSeq[idx];
-		//console.log(`/Happy_Diwali_${state.ext}${currentIndex.current}.jpg`);
-		let str = typeof window !== "undefined" && window.innerWidth <= 768 ? `/Happy_Diwali_9_16${idx}.jpg` : `/Happy_Diwali_16_9${idx}.jpg`;
+		let str = typeof window !== "undefined" && window.innerWidth <= 768 ? `/${slug}/9_16${idx}.jpg` : `/${slug}/16_9${idx}.jpg`;
 		return str;
-		//return state.isMobileView ? `/Happy_Diwali_9_16310.jpg` : `/Happy_Diwali_16_9310.jpg`;
-		//return `/ezgif-frame-${currentIndex.current}.jpg`;
 	};
 
 	const preloadImages = async () => {
 		for (let i = 1; i < frameCount.current; i++) {
 			const img = new window.Image();
 			img.src = getCurrentFrame(i.toString().padStart(3, "0"));
-			console.log("preloading image - ", getCurrentFrame(i));
 		}
 	};
 
 	const updateImage = (index) => {
-		console.log("imageRef.current - ", imageRef.current);
-		window.imageRef = imageRef.current;
 		imageRef.current.src = getCurrentFrame(index);
 		canvasContextRef.current.drawImage(imageRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
 	};
 
 	return (
 		<div ref={canvasHolderRef} id="canvasHolder">
-			{" "}
-			{/* <Image src={`/Diwali_16_9/Happy_Diwali_16_9${currentIndex.current}.jpg`} alt="image" width={600} height={400} /> */}
-			<div id="image">
-				<img
-					ref={imageRef}
-					src={getCurrentFrame(currentIndex.current)}
-					alt="image"
-					width={typeof window !== "undefined" ? window.innerWidth : 100}
-					height={typeof window !== "undefined" ? window.innerHeight : 100}
-				/>
-			</div>
-			{/* <canvas ref={canvasRef} id="hero-lightpass" /> */}
+			{!state.drawOnCanvas && (
+				<div id="image">
+					<img
+						ref={imageRef}
+						src={getCurrentFrame(currentIndex.current)}
+						alt="image"
+						width={typeof window !== "undefined" ? window.innerWidth : 100}
+						height={typeof window !== "undefined" ? window.innerHeight : 100}
+					/>
+				</div>
+			)}
+			{state.drawOnCanvas && <canvas ref={canvasRef} id="hero-lightpass" />}
 		</div>
 	);
 }
