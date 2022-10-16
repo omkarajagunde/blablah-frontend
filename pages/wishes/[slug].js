@@ -9,7 +9,7 @@ function Slug(props) {
 		isMobileView: false,
 		templateData: props.template,
 		frameCount: 200,
-		drawOnCanvas: false
+		drawOnCanvas: true
 	});
 	const canvasRef = useRef(null);
 	const canvasContextRef = useRef(null);
@@ -21,11 +21,18 @@ function Slug(props) {
 	useEffect(() => {
 		if (state.drawOnCanvas) {
 			canvasContextRef.current = canvasRef.current.getContext("2d");
+			if (window.innerWidth < 768) {
+				canvasRef.current.width = window.innerWidth + window.innerWidth;
+				canvasRef.current.height = window.innerHeight + window.innerHeight + window.innerHeight;
+			} else {
+				canvasRef.current.width = window.innerWidth + 300;
+				canvasRef.current.height = window.innerHeight + 300;
+			}
+
 			imageRef.current = new window.Image();
-			imageRef.current.src = getCurrentFrame("000");
+			imageRef.current.src = getCurrentFrame(currentIndex.current);
 			imageRef.current.onload = function () {
-				canvasContextRef.current.imageSmoothingEnabled = false;
-				canvasContextRef.current.drawImage(imageRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+				canvasContextRef.current.drawImage(imageRef.current, 0, 0);
 			};
 		}
 
@@ -52,6 +59,27 @@ function Slug(props) {
 		return str;
 	};
 
+	const getViewport = () => {
+		var viewPortWidth;
+		var viewPortHeight;
+
+		// the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
+		if (typeof window.innerWidth != "undefined") {
+			(viewPortWidth = window.innerWidth), (viewPortHeight = window.innerHeight);
+		}
+
+		// IE6 in standards compliant mode (i.e. with a valid doctype as the first line in the document)
+		else if (typeof document.documentElement != "undefined" && typeof document.documentElement.clientWidth != "undefined" && document.documentElement.clientWidth != 0) {
+			(viewPortWidth = document.documentElement.clientWidth), (viewPortHeight = document.documentElement.clientHeight);
+		}
+
+		// older versions of IE
+		else {
+			(viewPortWidth = document.getElementsByTagName("body")[0].clientWidth), (viewPortHeight = document.getElementsByTagName("body")[0].clientHeight);
+		}
+		return [viewPortWidth, viewPortHeight];
+	};
+
 	const preloadImages = async () => {
 		for (let i = 1; i < frameCount.current; i++) {
 			const img = new window.Image();
@@ -61,7 +89,7 @@ function Slug(props) {
 
 	const updateImage = (index) => {
 		imageRef.current.src = getCurrentFrame(index);
-		canvasContextRef.current.drawImage(imageRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+		canvasContextRef.current.drawImage(imageRef.current, 0, 0);
 	};
 
 	return (
