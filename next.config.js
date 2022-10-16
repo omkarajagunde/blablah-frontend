@@ -1,7 +1,6 @@
 module.exports = {
 	reactStrictMode: true,
 	images: {
-		domains: ["https://i.pinimg.com"],
 		minimumCacheTTL: 23600
 	},
 	async headers() {
@@ -12,7 +11,7 @@ module.exports = {
 				headers: [
 					{
 						key: "Cache-Control",
-						value: "public, max-age=9999999, s-maxage=9999999, stale-while-revalidate=9999999"
+						value: "public, max-age=23600, s-maxage=23600, stale-while-revalidate=23600"
 					}
 				]
 			},
@@ -23,7 +22,7 @@ module.exports = {
 					{
 						key: "Cache-Control",
 						// Instead of this value:
-						value: "public, max-age=9999999, s-maxage=9999999, stale-while-revalidate=9999999"
+						value: "public, max-age=23600, s-maxage=23600, stale-while-revalidate=23600"
 						// Cache-Control response header is `public, max-age=60` in production
 						// and `public, max-age=0, must-revalidate` in development
 					}

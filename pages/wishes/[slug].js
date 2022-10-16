@@ -43,7 +43,8 @@ function Slug(props) {
 		// console.log("imageRef.current - ", imageRef.current);
 		// imageRef.current.src = getCurrentFrame("000");
 		// imageRef.current.onload = function () {
-		// 	canvasContextRef.current.drawImage(imageRef.current, 0, 0);
+		// 	canvasContextRef.current.imageSmoothingEnabled = false;
+		// 	canvasContextRef.current.drawImage(imageRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
 		// };
 
 		window.addEventListener("scroll", () => {
@@ -58,7 +59,7 @@ function Slug(props) {
 
 			//setState((prevState) => ({ ...prevState, idx: currentIndex.current }));
 			//requestAnimationFrame(() => updateImage(frameIndex + 1));
-			console.log(imageRef.current);
+			// console.log(imageRef.current);
 			if (imageRef.current) imageRef.current.src = getCurrentFrame(currentIndex.current);
 		});
 
@@ -92,7 +93,9 @@ function Slug(props) {
 		//console.log(state.templateData, idx);
 		//return state.isMobileView ? state.templateData.mobileImageSeq[idx] : props.template.laptopImageSeq[idx];
 		//console.log(`/Happy_Diwali_${state.ext}${currentIndex.current}.jpg`);
-		return state.isMobileView ? `/Happy_Diwali_9_16${currentIndex.current}.jpg` : `/Happy_Diwali_16_9${currentIndex.current}.jpg`;
+		let str = typeof window !== "undefined" && window.innerWidth <= 768 ? `/Happy_Diwali_9_16${currentIndex.current}.jpg` : `/Happy_Diwali_16_9${currentIndex.current}.jpg`;
+		console.log("str -- ", str);
+		return str;
 		//return state.isMobileView ? `/Happy_Diwali_9_16310.jpg` : `/Happy_Diwali_16_9310.jpg`;
 		//return `/ezgif-frame-${currentIndex.current}.jpg`;
 	};
@@ -109,7 +112,7 @@ function Slug(props) {
 		console.log("imageRef.current - ", imageRef.current);
 		window.imageRef = imageRef.current;
 		imageRef.current.src = getCurrentFrame(index);
-		canvasContextRef.current.drawImage(imageRef.current, 0, 0);
+		canvasContextRef.current.drawImage(imageRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
 	};
 
 	return (
