@@ -53,9 +53,7 @@ function Slug(props) {
 			const scrollFraction = scrollTop / maxScrollTop;
 			let frameIndex = Math.min(frameCount.current - 1, Math.ceil(scrollFraction * frameCount.current));
 			if (frameIndex === 0) frameIndex += 1;
-			currentIndex.current = frameIndex
-				.toString()
-				.padStart(state.isMobileView ? state.templateData.mobileImageSeq.length.toString().length : props.template.laptopImageSeq.length.toString().length, "0");
+			currentIndex.current = frameIndex.toString().padStart(3, "0");
 
 			//setState((prevState) => ({ ...prevState, idx: currentIndex.current }));
 			//requestAnimationFrame(() => updateImage(frameIndex + 1));
@@ -93,8 +91,7 @@ function Slug(props) {
 		//console.log(state.templateData, idx);
 		//return state.isMobileView ? state.templateData.mobileImageSeq[idx] : props.template.laptopImageSeq[idx];
 		//console.log(`/Happy_Diwali_${state.ext}${currentIndex.current}.jpg`);
-		let str = typeof window !== "undefined" && window.innerWidth <= 768 ? `/Happy_Diwali_9_16${currentIndex.current}.jpg` : `/Happy_Diwali_16_9${currentIndex.current}.jpg`;
-		console.log("str -- ", str);
+		let str = typeof window !== "undefined" && window.innerWidth <= 768 ? `/Happy_Diwali_9_16${idx}.jpg` : `/Happy_Diwali_16_9${idx}.jpg`;
 		return str;
 		//return state.isMobileView ? `/Happy_Diwali_9_16310.jpg` : `/Happy_Diwali_16_9310.jpg`;
 		//return `/ezgif-frame-${currentIndex.current}.jpg`;
@@ -103,8 +100,8 @@ function Slug(props) {
 	const preloadImages = async () => {
 		for (let i = 1; i < frameCount.current; i++) {
 			const img = new window.Image();
-			img.src = getCurrentFrame(i);
-			//console.log(getCurrentFrame(i));
+			img.src = getCurrentFrame(i.toString().padStart(3, "0"));
+			console.log("preloading image - ", getCurrentFrame(i));
 		}
 	};
 
