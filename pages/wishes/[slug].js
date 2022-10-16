@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { gsap } from "gsap/dist/gsap";
+import { InView } from "react-intersection-observer";
 
 function Slug(props) {
 	const router = useRouter();
@@ -9,7 +11,7 @@ function Slug(props) {
 		isMobileView: false,
 		templateData: props.template,
 		frameCount: 200,
-		drawOnCanvas: false
+		drawOnCanvas: true
 	});
 	const canvasRef = useRef(null);
 	const canvasContextRef = useRef(null);
@@ -19,38 +21,20 @@ function Slug(props) {
 	const currentIndex = useRef("001");
 
 	useEffect(() => {
-		if (state.drawOnCanvas) {
-			canvasContextRef.current = canvasRef.current.getContext("2d");
-			if (window.innerWidth < 768) {
-				canvasRef.current.width = window.innerWidth + window.innerWidth;
-				canvasRef.current.height = window.innerHeight + window.innerHeight + window.innerHeight;
-			} else {
-				canvasRef.current.width = window.innerWidth + 300;
-				canvasRef.current.height = window.innerHeight + 300;
+		const load = async () => {
+			if (typeof window !== undefined) {
+				const ScrollMagic = (await import("scrollmagic")).default;
+				const controller = new ScrollMagic.Controller();
+
+				new ScrollMagic.Scene({
+					duration: `${frameCount.current + 2}%`, // the scene should last for a scroll distance of 100px
+					offset: getViewport()[1] - 50 // start this scene after scrolling for 50px
+				})
+					.setPin("#canvasHolder") // pins the element for the the scene's duration
+					.addTo(controller);
 			}
-
-			imageRef.current = new window.Image();
-			imageRef.current.src = getCurrentFrame(currentIndex.current);
-			imageRef.current.onload = function () {
-				canvasContextRef.current.drawImage(imageRef.current, 0, 0);
-			};
-		}
-
-		window.addEventListener("scroll", () => {
-			const scrollTop = document.documentElement.scrollTop;
-			const maxScrollTop = document.documentElement.scrollHeight - window.innerHeight;
-			const scrollFraction = scrollTop / maxScrollTop;
-			let frameIndex = Math.min(frameCount.current - 1, Math.ceil(scrollFraction * frameCount.current));
-			if (frameIndex === 0) frameIndex += 1;
-			currentIndex.current = frameIndex.toString().padStart(3, "0");
-
-			if (state.drawOnCanvas) {
-				requestAnimationFrame(() => updateImage(currentIndex.current));
-			} else {
-				if (imageRef.current) imageRef.current.src = getCurrentFrame(currentIndex.current);
-			}
-		});
-
+		};
+		load();
 		preloadImages();
 	}, []);
 
@@ -59,7 +43,54 @@ function Slug(props) {
 		return str;
 	};
 
-	const getViewport = () => {
+	const setScroller = (inView) => {
+		if (inView) {
+			if (state.drawOnCanvas) {
+				canvasContextRef.current = canvasRef.current.getContext("2d");
+				if (window.innerWidth < 768) {
+					canvasRef.current.width = window.innerWidth + window.innerWidth;
+					canvasRef.current.height = window.innerHeight + window.innerHeight + window.innerHeight;
+				} else {
+					canvasRef.current.width = window.innerWidth + 300;
+					canvasRef.current.height = window.innerHeight + 300;
+				}
+
+				imageRef.current = new window.Image();
+				imageRef.current.src = getCurrentFrame(currentIndex.current);
+				imageRef.current.onload = function () {
+					canvasContextRef.current.drawImage(imageRef.current, 0, 0);
+				};
+			}
+
+			window.addEventListener("scroll", scrollHandler);
+		} else {
+			//window.removeEventListener("scroll", scrollHandler);
+		}
+	};
+
+	const scrollHandler = () => {
+		const scrollTop = document.documentElement.scrollTop;
+		const maxScrollTop = document.documentElement.scrollHeight - window.innerHeight;
+		const scrollFraction = scrollTop / maxScrollTop;
+		let frameIndex = Math.min(frameCount.current - 1, Math.ceil(scrollFraction * frameCount.current));
+		if (frameIndex === 0) frameIndex += 1;
+		currentIndex.current = frameIndex.toString().padStart(3, "0");
+
+		if (state.drawOnCanvas) {
+			requestAnimationFrame(() => updateImage(currentIndex.current));
+		} else {
+			if (imageRef.current) imageRef.current.src = getCurrentFrame(currentIndex.current);
+		}
+	};
+
+	const preloadImages = async () => {
+		for (let i = 1; i < frameCount.current; i++) {
+			const img = new window.Image();
+			img.src = getCurrentFrame(i.toString().padStart(3, "0"));
+		}
+	};
+
+	function getViewport() {
 		var viewPortWidth;
 		var viewPortHeight;
 
@@ -78,14 +109,7 @@ function Slug(props) {
 			(viewPortWidth = document.getElementsByTagName("body")[0].clientWidth), (viewPortHeight = document.getElementsByTagName("body")[0].clientHeight);
 		}
 		return [viewPortWidth, viewPortHeight];
-	};
-
-	const preloadImages = async () => {
-		for (let i = 1; i < frameCount.current; i++) {
-			const img = new window.Image();
-			img.src = getCurrentFrame(i.toString().padStart(3, "0"));
-		}
-	};
+	}
 
 	const updateImage = (index) => {
 		imageRef.current.src = getCurrentFrame(index);
@@ -93,19 +117,24 @@ function Slug(props) {
 	};
 
 	return (
-		<div ref={canvasHolderRef} id="canvasHolder">
-			{!state.drawOnCanvas && (
-				<div id="image">
-					<img
-						ref={imageRef}
-						src={getCurrentFrame(currentIndex.current)}
-						alt="image"
-						width={typeof window !== "undefined" ? window.innerWidth : 100}
-						height={typeof window !== "undefined" ? window.innerHeight : 100}
-					/>
+		<div>
+			<div className="section-1">Loading || Scrolling || Profile</div>
+			<InView as="div" onChange={(inView, entry) => setScroller(inView)}>
+				<div ref={canvasHolderRef} id="canvasHolder">
+					{!state.drawOnCanvas && (
+						<div id="img-sequencer">
+							<img
+								ref={imageRef}
+								src={getCurrentFrame(currentIndex.current)}
+								alt="image"
+								width={typeof window !== "undefined" ? window.innerWidth : 100}
+								height={typeof window !== "undefined" ? window.innerHeight : 100}
+							/>
+						</div>
+					)}
+					{state.drawOnCanvas && <canvas ref={canvasRef} id="img-sequencer" />}
 				</div>
-			)}
-			{state.drawOnCanvas && <canvas ref={canvasRef} id="hero-lightpass" />}
+			</InView>
 		</div>
 	);
 }

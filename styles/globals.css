@@ -109,9 +109,7 @@ a {
 
 
 canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
+    
     width: 100%;
     height: 100%;
     max-width: 100%;
@@ -122,8 +120,13 @@ canvas {
     height: 200vh;
 }
 
-#image{
-    position: fixed;
+#img-sequencer{
+    /* position: fixed; */
     top: 0;
     left: 0;
+}
+
+.section-1 {
+    width: 100%;
+    height: 105vh;
 }
