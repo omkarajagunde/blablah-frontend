@@ -14,7 +14,7 @@ function Slug(props) {
 		isMobileView: false,
 		templateData: props.template,
 		frameCount: 200,
-		scrollSpeed: 1,
+		scrollSpeed: 2,
 		drawOnCanvas: false
 	});
 	const canvasRef = useRef(null);
@@ -123,7 +123,7 @@ function Slug(props) {
 	return (
 		<div>
 			<div className="section-1">
-				<Image className="profileHolder" src={SpaceIcon.src} width={300} height={300} />
+				<div className="createLink">Create your own link</div>
 				<img className="arrowDown" src={ArrowDownDir.src} />
 				<img className="profileIcon" src={OmkarIcon.src} />
 				<div className="nameHolder">
@@ -149,7 +149,9 @@ function Slug(props) {
 					{state.drawOnCanvas && <canvas ref={canvasRef} id="img-sequencer" />}
 				</div>
 			</InView>
-			<div className="section-3">Happy Diwali</div>
+			<div className="section-3">
+				<img src={`/${slug}/banner.png`} />
+			</div>
 		</div>
 	);
 }
