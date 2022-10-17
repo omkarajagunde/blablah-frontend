@@ -179,7 +179,7 @@ canvas {
 
 .nameHolder{
     position: absolute;
-    bottom: 96px;
+    bottom: 35%;
     font-size: 1.5rem;
     line-height: 1.5rem;
     /* transform: rotate(352deg); */
@@ -189,7 +189,7 @@ canvas {
 
 .arrowDown{
     position: absolute;
-    bottom: 250px;
+    bottom: 50%;
     right: 10px;
     width: 190px;
     transform: rotate(100deg);
