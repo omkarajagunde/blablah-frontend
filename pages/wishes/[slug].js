@@ -31,7 +31,8 @@ function Slug(props) {
 				const controller = new ScrollMagic.Controller();
 
 				new ScrollMagic.Scene({
-					duration: `${frameCount.current + state.scrollSpeed}%`, // the scene should last for a scroll distance of 100px
+					triggerHook: 0,
+					duration: `${frameCount.current}%`, // the scene should last for a scroll distance of 100px
 					offset: getViewport()[1] - 50 // start this scene after scrolling for 50px
 				})
 					.setPin("#canvasHolder") // pins the element for the the scene's duration
