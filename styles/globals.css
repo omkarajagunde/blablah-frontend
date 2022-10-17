@@ -196,7 +196,7 @@ canvas {
 }
 
 .scrollmagic-pin-spacer{
-    
+    margin-top: -100px;
 }
 
 .keepScrolling{
@@ -209,6 +209,7 @@ canvas {
     justify-content: center;
     align-items: center;
     height: 60px;
+    margin-top: -50px;
     
 }
 
