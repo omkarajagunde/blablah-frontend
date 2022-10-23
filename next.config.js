@@ -3,6 +3,15 @@ module.exports = {
 	images: {
 		minimumCacheTTL: 23600
 	},
+	async redirects() {
+		return [
+			{
+				source: "/",
+				destination: "/diwali",
+				permanent: true
+			}
+		];
+	},
 	async headers() {
 		return [
 			{

@@ -92,7 +92,8 @@ function diwali() {
 			phone: state.phoneNum,
 			countryCode: sessionStorage.getItem("cc") || "NA (please refer `phone` field)",
 			countryName: sessionStorage.getItem("cn") || "NA",
-			userCreatedLink: `https://${APP_NAME}.app/diwali?n=` + encodeURI(state.name)
+			userCreatedLink: `https://${APP_NAME}.app/diwali?n=` + encodeURI(state.name),
+			createdDate: new Date().toString()
 		});
 	};
 
