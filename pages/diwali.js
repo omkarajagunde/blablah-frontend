@@ -35,6 +35,18 @@ function diwali() {
 		});
 	}, []);
 
+	useEffect(() => {
+		if (state.scrollPercent > 90 && !state.audioAlreadyPlayed) {
+			let media = new Audio("/HappyDiwali.mp3");
+			setTimeout(() => media.play(), 1000);
+			setState((prevState) => ({ ...prevState, audioAlreadyPlayed: true }));
+		}
+
+		if (state.scrollPercent < 90) {
+			setState((prevState) => ({ ...prevState, audioAlreadyPlayed: false }));
+		}
+	}, [state.scrollPercent, state.audioAlreadyPlayed]);
+
 	const handleClaimLink = () => {
 		let name = prompt("Enter your name?");
 		if (name) setState((prevState) => ({ ...prevState, name: name.replaceAll(" ", "-"), isModalOpen: true }));
