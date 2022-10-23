@@ -18,8 +18,8 @@ function diwali() {
 		let params = new URLSearchParams(window.location.search);
 		params = Object.fromEntries(params);
 		console.log(params);
-		if (params.name && params.name.trim().length > 0) {
-			setState((prevState) => ({ ...prevState, name: params.name }));
+		if (params.n && params.n.trim().length > 0) {
+			setState((prevState) => ({ ...prevState, name: params.n }));
 		}
 
 		let path = document.querySelector("path");
@@ -50,7 +50,7 @@ function diwali() {
 				.share({
 					title: "Wish you happy diwali, may this diwali bring you joy and prosperity...",
 					text: "🧨 Please click below and accept my digital wish 🪔",
-					url: "https://blablah.app/diwali?=" + encodeURI(state.name)
+					url: "https://blablah.app/diwali?n=" + encodeURI(state.name)
 				})
 				.then(() => console.log("Successful share"))
 				.catch((error) => console.log("Error sharing", error));
@@ -60,7 +60,7 @@ function diwali() {
 	const handleWpShare = () => {
 		if (navigator.userAgent.match(/iPhone|Android/i)) {
 			document.write(
-				`<a id="wpShare" href="whatsapp://send?text=🧨 Please click below and accept my digital wish 🪔 - https://blablah.app/diwali?=${state.name}">Share on WhatApp</a>`
+				`<a id="wpShare" href="whatsapp://send?text=🧨 Please click below and accept my digital wish 🪔 - https://blablah.app/diwali?n=${state.name}">Share on WhatApp</a>`
 			);
 			document.getElementById("wpShare").click();
 		}
