@@ -17,6 +17,7 @@ function diwali() {
 	useEffect(() => {
 		let params = new URLSearchParams(window.location.search);
 		params = Object.fromEntries(params);
+		console.log(params);
 		if (params.name && params.name.trim().length > 0) {
 			setState((prevState) => ({ ...prevState, name: params.name }));
 		}
@@ -81,7 +82,7 @@ function diwali() {
 			</Head>
 			<HeroAnim />
 			{state.scrollPercent > 90 && (
-				<audio>
+				<audio controls>
 					<source src="HappyDiwali.mp3" type="audio/mpeg" />
 					Your browser does not support the audio tag.
 				</audio>
