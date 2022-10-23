@@ -24,7 +24,7 @@
     "lodash": "^4.17.21",
     "mic-recorder-to-mp3": "^2.2.2",
     "mongoose": "^6.3.1",
-    "nanoid": "^3.1.22",
+    "nanoid": "^3.3.4",
     "next": "12.0.10",
     "next-compose-plugins": "^2.2.1",
     "next-images": "^1.7.0",

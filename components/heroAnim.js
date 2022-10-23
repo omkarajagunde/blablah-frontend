@@ -18,9 +18,10 @@ function HeroAnim() {
 			{!isMobile && (
 				<svg preserveAspectRatio="xMidYMax meet" viewBox="0 0 1085 1031" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<path
-						d="M2 0V234H120.5L135.5 202L150.5 234L187.5 113.5L222 294L263 175L290.5 262L309.5 202L323 234L335.5 175L349.5 234H380.5V49H1082.5V583.5H2V378H187.5"
+						d="M1 0.5V231H169L182.5 224.5L196.5 231H206L211 240.5L214 231H223.5L229.5 215L235.5 229L244.5 233L247.5 237.5L255.5 134.5L268 294.5L274.5 231H290.5L307.5 213L322.5 231H379.5V49.5H1081.5V583.5H1V377.5H185.5"
 						stroke="white"
 						stroke-width="4"
+						stroke-linejoin="round"
 					/>
 				</svg>
 			)}
