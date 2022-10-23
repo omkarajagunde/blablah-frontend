@@ -19,7 +19,7 @@ function diwali() {
 		params = Object.fromEntries(params);
 		console.log(params);
 		if (params.n && params.n.trim().length > 0) {
-			setState((prevState) => ({ ...prevState, name: params.n }));
+			setState((prevState) => ({ ...prevState, name: params.n.replaceAll("-", " ") }));
 		}
 
 		let path = document.querySelector("path");
@@ -37,7 +37,7 @@ function diwali() {
 
 	const handleClaimLink = () => {
 		let name = prompt("Enter your name?");
-		setState((prevState) => ({ ...prevState, name, isModalOpen: true }));
+		if (name) setState((prevState) => ({ ...prevState, name: name.replaceAll(" ", "-"), isModalOpen: true }));
 	};
 
 	const handleCloseModal = () => {
