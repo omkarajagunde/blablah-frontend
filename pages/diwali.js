@@ -34,18 +34,6 @@ function diwali() {
 		});
 	}, []);
 
-	useEffect(() => {
-		if (state.scrollPercent > 95 && !state.audioAlreadyPlayed) {
-			let media = new Audio("/HappyDiwali.mp3");
-			media.play();
-			setState((prevState) => ({ ...prevState, audioAlreadyPlayed: true }));
-		}
-
-		if (state.scrollPercent < 10) {
-			setState((prevState) => ({ ...prevState, audioAlreadyPlayed: false }));
-		}
-	}, [state.scrollPercent, state.audioAlreadyPlayed]);
-
 	const handleClaimLink = () => {
 		let name = prompt("Enter your name?");
 		setState((prevState) => ({ ...prevState, name, isModalOpen: true }));
@@ -92,6 +80,12 @@ function diwali() {
 				<meta name="revisit-after" content="1 days" />
 			</Head>
 			<HeroAnim />
+			{state.scrollPercent > 90 && (
+				<audio>
+					<source src="HappyDiwali.mp3" type="audio/mpeg" />
+					Your browser does not support the audio tag.
+				</audio>
+			)}
 			{state.isModalOpen && state.name !== "Your name here, click below" && (
 				<div className={styles.modal}>
 					<div className={styles.modalContent}>
