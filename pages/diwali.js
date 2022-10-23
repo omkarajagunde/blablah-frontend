@@ -6,6 +6,8 @@ import { BrowserView, MobileView, isBrowser, isMobile } from "react-device-detec
 import Script from "next/script";
 import Head from "next/head";
 
+const APP_NAME = "opnr";
+
 function diwali() {
 	const [state, setState] = useState({
 		scroll: 0,
@@ -70,7 +72,7 @@ function diwali() {
 				.share({
 					title: "Wish you happy diwali, may this diwali bring you joy and prosperity...",
 					text: "🧨 Please click below and accept my digital wish 🪔",
-					url: "https://blablah.app/diwali?n=" + encodeURI(state.name)
+					url: `https://${APP_NAME}.app/diwali?n=` + encodeURI(state.name)
 				})
 				.then(() => console.log("Successful share"))
 				.catch((error) => console.log("Error sharing", error));
@@ -80,7 +82,7 @@ function diwali() {
 	const handleWpShare = () => {
 		if (navigator.userAgent.match(/iPhone|Android/i)) {
 			document.write(
-				`<a id="wpShare" href="whatsapp://send?text=🧨 Please click below and accept my digital wish 🪔 - https://blablah.app/diwali?n=${state.name}">Share on WhatApp</a>`
+				`<a id="wpShare" href="whatsapp://send?text=🧨 Please click below and accept my digital wish 🪔 - https://${APP_NAME}.app/diwali?n=${state.name}">Share on WhatApp</a>`
 			);
 			document.getElementById("wpShare").click();
 		}
@@ -122,7 +124,7 @@ function diwali() {
 								</b>
 							</div>
 						</div>
-						<div className={styles.linkContainer}>{`https://blablah.app/diwali?name=${state.name}`}</div>
+						<div className={styles.linkContainer}>{`https://${APP_NAME}.app/diwali?name=${state.name}`}</div>
 						<div className={!isMobile ? styles.displaySpaceBetween : ""}>
 							<button className={styles.share} onClick={handleShare}>
 								Click to share
@@ -143,7 +145,7 @@ function diwali() {
 				</div>
 			)}
 			<div className={styles.heroSection}>
-				<div className={styles.logo}>Blablah</div>
+				<div className={styles.logo}>Opnr</div>
 
 				<div className={styles.gif}>
 					{state.scrollPercent > 90 && (
