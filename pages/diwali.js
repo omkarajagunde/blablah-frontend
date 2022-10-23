@@ -59,7 +59,10 @@ function diwali() {
 
 	const handleWpShare = () => {
 		if (navigator.userAgent.match(/iPhone|Android/i)) {
-			document.write(`<a href="whatsapp://send?text=🧨 Please click below and accept my digital wish 🪔 - https://blablah.app/diwali?=${state.name}">Share on WhatApp</a>`);
+			document.write(
+				`<a id="wpShare" href="whatsapp://send?text=🧨 Please click below and accept my digital wish 🪔 - https://blablah.app/diwali?=${state.name}">Share on WhatApp</a>`
+			);
+			document.getElementById("wpShare").click();
 		}
 	};
 
