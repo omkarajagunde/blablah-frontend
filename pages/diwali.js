@@ -115,6 +115,12 @@ function diwali() {
 		}
 	};
 
+	const convertToSlug = (Text) => {
+		return Text.toLowerCase()
+			.replace(/ /g, "-")
+			.replace(/[^\w-]+/g, "");
+	};
+
 	const getName = () => {
 		let name = prompt("Enter your name?");
 		if (name && name.trim().length < 4) {
@@ -123,7 +129,7 @@ function diwali() {
 				getName();
 			}
 		} else {
-			if (name) setState((prevState) => ({ ...prevState, name: name, isNameValid: true, isModalOpen: true }));
+			if (name) setState((prevState) => ({ ...prevState, name: convertToSlug(name), isNameValid: true, isModalOpen: true }));
 		}
 	};
 
