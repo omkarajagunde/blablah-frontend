@@ -85,7 +85,7 @@ function diwali() {
 			</Head>
 			<HeroAnim />
 			{state.scrollPercent > 90 && (
-				<audio controls src="/HappyDiwali.mp">
+				<audio controls src="/HappyDiwali.mp3">
 					Your browser does not support the
 					<code>audio</code> element.
 				</audio>
