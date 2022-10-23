@@ -102,7 +102,7 @@ function diwali() {
 							<button className={styles.share} onClick={handleShare}>
 								Click to share
 							</button>
-							{state.isMobile && (
+							{isMobile && (
 								<button className={styles.share} onClick={handleWpShare}>
 									Whatsapp share
 								</button>
