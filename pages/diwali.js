@@ -60,7 +60,7 @@ function diwali() {
 			navigator
 				.share({
 					title: "Wish you happy diwali, may this diwali bring you joy and prosperity...",
-					text: "🧨🧨🧨 Please click below and accept my digital wish 🪔🪔🪔",
+					text: "🧨 Please click below and accept my digital wish 🪔",
 					url: "https://blablah.app/diwali?=" + state.name
 				})
 				.then(() => console.log("Successful share"))
@@ -78,7 +78,7 @@ function diwali() {
 				<meta name="theme-color" content="#474663" />
 				<meta name="title" content="Digital Happy Diwali Wish" />
 				<meta name="description" content="Wish you happy diwali, may this diwali bring you joy and prosperity..." />
-				<meta name="image" content={"/HappDiwaliSVG.svg"} />
+				<meta name="image" content={"/diwaliImage.png"} />
 				<meta name="keywords" content={"Happy Diwali gif, Happy diwali greeting, Happy diwali link generator, happy diwali images"} />
 				<meta name="robots" content="index, follow" />
 				<meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
