@@ -168,7 +168,7 @@ function diwali() {
 		<div className={styles.container}>
 			<Head>
 				<title>Happy Diwali 2022</title>
-				<link rel="icon" href="/favicon.ico" />
+				<link rel="icon" href="/opnr.ico" />
 
 				<meta name="theme-color" content="#474663" />
 				<meta name="title" content="Digital Happy Diwali Wish" />
