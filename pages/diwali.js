@@ -33,6 +33,14 @@ function diwali() {
 			path.style.strokeDashoffset = pathLength - drawLength;
 			setState((prevState) => ({ ...prevState, scroll: document.documentElement.scrollTop, scrollPercent: scrollPercent * 100 }));
 		});
+
+		window.dataLayer = window.dataLayer || [];
+		function gtag() {
+			dataLayer.push(arguments);
+		}
+		gtag("js", new Date());
+
+		gtag("config", "G-Y56FZ0BQNJ");
 	}, []);
 
 	useEffect(() => {
@@ -95,6 +103,7 @@ function diwali() {
 				<meta name="language" content="English" />
 				<meta name="revisit-after" content="1 days" />
 			</Head>
+			<Script src="https://www.googletagmanager.com/gtag/js?id=G-Y56FZ0BQNJ" />
 			<HeroAnim />
 			{state.scrollPercent > 90 && (
 				<audio controls src="/HappyDiwali.mp3">
