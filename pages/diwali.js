@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import styles from "../../styles/Diwali.module.scss";
-import HeroAnim from "../../components/heroAnim";
+import styles from "../styles/Diwali.module.scss";
+import HeroAnim from "../components/heroAnim";
 import Image from "next/image";
 import { BrowserView, MobileView, isBrowser, isMobile } from "react-device-detect";
 
 function diwali() {
-	const audioAlreadyPlayed = useRef(false);
 	const [state, setState] = useState({
 		scroll: 0,
 		audioAlreadyPlayed: false,
