@@ -211,12 +211,6 @@ function diwali() {
 									Whatsapp share
 								</button>
 							)}
-							<div className={styles.attribution}>
-								Created by{" "}
-								<a target={"_blank"} href={"https://omkarajagunde.web.app"}>
-									<b>@omkarajagunde</b>
-								</a>
-							</div>
 						</div>
 					</div>
 				</div>
