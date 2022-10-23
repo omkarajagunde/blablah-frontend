@@ -50,7 +50,7 @@ function diwali() {
 				.share({
 					title: "Wish you happy diwali, may this diwali bring you joy and prosperity...",
 					text: "🧨 Please click below and accept my digital wish 🪔",
-					url: "https://blablah.app/diwali?=" + state.name
+					url: "https://blablah.app/diwali?=" + encodeURI(state.name)
 				})
 				.then(() => console.log("Successful share"))
 				.catch((error) => console.log("Error sharing", error));
