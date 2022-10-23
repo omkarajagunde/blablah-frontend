@@ -3,6 +3,8 @@ import styles from "../styles/Diwali.module.scss";
 import HeroAnim from "../components/heroAnim";
 import Image from "next/image";
 import { BrowserView, MobileView, isBrowser, isMobile } from "react-device-detect";
+import Script from "next/script";
+import Head from "next/head";
 
 function diwali() {
 	const [state, setState] = useState({
@@ -57,7 +59,7 @@ function diwali() {
 			navigator
 				.share({
 					title: "Wish you happy diwali, may this diwali bring you joy and prosperity...",
-					text: "Please click the url below and accept my digital wish",
+					text: "🧨🧨🧨 Please click below and accept my digital wish 🪔🪔🪔",
 					url: "https://blablah.app/diwali?=" + state.name
 				})
 				.then(() => console.log("Successful share"))
@@ -67,6 +69,21 @@ function diwali() {
 
 	return (
 		<div className={styles.container}>
+			<Script data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEB_ID} strategy="lazyOnload" src={process.env.NEXT_PUBLIC_ANALYTICS_URL} />
+			<Head>
+				<title>Happy Diwali 2022</title>
+				<link rel="icon" href="/favicon.ico" />
+
+				<meta name="theme-color" content="#474663" />
+				<meta name="title" content="Digital Happy Diwali Wish" />
+				<meta name="description" content="Wish you happy diwali, may this diwali bring you joy and prosperity..." />
+				<meta name="image" content={"/HappDiwaliSVG.svg"} />
+				<meta name="keywords" content={"Happy Diwali gif, Happy diwali greeting, Happy diwali link generator, happy diwali images"} />
+				<meta name="robots" content="index, follow" />
+				<meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
+				<meta name="language" content="English" />
+				<meta name="revisit-after" content="1 days" />
+			</Head>
 			<HeroAnim />
 			{state.isModalOpen && state.name !== "Your name here, click below" && (
 				<div className={styles.modal}>
