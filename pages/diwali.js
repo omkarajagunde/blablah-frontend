@@ -36,7 +36,8 @@ function diwali() {
 
 	useEffect(() => {
 		if (state.scrollPercent > 95 && !state.audioAlreadyPlayed) {
-			new Audio("/HappyDiwali.mp3").play();
+			let media = new Audio("/HappyDiwali.mp3");
+			media.play();
 			setState((prevState) => ({ ...prevState, audioAlreadyPlayed: true }));
 		}
 
