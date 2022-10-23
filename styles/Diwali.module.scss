@@ -226,4 +226,21 @@
         width: 100%;
         margin-bottom: 10px;
     }
+
+    .claimYourLink {
+        all: unset;
+        background-color: #8A3EFC;
+        margin-top: 10px;
+        font-size: .8rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 150px;
+        height: 30px;
+        border-radius: 2px;
+
+        &:hover {
+            opacity: 0.6;
+        }
+    }
 }
