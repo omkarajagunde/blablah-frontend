@@ -68,6 +68,12 @@ function diwali() {
 		}
 	};
 
+	const handleWpShare = () => {
+		if (navigator.userAgent.match(/iPhone|Android/i)) {
+			document.write(`<a href="whatsapp://send?text=🧨 Please click below and accept my digital wish 🪔 - https://blablah.app/diwali?=${state.name}">Share on WhatApp</a>`);
+		}
+	};
+
 	return (
 		<div className={styles.container}>
 			<Script data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEB_ID} strategy="lazyOnload" src={process.env.NEXT_PUBLIC_ANALYTICS_URL} />
@@ -102,6 +108,11 @@ function diwali() {
 							<button className={styles.share} onClick={handleShare}>
 								Click to share
 							</button>
+							{state.isMobile && (
+								<button className={styles.share} onClick={handleWpShare}>
+									Whatsapp share
+								</button>
+							)}
 							<div className={styles.attribution}>
 								Created by{" "}
 								<a target={"_blank"} href={"https://omkarajagunde.web.app"}>
