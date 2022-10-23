@@ -1,0 +1,226 @@
+.heroSection{
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 2000px;
+}
+
+.container{
+    background:  url(../public/DiwaliBack.png) no-repeat fixed content-box;
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 700vh;
+}
+
+.logo{
+    top: 50px;
+    margin: 0rem 12rem;
+    position: fixed;
+    color: white;
+    font-size: 1.7rem;
+    font-weight: 500;
+}
+
+.path{
+    margin: 0rem 12rem;
+    top: 72px;
+    position: fixed;
+    left: 4px;
+    svg{
+        display: inline-block;
+        min-width: 1050px;
+        min-height: 550px;
+    }
+}
+
+.username{
+    top: 29rem;
+    position: fixed;
+    font-size: 1.8rem;
+    left: 15rem;
+    font-weight: 500;
+    color: white;
+    line-height: 2rem;
+}
+
+.claimYourLink{
+    all: unset;
+    background-color: #8A3EFC;
+    margin-top: 20px;
+    font-size: .9rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 50px;
+    border-radius: 4px;
+    &:hover{
+        opacity: 0.6;
+    }
+}
+
+.subtitle{
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+.startScroll{
+    color: white;
+    font-size: 8rem;
+    font-style: italic;
+    border-left: 5px solid white;
+    padding-left: 50px;
+    position: fixed;
+    left: 13rem;
+    line-height: 7rem;
+    bottom: 10rem;
+}
+
+.gif{
+    position: relative;
+}
+
+.iframe{
+    position: fixed;
+    top: 10rem;
+    left: 38rem;
+    width: 600px;
+    height: 470px;
+}
+
+
+.modal{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    backdrop-filter: blur(7px);
+    top: 0px;
+    left: 0px;
+
+}
+
+@keyframes fadeIn {
+    0% {
+        margin-top: -100%;
+        opacity: 0;
+    }
+
+    100% {
+        margin-top: 0%;
+        opacity: 1;
+    }
+}
+
+.modalContent{
+    background: white;
+    height: 200px;
+    position: fixed;
+    width: 80%;
+    margin: auto;
+    left: 10%;
+    padding: 20px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    box-shadow: 0px 4px 34px rgba(0, 0, 0, 0.95);
+    animation: fadeIn 3s ease;
+}
+
+.linkContainer{
+    padding: 10px;
+    background: #303338;
+    color: white;
+    margin-top: 10px;
+}
+
+.share{
+    all: unset;
+    background-color: #8A3EFC;
+    margin-top: 20px;
+    font-size: .9rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 50px;
+    border-radius: 4px;
+    color: white;
+    &:hover {
+        opacity: 0.6;
+    }
+}
+
+.displaySpaceBetween{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media screen and (max-width: 768px){
+    .logo {
+        top: 60px;
+        margin: 0rem 1rem;
+    }
+
+    .startScroll {
+        all: unset;
+        font-size: 3rem;
+        font-style: italic;
+        border-left: 5px solid white;
+        padding-left: 20px;
+        position: fixed;
+        left: 2rem;
+        top: 16rem;
+        line-height: 3rem;
+        color: white;
+    }
+
+    .path {
+        margin: 0rem 1rem;
+        top: 90px;
+        position: fixed;
+        left: 4px;
+
+        svg {
+            display: inline-block;
+            min-width: 90vw;
+        }
+    }
+
+    .iframe {
+        position: fixed;
+        top: 10rem;
+        left: 0px;
+        width: 100vw;
+    }
+
+
+    .username {
+        top: unset;
+        bottom: 1.5rem;
+        font-size: 1.2rem;
+        left: 3rem;
+        line-height: 1.4rem;
+        width: 50vw;
+    }
+
+    .gif {
+        position: relative;;
+    }
+
+    .modalContent {
+        background: white;
+        height: max-content;
+        position: fixed;
+        width: 90%;
+        margin: auto;
+        left: 5%;
+        padding: 10px;
+        
+    }
+
+    .share{
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}

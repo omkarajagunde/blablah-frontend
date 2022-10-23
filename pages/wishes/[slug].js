@@ -4,8 +4,10 @@ import axios from "axios";
 import SpaceIcon from "../../Resources/Space.svg";
 import ArrowDownDir from "../../Resources/ArrowDownDir.svg";
 import OmkarIcon from "../../Resources/Omkar.jpeg";
+import styles from "../../styles/Diwali.module.scss";
 import { InView } from "react-intersection-observer";
 import Image from "next/image";
+import HeroAnim from "../../components/heroAnim";
 
 function Slug(props) {
 	const router = useRouter();
@@ -37,10 +39,28 @@ function Slug(props) {
 				})
 					.setPin("#canvasHolder") // pins the element for the the scene's duration
 					.addTo(controller);
+
+				new ScrollMagic.Scene({
+					triggerHook: 0,
+					duration: `${500}vh`, // the scene should last for a scroll distance of 100px
+					offset: 0 // start this scene after scrolling for 50px
+				})
+					.setPin("#heroSection") // pins the element for the the scene's duration
+					.addTo(controller);
 			}
 		};
 		load();
 		preloadImages();
+		let path = document.querySelector("path");
+		let pathLength = path.getTotalLength();
+		path.style.strokeDasharray = pathLength + " " + pathLength;
+		path.style.strokeDashoffset = pathLength;
+
+		window.addEventListener("scroll", () => {
+			var scrollPercent = (document.documentElement.scrollTop + document.body.scrollTop) / (document.documentElement.scrollHeight - document.documentElement.clientHeight);
+			var drawLength = pathLength * scrollPercent;
+			path.style.strokeDashoffset = pathLength - drawLength;
+		});
 	}, []);
 
 	const getCurrentFrame = (idx) => {
@@ -123,19 +143,17 @@ function Slug(props) {
 
 	return (
 		<div>
-			<div className="section-1">
-				<div className="createLink">Create your own link</div>
-				<img className="arrowDown" src={ArrowDownDir.src} />
-				<img className="profileIcon" src={OmkarIcon.src} />
-				<div className="nameHolder">
-					Omkar Ajagunde <br /> presents
+			<div className={styles.heroSection} id="heroSection">
+				<div className={styles.logo}>Blablah</div>
+				<HeroAnim className={styles.path} />
+				<div className={styles.username}>
+					Omkar <br /> Ajagunde
+					<br />
+					<div className={styles.subtitle}>presents</div>
 				</div>
 			</div>
 			<InView as="div" onChange={(inView, entry) => setScroller(inView)}>
 				<div ref={canvasHolderRef} id="canvasHolder">
-					<div className="keepScrolling">
-						<div className="keepScrolling-text">keep scrolling</div>
-					</div>
 					{!state.drawOnCanvas && (
 						<div id="img-sequencer">
 							<img
