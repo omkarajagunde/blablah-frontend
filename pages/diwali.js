@@ -85,9 +85,9 @@ function diwali() {
 			</Head>
 			<HeroAnim />
 			{state.scrollPercent > 90 && (
-				<audio controls>
-					<source src="HappyDiwali.mp3" type="audio/mpeg" />
-					Your browser does not support the audio tag.
+				<audio controls src="/HappyDiwali.mp">
+					Your browser does not support the
+					<code>audio</code> element.
 				</audio>
 			)}
 			{state.isModalOpen && state.name !== "Your name here, click below" && (
