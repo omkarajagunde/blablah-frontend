@@ -24,31 +24,30 @@ function IdentityTab() {
 		genderFlagMessage: false,
 		saveOrEditFlagFullname: LiveChatSelector.identityObj.fullname !== "",
 		saveOrEditFlagAge: LiveChatSelector.identityObj.age !== "",
-		identityObj: LiveChatSelector.identityObj,
+		identityObj: LiveChatSelector.identityObj
 	});
 
 	useEffect(() => {
-
 		if (LiveChatSelector.identityObj?.gender !== "any") {
 			setState((prevState) => ({
 				...prevState,
 				genderFlag: LiveChatSelector.identityObj?.gender !== "any",
 				isUserImageCaptured: false,
-				genderFlagMessage: `Your gender is ${LiveChatSelector.identityObj?.gender}`,
+				genderFlagMessage: `Your gender is ${LiveChatSelector.identityObj?.gender}`
 			}));
 		}
 	}, []);
 
 	useUpdateEffect(() => {
 		if (LiveChatSelector.detectedGenderStatus === 200) {
-			if (window.umami) window.umam("Gender detected successfully")
+			// TODO TRACKING EVENT : Gender detected successfully
 			dispatch(ClearLiveChatLogs());
 			setState((prevState) => ({
 				...prevState,
 				genderFlagMessage: `Your gender is ${LiveChatSelector.identityObj?.gender}`,
 				identityObj: { ...state.identityObj, gender: LiveChatSelector.identityObj?.gender },
 				isUserImageCaptured: false,
-				genderFlag: true,
+				genderFlag: true
 			}));
 			localStorage.setItem("gender", LiveChatSelector.identityObj?.gender);
 		}
@@ -61,7 +60,7 @@ function IdentityTab() {
 
 	const handleVerifyIndetity = (eve) => {
 		// Click event
-		if (window.umami) window.umam("Gender detection tried")
+		// TODO TRACKING EVENT : Gender detection tried
 		setState((prevState) => ({ ...prevState, isUserImageCaptured: true }));
 		new Compressor(eve.target.files[0], {
 			quality: 0.4,
@@ -79,7 +78,7 @@ function IdentityTab() {
 			},
 			error(err) {
 				console.log(err.message);
-			},
+			}
 		});
 	};
 
@@ -96,7 +95,7 @@ function IdentityTab() {
 
 	const handleAddName = (eve) => {
 		// Click event
-		if (window.umami) window.umam("Name typed")
+		// TODO TRACKING EVENT : Name typed
 		let elem = document.getElementById("NameInput");
 		if (elem.value.trim().length > 0) {
 			dispatch(HandleIdentityChange(state.identityObj));
@@ -113,7 +112,7 @@ function IdentityTab() {
 
 	const handleAddAge = (eve) => {
 		// Click event
-		if (window.umami) window.umam("Age added")
+		// TODO TRACKING EVENT : Age added
 		let elem = document.getElementById("NameInput");
 		if (elem.value.trim().length > 0) {
 			dispatch(HandleIdentityChange(state.identityObj));

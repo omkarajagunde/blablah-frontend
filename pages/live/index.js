@@ -68,8 +68,7 @@ function Index() {
 		tabIndex: 0,
 		commonInterestsArray: [],
 		smartRepliesArray: ["", "", "", ""],
-		restrictedModeKeywordsArray:
-			typeof window !== "undefined" ? JSON.parse(localStorage.getItem("restrictedModeNewKeywordsArray")) || [] : [],
+		restrictedModeKeywordsArray: typeof window !== "undefined" ? JSON.parse(localStorage.getItem("restrictedModeNewKeywordsArray")) || [] : [],
 		restrictedModeNewKeywordsArray: [],
 		peerNegativeKeywordsArray: [],
 		chatMessagesArray: [],
@@ -193,7 +192,7 @@ function Index() {
 		}
 
 		if (eve === SEND_MESSAGE) {
-			if (window.umami) window.umami("INFO Message Sent");
+			// TODO TRACKING EVENT : INFO Message Sent
 			socketRef.current.emit(SEND_MESSAGE, {
 				socketId: socketRef.current.id,
 				action: SEND_MESSAGE,
@@ -259,7 +258,7 @@ function Index() {
 		});
 
 		socketRef.current.on(CLIENT_INTRODUCTION, (data) => {
-			if (window.umami) window.umami("INFO Total Sessions Started");
+			// TODO TRACKING EVENT : INFO Sessions Started
 			console.log(data);
 
 			let time = new Date();
@@ -267,11 +266,9 @@ function Index() {
 			let mainMsg = "";
 			let subMsg = "";
 
-			if (data.data.intersectedInterests.length > 0)
-				mainMsg = `Your interests \n` + `${data.data.intersectedInterests.map((interest) => `${interest}`)}\n`;
+			if (data.data.intersectedInterests.length > 0) mainMsg = `Your interests \n` + `${data.data.intersectedInterests.map((interest) => `${interest}`)}\n`;
 
-			if (data.data.genderInterestFound && data.data.myName)
-				subMsg = ` connected with ${data.data.myName}, ${data.data.myGender}`;
+			if (data.data.genderInterestFound && data.data.myName) subMsg = ` connected with ${data.data.myName}, ${data.data.myGender}`;
 			else if (data.data.genderInterestFound) subMsg = ` connected with ${data.data.myGender}`;
 			else if (data.data.myName) subMsg = ` connected with ${data.data.myName}`;
 
@@ -310,7 +307,7 @@ function Index() {
 		});
 
 		socketRef.current.on(SEND_MESSAGE, (data) => {
-			if (window.umami) window.umami("INFO Message Received");
+			// TODO TRACKING EVENT : INFO Message Received
 			if (window.navigator) window.navigator.vibrate(400);
 			setState((prevState) => ({ ...prevState, chatMessagesArray: [...prevState.chatMessagesArray, data.chatData] }));
 		});
@@ -549,8 +546,7 @@ function Index() {
 						};
 
 						console.log("Audio message size in mb : ", Buffer.byteLength(JSON.stringify(sendMsgObject)) / 1e6);
-						if (Buffer.byteLength(JSON.stringify(sendMsgObject)) / 1e6 >= 6)
-							alert("Max Audio length can be 2 mins, Try with audio message less than 2 mins");
+						if (Buffer.byteLength(JSON.stringify(sendMsgObject)) / 1e6 >= 6) alert("Max Audio length can be 2 mins, Try with audio message less than 2 mins");
 						else {
 							// Send Audio message
 							handleSocketEvent(SEND_MESSAGE, sendMsgObject);
@@ -567,7 +563,7 @@ function Index() {
 				})
 				.catch((e) => {
 					// Click event
-					if (window.umami) window.umami("Failed to send message");
+					// TODO TRACKING EVENT : Failed to send message
 					alert("We could not send your message");
 					console.log(e);
 					setState((prevState) => ({ ...prevState, isMicBlocked: false, isMicRecording: false, isMicPressed: false }));
@@ -600,7 +596,7 @@ function Index() {
 
 	const handleSmartReplyClick = (reply) => {
 		// Click event
-		if (window.umami) window.umami("Smart Reply Click");
+		// TODO TRACKING EVENT : Smart Reply Click
 		setState((prevState) => ({ ...prevState, expandSmartReply: false }));
 		let chatArray = [...state.chatMessagesArray];
 		chatArray.map((msg, index) => {
@@ -664,7 +660,7 @@ function Index() {
 		if (state.isNewSessionStatus === "New") {
 			handleSocketEvent(CLIENT_INTRODUCTION);
 			// Click event
-			if (window.umami) window.umami("Start new session Click");
+			// TODO TRACKING EVENT : Start new session Click
 		}
 		if (state.isNewSessionStatus === "Skip") setState((prevState) => ({ ...prevState, isNewSessionStatus: "Really" }));
 		if (state.isNewSessionStatus === "Really") {
@@ -675,15 +671,14 @@ function Index() {
 
 	const handleTabChange = (index) => {
 		// Click event
-		if (window.umami) window.umami("Tab Change Event");
+		// TODO TRACKING EVENT : Tab Change Event
 		setState((prevState) => ({ ...prevState, tabIndex: index }));
 	};
 
 	const handleSettingsTabChange = (index) => {
 		let myGender = LiveChatSelector.identityObj?.gender;
 		console.log(myGender);
-		if (myGender !== "any")
-			setState((prevState) => ({ ...prevState, settingsTabIndex: index, isMyGenderSpecified: true }));
+		if (myGender !== "any") setState((prevState) => ({ ...prevState, settingsTabIndex: index, isMyGenderSpecified: true }));
 		else setState((prevState) => ({ ...prevState, isMyGenderSpecified: false }));
 	};
 
@@ -708,7 +703,7 @@ function Index() {
 
 	const handleConfirmImage = (e) => {
 		// Click event
-		if (window.umami) window.umami("Image Share Event");
+		// TODO TRACKING EVENT : Image Share Event
 		setState((prevState) => ({ ...prevState, imageFile: e, showImageDisapperModal: true }));
 	};
 
@@ -767,7 +762,7 @@ function Index() {
 
 	const handleAdCampaignClick = () => {
 		// Click event
-		if (window.umami) window.umami("Contextual Ad Click");
+		// TODO TRACKING EVENT : Contextual Ad Click
 		window.open("/ads", "_blank");
 	};
 
@@ -796,18 +791,10 @@ function Index() {
 					>
 						<div
 							style={{ animation: msg.newlyAdded ? "newMessage 500ms ease-in-out" : null }}
-							className={
-								msg.type === "received"
-									? styles.chatContainer__receivedMsgContainer
-									: styles.chatContainer__sentMsgContainer
-							}
+							className={msg.type === "received" ? styles.chatContainer__receivedMsgContainer : styles.chatContainer__sentMsgContainer}
 						>
 							<div className={styles.chatContainer__receivedMsg}>
-								<audio
-									controls
-									controlsList="nodownload novolume nofullscreen noremoteplayback noplaybackrate"
-									src={msg.msg}
-								></audio>
+								<audio controls controlsList="nodownload novolume nofullscreen noremoteplayback noplaybackrate" src={msg.msg}></audio>
 							</div>
 							<div className={styles.chatContainer__receivedMsgName}>
 								<b>{msg.senderName}</b> <br /> {msg.timeStamp}
@@ -820,10 +807,7 @@ function Index() {
 			if (msg.isMetadata) {
 				return (
 					<div className={styles.chatContainer__msgContainer} id="chatMessage" key={`${msg.msg}-${index}`}>
-						<div
-							style={{ animation: msg.newlyAdded ? "newMessage 500ms ease-in-out" : null }}
-							className={styles.chatContainer__metadata}
-						>
+						<div style={{ animation: msg.newlyAdded ? "newMessage 500ms ease-in-out" : null }} className={styles.chatContainer__metadata}>
 							{msg.msg}
 						</div>
 					</div>
@@ -839,15 +823,9 @@ function Index() {
 				>
 					<div
 						style={{ animation: msg.newlyAdded ? "newMessage 500ms ease-in-out" : null }}
-						className={
-							msg.type === "received"
-								? styles.chatContainer__receivedMsgContainer
-								: styles.chatContainer__sentMsgContainer
-						}
+						className={msg.type === "received" ? styles.chatContainer__receivedMsgContainer : styles.chatContainer__sentMsgContainer}
 					>
-						<div className={styles.chatContainer__receivedMsg}>
-							{!msg.retracted ? msg.msg : "Oops some keyword in message is not allowed, hence message was retracted"}
-						</div>
+						<div className={styles.chatContainer__receivedMsg}>{!msg.retracted ? msg.msg : "Oops some keyword in message is not allowed, hence message was retracted"}</div>
 						<div className={styles.chatContainer__receivedMsgName}>
 							{!msg.retracted && (
 								<>
@@ -889,10 +867,7 @@ function Index() {
 						)}
 					</div>
 
-					<div
-						style={{ opacity: !state.isMyGenderSpecified ? "0.4" : "1" }}
-						className={styles.chatContainer__settingsTabView}
-					>
+					<div style={{ opacity: !state.isMyGenderSpecified ? "0.4" : "1" }} className={styles.chatContainer__settingsTabView}>
 						{state.settingsTabViewOptions.map((tab, index) => (
 							<div
 								style={{
@@ -919,9 +894,7 @@ function Index() {
 					</div>
 
 					<div className={styles.chatContainer__settingsTitle}>Add Common Interests</div>
-					<div className={styles.chatContainer__settingsSubTitle}>
-						Add and press Enter e.g. Fitness, workout, science
-					</div>
+					<div className={styles.chatContainer__settingsSubTitle}>Add and press Enter e.g. Fitness, workout, science</div>
 					<div className={styles.chatContainer__commonInterestsContainer}>
 						{state.commonInterestsArray.map((interest, index) => (
 							<div key={`${interest}-${index}`}>
@@ -967,29 +940,17 @@ function Index() {
 	// rendering the mobile view
 	const renderMobileView = () => {
 		return (
-			<div
-				className={styles.chatContainer}
-				id="chatContainer"
-				style={{ overflowY: state.isRulesViewOpen ? "hidden" : null }}
-			>
+			<div className={styles.chatContainer} id="chatContainer" style={{ overflowY: state.isRulesViewOpen ? "hidden" : null }}>
 				{state.isRulesViewOpen && (
 					<div className={styles.chatContainer__rulesView} onClick={handleToggleRules}>
-						<div
-							className={styles.chatContainer__rulesUpArrow}
-							style={{ marginLeft: isMobileView ? "66%" : "71%" }}
-						></div>
+						<div className={styles.chatContainer__rulesUpArrow} style={{ marginLeft: isMobileView ? "66%" : "71%" }}></div>
 						<div className={styles.chatContainer__rulesScreen} onClick={handleStopRulesScreenPropagation}>
 							<div className={styles.chatContainer__rulesTitle}>
-								This is a <b>restricted mode</b> where the following words can’t be used while chatting (click to
-								remove)
+								This is a <b>restricted mode</b> where the following words can’t be used while chatting (click to remove)
 							</div>
 							<div className={styles.chatContainer__keywordContainer}>
 								{state.restrictedModeKeywordsArray.map((keyword, index) => (
-									<div
-										key={`${keyword}-${index}`}
-										onClick={() => handleAddNewKeywordBackToRestrictedMode(index)}
-										className={styles.chatContainer__keyword}
-									>
+									<div key={`${keyword}-${index}`} onClick={() => handleAddNewKeywordBackToRestrictedMode(index)} className={styles.chatContainer__keyword}>
 										{keyword}
 									</div>
 								))}
@@ -997,10 +958,7 @@ function Index() {
 							<div className={styles.chatContainer__rulesTitle} style={{ marginTop: "20px" }}>
 								You can add more <b>keywords</b> to restricted mode from below (click to add)
 							</div>
-							<div
-								className={styles.chatContainer__keywordContainer}
-								style={{ overflowX: "scroll", flexWrap: "nowrap" }}
-							>
+							<div className={styles.chatContainer__keywordContainer} style={{ overflowX: "scroll", flexWrap: "nowrap" }}>
 								{state.restrictedModeNewKeywordsArray.map((keyword, index) => (
 									<div
 										key={`${keyword}-${index}`}
@@ -1022,12 +980,7 @@ function Index() {
 				)}
 				<div className={styles.chatContainer__topbar}>
 					<div className={styles.chatContainer__siteLogo}>
-						<Image
-							src={SiteLogoWhite.src}
-							alt="blabla-siteLogo.png"
-							width={state.isMobileView ? 140 : 200}
-							height={state.isMobileView ? 40 : 80}
-						/>
+						<Image src={SiteLogoWhite.src} alt="blabla-siteLogo.png" width={state.isMobileView ? 140 : 200} height={state.isMobileView ? 40 : 80} />
 					</div>
 					<div className={styles.chatContainer__chatOptions}>
 						<button onClick={handleToggleRules}>Rules</button>
@@ -1114,9 +1067,7 @@ function Index() {
 							</div>
 							<div
 								style={{ margin: "5px" }}
-								onClick={() =>
-									setState((prevState) => ({ ...prevState, showImageDisapperModal: false, imageFile: null }))
-								}
+								onClick={() => setState((prevState) => ({ ...prevState, showImageDisapperModal: false, imageFile: null }))}
 								className={styles.chatContainer__startSession}
 							>
 								<button>Cancel</button>
@@ -1129,26 +1080,15 @@ function Index() {
 								Guidelines for usage (Scroll till end to close this dialog)
 							</div>
 							<PrivacyText />
-							<div
-								style={{ margin: "5px" }}
-								onClick={() => setState((prevState) => ({ ...prevState, showPrivacyModal: false }))}
-								className={styles.chatContainer__startSession}
-							>
+							<div style={{ margin: "5px" }} onClick={() => setState((prevState) => ({ ...prevState, showPrivacyModal: false }))} className={styles.chatContainer__startSession}>
 								<button>Cancel</button>
 							</div>
 						</div>
 					)}
 					{state.isNewSessionStatus === "New" && (
 						<div className={styles.chatContainer__newSessionScreen} onClick={handleChangeSessionStatus}>
-							<div
-								className={styles.chatContainer__rulesUpArrow}
-								style={{ marginLeft: isMobileView ? "85%" : "94%", marginTop: isMobileView ? "62px" : "90px" }}
-							></div>
-							<div
-								className={styles.chatContainer__newSessionOptions}
-								style={{ marginTop: "unset" }}
-								onClick={(e) => e.stopPropagation()}
-							>
+							<div className={styles.chatContainer__rulesUpArrow} style={{ marginLeft: isMobileView ? "85%" : "94%", marginTop: isMobileView ? "62px" : "90px" }}></div>
+							<div className={styles.chatContainer__newSessionOptions} style={{ marginTop: "unset" }} onClick={(e) => e.stopPropagation()}>
 								<div className={styles.chatContainer__newAd} onClick={handleAdCampaignClick}>
 									Your banner ad can be here - check out
 								</div>
@@ -1206,23 +1146,14 @@ function Index() {
 							<Image src={ExpandCollapse.src} alt="image-icon" width={25} height={25} />
 						</div>
 					</div>
-					<div
-						className={styles.chatContainer__input}
-						style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null }}
-					>
+					<div className={styles.chatContainer__input} style={{ pointerEvents: state.isNewSessionStatus === "New" ? "none" : null }}>
 						<div className={styles.chatContainer__inputImageSelector}>
 							<input type="file" onChange={(e) => handleConfirmImage(e, true)} accept="image/*" />
 							<Image src={ImageIcon.src} alt="image-icon" width={25} height={25} />
 						</div>
 
 						<div>
-							<Image
-								onClick={handleMicClick}
-								src={state.isMicPressed ? MicCancel.src : MicIcon.src}
-								alt="mic-icon"
-								width={25}
-								height={25}
-							/>
+							<Image onClick={handleMicClick} src={state.isMicPressed ? MicCancel.src : MicIcon.src} alt="mic-icon" width={25} height={25} />
 						</div>
 
 						<div>
@@ -1257,12 +1188,6 @@ function Index() {
 	const { isMobileView } = state;
 	return (
 		<div style={{ height: "100%" }}>
-			{/* Tracking Umami is code */}
-			<Script
-				data-website-id={process.env.NEXT_UMAMI_WEB_ID}
-				strategy="lazyOnload"
-				src={process.env.NEXT_PUBLIC_ANALYTICS_URL}
-			/>
 			<Head>
 				<meta name="theme-color" content="#474663" />
 				<title> {SEO.live.pageTitle} </title>

@@ -41,43 +41,23 @@ export default function Home() {
 
 	const handleButtonClick = () => {
 		// Click event
-		if (window.umami) window.umami("Meet People Button Click");
+		// TODO TRACKING EVENT : Meet People Button Click
 	};
 
 	const renderLeftSection = () => (
 		<div className={styles.mainContainer_leftSection} key={state.selectedHeaderIndex}>
 			<div className={styles.mainContainer_tagLine}>
 				<div className={styles.mainContainer_tagLine_poly1}>
-					<Image
-						src={Polygon1.src}
-						width={state.isMobileView ? 180 : 180}
-						height={state.isMobileView ? 180 : 180}
-						alt=""
-					/>
+					<Image src={Polygon1.src} width={state.isMobileView ? 180 : 180} height={state.isMobileView ? 180 : 180} alt="" />
 				</div>
 				<div className={styles.mainContainer_tagLine_poly2}>
-					<Image
-						src={Polygon2.src}
-						width={state.isMobileView ? 200 : 200}
-						height={state.isMobileView ? 200 : 200}
-						alt=""
-					/>
+					<Image src={Polygon2.src} width={state.isMobileView ? 200 : 200} height={state.isMobileView ? 200 : 200} alt="" />
 				</div>
 				<div className={styles.mainContainer_tagLine_poly3}>
-					<Image
-						src={Polygon3.src}
-						width={state.isMobileView ? 200 : 280}
-						height={state.isMobileView ? 200 : 280}
-						alt=""
-					/>
+					<Image src={Polygon3.src} width={state.isMobileView ? 200 : 280} height={state.isMobileView ? 200 : 280} alt="" />
 				</div>
 				<div className={styles.mainContainer_tagLine_poly4}>
-					<Image
-						src={Polygon4.src}
-						width={state.isMobileView ? 200 : 190}
-						height={state.isMobileView ? 200 : 190}
-						alt=""
-					/>
+					<Image src={Polygon4.src} width={state.isMobileView ? 200 : 190} height={state.isMobileView ? 200 : 190} alt="" />
 				</div>
 
 				<div className={styles.mainContainer_tagLineText}>{state.headerTexts[state.selectedHeaderIndex].title}</div>
@@ -140,12 +120,6 @@ export default function Home() {
 
 	return (
 		<div>
-			{/* Tracking Umami is code */}
-			<Script
-				data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEB_ID}
-				strategy="lazyOnload"
-				src={process.env.NEXT_PUBLIC_ANALYTICS_URL}
-			/>
 			<Head>
 				<title>{SEO.home.pageTitle}</title>
 				<link rel="icon" href="/favicon.ico" />
