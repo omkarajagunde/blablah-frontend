@@ -8,7 +8,6 @@ import AwesomeDebouncePromise from "awesome-debounce-promise";
 import socketIOClient from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
-import Script from "next/script";
 import IdentityTab from "../../components/IdentityTab";
 import useUpdateEffect from "../../components/_helpers/useUpdateEffect";
 import AudioRecording from "../../components/AudioRecording";

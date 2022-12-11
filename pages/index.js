@@ -4,7 +4,6 @@ import styles from "../styles/Home.module.scss";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import Script from "next/script";
 
 // Icons !
 import Polygon1 from "../Resources/Polygon1.svg";
