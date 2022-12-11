@@ -7,8 +7,6 @@ import { firebase } from "../apiHelpers/firebase";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Tabs, Tab, Button, Form, Alert } from "react-bootstrap";
 import ViewBlogs from "../components/ViewBlogs";
-import NewTemplate from "../components/NewTemplate";
-import ViewTemplates from "../components/ViewTemplates";
 import { admins } from "../Resources/json-res";
 import "suneditor/dist/css/suneditor.min.css";
 // Styles!
@@ -242,19 +240,11 @@ function admin() {
 						<Tab eventKey="newBlog" title="New Blog">
 							<Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
 								<Form.Label>Enter Blog Title</Form.Label>
-								<Form.Control
-									maxLength={300}
-									onBlur={handleTitleBlur}
-									placeholder="e.g. This is a catchy blog title which would be 20 -40 words long"
-								/>
+								<Form.Control maxLength={300} onBlur={handleTitleBlur} placeholder="e.g. This is a catchy blog title which would be 20 -40 words long" />
 							</Form.Group>
 							<Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
 								<Form.Label>Enter Meta keywords (comma seperated ",")</Form.Label>
-								<Form.Control
-									maxLength={800}
-									onBlur={handleMetaKeywordsBlur}
-									placeholder="e.g. programming, science, digital marketing"
-								/>
+								<Form.Control maxLength={800} onBlur={handleMetaKeywordsBlur} placeholder="e.g. programming, science, digital marketing" />
 							</Form.Group>
 							<Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
 								<Form.Label>Enter short description</Form.Label>
@@ -299,12 +289,6 @@ function admin() {
 						</Tab>
 						<Tab eventKey="viewBlog" title="View Blogs">
 							<ViewBlogs />
-						</Tab>
-						<Tab eventKey="New template" title="New Template">
-							<NewTemplate />
-						</Tab>
-						<Tab eventKey="View templates" title="View Templates">
-							<ViewTemplates />
 						</Tab>
 					</Tabs>
 				</div>
