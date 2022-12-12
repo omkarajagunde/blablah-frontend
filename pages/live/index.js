@@ -113,11 +113,11 @@ function Index() {
 			isChatEndedWithError: null,
 			showImageDisapperModal: false
 		}));
-		const urlParams = new URLSearchParams(window.location.search);
-		let autoSearchStart = urlParams.get("autoStart");
-		if (autoSearchStart === "true") {
-			handleChangeSessionStatus();
-		}
+		// const urlParams = new URLSearchParams(window.location.search);
+		// let autoSearchStart = urlParams.get("autoStart");
+		// if (autoSearchStart === "true") {
+		// 	handleChangeSessionStatus();
+		// }
 		document.getElementById("inputText").blur();
 	}, [state.mySocketId]);
 
