@@ -234,7 +234,7 @@
 		right: 2%;
 		bottom: 120px;
 		z-index: 999;
-		height: 200px;
+		height: 240px;
 		overflow-y: scroll;
 		animation: heightSmooth 300ms ease-in-out;
 	}
@@ -334,7 +334,8 @@
 	}
 
 	&__settingsTitle {
-		margin-top: 20px;
+        margin-top: unset;
+        padding: 5px;
 		color: $color6;
 		font-size: 16px;
 		font-weight: 600;
@@ -412,16 +413,16 @@
 			width: 0px;
 			height: 0px;
 		}
-		input {
+		textarea {
 			all: unset;
 			color: $color2;
-			height: 100%;
-			width: max-content;
+			width: 100%;
 			display: flex;
-			height: 40px;
 			align-items: center;
 			padding-left: 10px;
-			font-size: 14px;
+			font-size: 16px;
+            height: 40px;
+            padding-top: 10px;
 		}
 		div {
 			background-color: $color8;
@@ -525,8 +526,8 @@
 	}
 
 	audio {
-		transform: scale(0.9);
-		margin-left: -16px;
+		transform: scale(0.8);
+		margin-left: -30px;
 		height: 42px;
 		background-color: $color0;
 		border-radius: 4px;

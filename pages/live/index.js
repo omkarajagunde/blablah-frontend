@@ -45,6 +45,16 @@ const recorder = new MicRecorder({
 	bitRate: 256
 });
 
+const debounce = (func, timeout = 300) => {
+	let timer;
+	return (...args) => {
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			func.apply(this, args);
+		}, timeout);
+	};
+};
+
 function Index() {
 	const dispatch = useDispatch();
 	const router = useRouter();
@@ -367,7 +377,8 @@ function Index() {
 			handleInitSocketEvents();
 			const urlParams = new URLSearchParams(window.location.search);
 			let autoSearchStart = urlParams.get("autoStart");
-			if (autoSearchStart == true) {
+			console.log("autoSearchStart - ", autoSearchStart);
+			if (autoSearchStart === true) {
 				handleChangeSessionStatus();
 			}
 			setState((prevState) => ({ ...prevState, myInfo: LiveChatSelector.isServerOperationalData }));
@@ -694,6 +705,7 @@ function Index() {
 
 	const handleAddInterest = (e) => {
 		let value = e.target.value;
+		console.log(e.key);
 		if (e.key === "Enter" && value.trim().length > 0) {
 			let commonInterestsArray = [...state.commonInterestsArray, value.trim().toLowerCase()];
 			setURLSearchParam("interests", commonInterestsArray);
@@ -701,7 +713,9 @@ function Index() {
 				...prevState,
 				commonInterestsArray
 			}));
-			document.getElementById("interestInput").value = "";
+			setTimeout(() => {
+				document.getElementById("interestInput").value = "";
+			}, 100);
 		}
 	};
 
@@ -905,7 +919,7 @@ function Index() {
 								{interest} <b onClick={() => handleRemoveInterest(index)}>X</b>
 							</div>
 						))}
-						<input id="interestInput" placeholder="Add here" onKeyPress={handleAddInterest} />
+						<textarea id="interestInput" type="text" placeholder="Add here" onKeyDown={handleAddInterest} />
 					</div>
 
 					<div className={styles.chatContainer__startSession}>
@@ -1032,7 +1046,7 @@ function Index() {
 							<div className={styles.chatContainer__settingsTitle} style={{ marginTop: "unset", padding: "12px" }}>
 								In how much time should this Image disapper?
 							</div>
-							<div style={{ display: "flex" }}>
+							<div style={{ display: "flex", flexWrap: "wrap" }}>
 								<div
 									style={{ color: "#474663", margin: "5px", border: "1px solid #405068" }}
 									onClick={() => handleFileUpload(30, true)}
