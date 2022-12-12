@@ -113,6 +113,11 @@ function Index() {
 			isChatEndedWithError: null,
 			showImageDisapperModal: false
 		}));
+		const urlParams = new URLSearchParams(window.location.search);
+		let autoSearchStart = urlParams.get("autoStart");
+		if (autoSearchStart === "true") {
+			handleChangeSessionStatus();
+		}
 		document.getElementById("inputText").blur();
 	}, [state.mySocketId]);
 
@@ -375,12 +380,6 @@ function Index() {
 			// Get trending trends
 			dispatch(GetTrends());
 			handleInitSocketEvents();
-			const urlParams = new URLSearchParams(window.location.search);
-			let autoSearchStart = urlParams.get("autoStart");
-			console.log("autoSearchStart - ", autoSearchStart);
-			if (autoSearchStart === true) {
-				handleChangeSessionStatus();
-			}
 			setState((prevState) => ({ ...prevState, myInfo: LiveChatSelector.isServerOperationalData }));
 		}
 
@@ -705,7 +704,6 @@ function Index() {
 
 	const handleAddInterest = (e) => {
 		let value = e.target.value;
-		console.log(e.key);
 		if (e.key === "Enter" && value.trim().length > 0) {
 			let commonInterestsArray = [...state.commonInterestsArray, value.trim().toLowerCase()];
 			setURLSearchParam("interests", commonInterestsArray);
