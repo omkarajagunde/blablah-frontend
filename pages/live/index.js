@@ -365,6 +365,11 @@ function Index() {
 			// Get trending trends
 			dispatch(GetTrends());
 			handleInitSocketEvents();
+			const urlParams = new URLSearchParams(window.location.search);
+			let autoSearchStart = urlParams.get("autoStart");
+			if (autoSearchStart == true) {
+				handleChangeSessionStatus();
+			}
 			setState((prevState) => ({ ...prevState, myInfo: LiveChatSelector.isServerOperationalData }));
 		}
 
