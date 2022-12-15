@@ -30,4 +30,15 @@ messaging.setBackgroundMessageHandler(function (payload) {
 
 	return self.registration.showNotification(notificationTitle, notificationOptions);
 });
+
+self.addEventListener("notificationclick", function (event) {
+	var url = "https://blablah.app/live";
+
+	//---close the notification---
+	event.notification.close();
+
+	//---open the app and navigate to breaking.html
+	// after clicking the notification---
+	event.waitUntil(clients.openWindow(url));
+});
 // [END background_handler]
