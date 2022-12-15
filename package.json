@@ -20,7 +20,7 @@
     "cookie-parser": "^1.4.6",
     "dotenv": "^8.2.0",
     "ffmpeg-extract-frames": "^2.0.2",
-    "firebase": "^9.7.0",
+    "firebase": "^9.9.0",
     "gsap": "^3.11.3",
     "lodash": "^4.17.21",
     "mic-recorder-to-mp3": "^2.2.2",

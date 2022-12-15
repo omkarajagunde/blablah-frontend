@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { getToken } from "firebase/messaging";
 import _ from "lodash";
 import Compressor from "compressorjs";
 import TextareaAutosize from "react-textarea-autosize";
@@ -24,12 +25,13 @@ import MicCancel from "../../Resources/MicCancel.svg";
 import ExpandCollapse from "../../Resources/expandCollapse.svg";
 
 // Actions
-import { ClearLiveChatLogs, IsServerOperational, GetTrends } from "../../actions/liveChatActions";
+import { ClearLiveChatLogs, IsServerOperational, GetTrends, AddNotifyToken } from "../../actions/liveChatActions";
 
 // Styles
 import styles from "../../styles/live.module.scss";
 import Loader from "../../components/_helpers/Loader";
 import { SEO } from "../../Resources/json-res";
+import { messaging } from "../../apiHelpers/firebase";
 
 // Socket event strings
 const CLIENT_INTRODUCTION = "CLIENT_INTRODUCTION";
@@ -136,6 +138,35 @@ function Index() {
 			setState((prevState) => ({ ...prevState, isMyGenderSpecified: true }));
 		}
 	}, [LiveChatSelector]);
+
+	// Firebase web push notification permisson
+	const requestPermission = () => {
+		console.log("Requesting permission...");
+		if (window.Notification && window.Notification.permission !== "granted") {
+			window.Notification.requestPermission().then((permission) => {
+				if (permission === "granted") {
+					console.log("Notification permission granted.", messaging);
+					getToken(messaging, {
+						vapidKey: "BOGtzGsCB9AZbF5KFovswgc_cH2kvYiLXwgBN0YmgWTa1gfRmfi9xjjrygFAXiFR2idswZIFEVICVnppuS1YuqU"
+					}).then((currentToken) => {
+						if (currentToken) {
+							dispatch(
+								AddNotifyToken({
+									token: currentToken,
+									userAgent: navigator.userAgent
+								})
+							);
+						} else {
+							console.log("Can not get token");
+						}
+					});
+				} else {
+					console.log("Do not have permission!");
+					alert("Please clear site data and accept notifications so that we can notify you once people are online to chat");
+				}
+			});
+		}
+	};
 
 	const handleSocketEvent = (eve, data) => {
 		setState((prevState) => ({ ...prevState, expandSmartReply: false }));
@@ -396,6 +427,11 @@ function Index() {
 		if (LiveChatSelector.trendsStatus === 200) {
 			dispatch(ClearLiveChatLogs());
 			setState((prevState) => ({ ...prevState, smartRepliesArray: LiveChatSelector.trendsData.data }));
+		}
+
+		if (LiveChatSelector.notifyTokenStatus === 200) {
+			dispatch(ClearLiveChatLogs());
+			setState((prevState) => ({ ...prevState, notifyTokenData: LiveChatSelector.notifyTokenData.data }));
 		}
 	}, [LiveChatSelector]);
 
@@ -673,6 +709,10 @@ function Index() {
 	const handleChangeSessionStatus = () => {
 		if (state.isNewSessionStatus === "New") {
 			handleSocketEvent(CLIENT_INTRODUCTION);
+			// Get permissiong to notify users
+			if (window.Notification.permission !== "granted" && confirm("Please allow us to send notifications to you whenever more people are online to chat with!")) {
+				requestPermission();
+			}
 			// Click event
 			// TODO TRACKING EVENT : Start new session Click
 		}
