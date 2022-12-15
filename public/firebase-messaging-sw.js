@@ -35,8 +35,8 @@ self.addEventListener("push", function (event) {
 	console.info("Event: Push", event.data.json());
 	let data = event.data.json().data;
 	let notification = event.data.json().notification;
-	console.log(data, notification);
-	var title,
+	console.log(data, no);
+	var title = notification.title,
 		body = {
 			//tag: "notification-1",
 			icon: "./favicon.ico",
@@ -44,7 +44,8 @@ self.addEventListener("push", function (event) {
 			notification: {
 				sound: "default"
 			},
-			data: JSON.stringify(data)
+			data: data,
+			body: notification.body
 		};
 
 	event.waitUntil(self.registration.showNotification(title, body));
