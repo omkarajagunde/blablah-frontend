@@ -32,10 +32,9 @@ messaging.setBackgroundMessageHandler(function (payload) {
 });
 
 self.addEventListener("push", function (event) {
-	console.info("Event: Push", event.data.json());
+	//console.info("Event: Push", event.data.json());
 	let data = event.data.json().data;
 	let notification = event.data.json().notification;
-	console.log(data, no);
 	var title = notification.title,
 		body = {
 			//tag: "notification-1",
