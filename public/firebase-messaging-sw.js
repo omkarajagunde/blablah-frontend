@@ -31,6 +31,25 @@ messaging.setBackgroundMessageHandler(function (payload) {
 	return self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
+self.addEventListener("push", function (event) {
+	console.info("Event: Push", event.data.json());
+	let data = event.data.json().data;
+	let notification = event.data.json().notification;
+	console.log(data, notification);
+	var title,
+		body = {
+			//tag: "notification-1",
+			icon: "./favicon.ico",
+			vibrate: [200, 100, 200, 100, 200, 100, 200],
+			notification: {
+				sound: "default"
+			},
+			data: JSON.stringify(data)
+		};
+
+	event.waitUntil(self.registration.showNotification(title, body));
+});
+
 self.addEventListener("notificationclick", function (event) {
 	var url = "https://blablah.app/live";
 
