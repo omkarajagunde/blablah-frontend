@@ -7,31 +7,31 @@ importScripts("https://www.gstatic.com/firebasejs/3.5.2/firebase-messaging.js");
 
 // Initialize the Firebase app in the service worker by passing in the
 // messagingSenderId.
-firebase.initializeApp({
-	messagingSenderId: "40911931240"
-});
+// firebase.initializeApp({
+// 	messagingSenderId: "40911931240"
+// });
 
 // Retrieve an instance of Firebase Messaging so that it can handle background
 // messages.
-const messaging = firebase.messaging();
+//const messaging = firebase.messaging();
 // [END initialize_firebase_in_sw]
 
 // If you would like to customize notifications that are received in the
 // background (Web app is closed or not in browser focus) then you should
 // implement this optional method.
 // [START background_handler]
-messaging.setBackgroundMessageHandler(function (payload) {
-	console.log("[firebase-messaging-sw.js] Received background message ", payload);
-	// Customize notification here
-	const notificationTitle = "Background Message Title";
-	const notificationOptions = {
-		body: "Background Message body."
-	};
+// messaging.setBackgroundMessageHandler(function (payload) {
+// 	console.log("[firebase-messaging-sw.js] Received background message ", payload);
+// 	// Customize notification here
+// 	const notificationTitle = "Background Message Title";
+// 	const notificationOptions = {
+// 		body: "Background Message body."
+// 	};
 
-	//return self.registration.showNotification(notificationTitle, notificationOptions);
+// 	//return self.registration.showNotification(notificationTitle, notificationOptions);
 
-	return self.registration.hideNotification();
-});
+// 	return self.registration.hideNotification();
+// });
 
 self.addEventListener("push", function (event) {
 	console.info("Event: Push", event.data.json());
