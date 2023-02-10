@@ -28,9 +28,9 @@ messaging.setBackgroundMessageHandler(function (payload) {
 		body: "Background Message body."
 	};
 
-	return self.registration.showNotification(notificationTitle, notificationOptions);
+	//return self.registration.showNotification(notificationTitle, notificationOptions);
 
-	// self.registration.hideNotification();
+	return self.registration.hideNotification();
 });
 
 self.addEventListener("push", function (event) {
@@ -53,7 +53,7 @@ self.addEventListener("push", function (event) {
 });
 
 self.addEventListener("notificationclick", function (event) {
-	var url = "https://blablah.app/live";
+	var url = event.data?.click_link || "https://blablah.app/live";
 
 	//---close the notification---
 	event.notification.close();
