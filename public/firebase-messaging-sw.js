@@ -20,18 +20,18 @@ const messaging = firebase.messaging();
 // background (Web app is closed or not in browser focus) then you should
 // implement this optional method.
 // [START background_handler]
-messaging.setBackgroundMessageHandler(function (payload) {
-	console.log("[firebase-messaging-sw.js] Received background message ", payload);
-	// Customize notification here
-	const notificationTitle = "Background Message Title";
-	const notificationOptions = {
-		body: "Background Message body."
-	};
+// messaging.setBackgroundMessageHandler(function (payload) {
+// 	console.log("[firebase-messaging-sw.js] Received background message ", payload);
+// 	// Customize notification here
+// 	const notificationTitle = "Background Message Title";
+// 	const notificationOptions = {
+// 		body: "Background Message body."
+// 	};
 
-	//return self.registration.showNotification(notificationTitle, notificationOptions);
+// 	//return self.registration.showNotification(notificationTitle, notificationOptions);
 
-	return self.registration.hideNotification();
-});
+// 	return self.registration.hideNotification();
+// });
 
 self.addEventListener("push", function (event) {
 	console.info("Event: Push", event.data.json());
@@ -53,8 +53,11 @@ self.addEventListener("push", function (event) {
 });
 
 self.addEventListener("notificationclick", function (event) {
-	var url = event.data?.click_link || "https://blablah.app/live";
-	console.log("event.data?.click_link - ", event.data?.click_link);
+	var url = event.notification.data?.click_link || "https://blablah.app/live";
+
+	setTimeout(() => {
+		console.log("On notification click: ", event);
+	}, 100);
 
 	//---close the notification---
 	event.notification.close();
