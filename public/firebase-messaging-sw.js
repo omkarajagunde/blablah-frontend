@@ -54,6 +54,7 @@ self.addEventListener("push", function (event) {
 
 self.addEventListener("notificationclick", function (event) {
 	var url = event.data?.click_link || "https://blablah.app/live";
+	console.log("event.data?.click_link - ", event.data?.click_link);
 
 	//---close the notification---
 	event.notification.close();
