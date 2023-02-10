@@ -32,6 +32,7 @@ import styles from "../../styles/live.module.scss";
 import Loader from "../../components/_helpers/Loader";
 import { SEO } from "../../Resources/json-res";
 import { messaging } from "../../apiHelpers/firebase";
+import Script from "next/script";
 
 // Socket event strings
 const CLIENT_INTRODUCTION = "CLIENT_INTRODUCTION";
@@ -149,6 +150,7 @@ function Index() {
 					getToken(messaging, {
 						vapidKey: "BOGtzGsCB9AZbF5KFovswgc_cH2kvYiLXwgBN0YmgWTa1gfRmfi9xjjrygFAXiFR2idswZIFEVICVnppuS1YuqU"
 					}).then((currentToken) => {
+						console.log("tkn -- ", currentToken);
 						if (currentToken) {
 							dispatch(
 								AddNotifyToken({
@@ -1244,6 +1246,31 @@ function Index() {
 	const { isMobileView } = state;
 	return (
 		<div style={{ height: "100%" }}>
+			<Script src="https://www.googletagmanager.com/gtag/js?id=AW-579008007" strategy="afterInteractive" />
+			<Script id="google-analytics" strategy="afterInteractive">
+				{`
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){window.dataLayer.push(arguments);}
+                    gtag('js', new Date());
+
+                    gtag('config', 'AW-579008007');
+                `}
+			</Script>
+			<Script>
+				{`function gtag_report_conversion(url) {
+                    var callback = function () {
+                        if (typeof(url) != 'undefined') {
+                        window.location = url;
+                        }
+                    };
+                    gtag('event', 'conversion', {
+                        'send_to': 'AW-579008007/JxVuCN_Ouq8DEIfsi5QC',
+                        'event_callback': callback
+                    });
+                    return false;
+                }`}
+			</Script>
+
 			<Head>
 				<meta name="theme-color" content="#474663" />
 				<title> {SEO.live.pageTitle} </title>
