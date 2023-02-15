@@ -9,22 +9,6 @@ const headerTexts = [
 				link: "/live"
 			}
 		]
-	},
-	{
-		title: "Create immersive digital wishes that people would love!",
-		ticks: [
-			"Customisation with your branding & images",
-			"Build subscriber list on whatsapp",
-			"Interactive wishes that convert",
-			"Add your links",
-			"Deep link your links to open native app"
-		],
-		buttons: [
-			{
-				text: "Create wishes",
-				link: "/wishes"
-			}
-		]
 	}
 ];
 const navbarJson = [
@@ -41,7 +25,7 @@ const navbarJson = [
 	{
 		link: "/wishes",
 		title: "Create Wishes",
-		hide: false
+		hide: true
 	},
 	{
 		link: "/live",
