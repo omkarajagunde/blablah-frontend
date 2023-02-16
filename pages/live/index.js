@@ -118,7 +118,7 @@ function Index() {
 		}));
 		// const urlParams = new URLSearchParams(window.location.search);
 		// let autoSearchStart = urlParams.get("autoStart");
-		// if (autoSearchStart === "true") {
+		// if (autoSearchStart === "true" && state.mySocketId) {
 		// 	handleChangeSessionStatus();
 		// }
 		document.getElementById("inputText").blur();
@@ -278,7 +278,8 @@ function Index() {
 		socketRef.current = socketIOClient(process.env.NEXT_PUBLIC_SERVER_URL, {
 			path: "/live",
 			query: { token: window.tkn },
-			transports: ["websocket", "polling", "flashsocket"]
+			transports: ["websocket", "polling", "flashsocket"],
+			closeOnBeforeunload: false
 		});
 
 		socketRef.current.on("connect", () => {
