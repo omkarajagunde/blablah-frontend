@@ -122,7 +122,7 @@ function IdentityTab() {
 
 	return (
 		<div className={styles.chatContainer__myFriends}>
-			<div className={styles.chatContainer__settingsTitle}>Cofirm you gender!</div>
+			{/* <div className={styles.chatContainer__settingsTitle}>Cofirm you gender!</div>
 			<div className={styles.chatContainer__settingsSubTitle}> Click a selfie of yourself from below, and we will detect your gender, We never save your photos </div>
 			<div className={styles.chatContainer__identityBox} style={{ background: state.genderFlag && state.identityObj.gender ? "#58b12e" : null }}>
 				{!state.isUserImageCaptured && !state.genderFlagMessage && (
@@ -142,7 +142,7 @@ function IdentityTab() {
 						</div>{" "}
 					</div>
 				)}
-			</div>
+			</div> */}
 
 			<div className={styles.chatContainer__settingsTitle}>Your full name?</div>
 			<div className={styles.chatContainer__keywordInput} style={{ marginTop: "10px" }}>

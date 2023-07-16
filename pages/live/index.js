@@ -73,7 +73,7 @@ function Index() {
 		userSearchTryingCount: 0,
 		isNewSessionStatus: "New",
 		mySocketId: "",
-		newTabs: ["Chat settings"],
+		newTabs: ["Chat settings", "Identity"],
 		settingsTabViewOptions: ["male", "female", "Any"],
 		settingsTabIndex: 2,
 		tabIndex: 0,
@@ -991,9 +991,9 @@ function Index() {
 			);
 		}
 
-		// if (state.tabIndex === 1) {
-		// 	return <IdentityTab />;
-		// }
+		if (state.tabIndex === 1) {
+			return <IdentityTab />;
+		}
 	};
 
 	// rendering the mobile view
