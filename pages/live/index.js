@@ -73,7 +73,7 @@ function Index() {
 		userSearchTryingCount: 0,
 		isNewSessionStatus: "New",
 		mySocketId: "",
-		newTabs: ["Chat settings", "Identity"],
+		newTabs: ["Chat settings"],
 		settingsTabViewOptions: ["male", "female", "Any"],
 		settingsTabIndex: 2,
 		tabIndex: 0,
@@ -915,7 +915,7 @@ function Index() {
 		if (state.tabIndex === 0) {
 			return (
 				<div className={styles.chatContainer__settings}>
-					<div className={styles.chatContainer__settingsTitle}>Connect With</div>
+					{/* <div className={styles.chatContainer__settingsTitle}>Connect With</div>
 					<div className={styles.chatContainer__settingsSubTitle}>
 						{state.isMyGenderSpecified ? (
 							"Select the gender you want to chat with"
@@ -939,7 +939,7 @@ function Index() {
 								{tab}
 							</div>
 						))}
-					</div>
+					</div> */}
 
 					<div className={styles.chatContainer__settingsTitle}>Connect with anyone?</div>
 					<div className={styles.chatContainer__settingsSubTitle}>Connect with anyone if interests not avialable?</div>
@@ -991,9 +991,9 @@ function Index() {
 			);
 		}
 
-		if (state.tabIndex === 1) {
-			return <IdentityTab />;
-		}
+		// if (state.tabIndex === 1) {
+		// 	return <IdentityTab />;
+		// }
 	};
 
 	// rendering the mobile view
