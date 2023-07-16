@@ -468,6 +468,7 @@ function Index() {
 		}
 
 		window.onbeforeunload = function (e) {
+			handleSocketEvent(END_CURRENT_SESSION, null);
 			// Cancel the event
 			e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
 			// Chrome requires returnValue to be set
@@ -1180,13 +1181,13 @@ function Index() {
 						</div>
 					</div>
 					<div className={styles.chatContainer__smartReply}>
-						<div>
+						{/* <div>
 							<div>
 								<input type="checkbox" id="switch" />
 								<label for="switch">Toggle</label>
 							</div>
 							<div>video off</div>
-						</div>
+						</div> */}
 						{state.smartRepliesArray.map((reply, index) => {
 							let renderIdx = state.isMobileView ? 2 : 6;
 							if (index < renderIdx) {
