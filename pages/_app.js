@@ -7,8 +7,6 @@ import { PersistGate } from "redux-persist/lib/integration/react";
 
 // import the two exports from the last code snippet.
 import { persistor, store } from "../store";
-import Script from "next/script";
-import "../public/beeguide-tools.css";
 
 function MyApp({ Component, pageProps }) {
 	return (
