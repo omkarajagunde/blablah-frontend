@@ -712,9 +712,9 @@ function Index() {
 		if (state.isNewSessionStatus === "New") {
 			handleSocketEvent(CLIENT_INTRODUCTION);
 			// Get permissiong to notify users
-			if (window.Notification.permission !== "granted" && confirm("Please allow us to send notifications to you whenever more people are online to chat with!")) {
-				requestPermission();
-			}
+			// if (window.Notification.permission !== "granted" && confirm("Please allow us to send notifications to you whenever more people are online to chat with!")) {
+			// 	requestPermission();
+			// }
 			// Click event
 			// TODO TRACKING EVENT : Start new session Click
 		}
