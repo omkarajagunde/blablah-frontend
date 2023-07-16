@@ -33,7 +33,6 @@ import Loader from "../../components/_helpers/Loader";
 import { SEO } from "../../Resources/json-res";
 import { messaging } from "../../apiHelpers/firebase";
 import Script from "next/script";
-
 // Socket event strings
 const CLIENT_INTRODUCTION = "CLIENT_INTRODUCTION";
 const PEER_STARTED_TYPING = "PEER_STARTED_TYPING";
@@ -1181,6 +1180,13 @@ function Index() {
 						</div>
 					</div>
 					<div className={styles.chatContainer__smartReply}>
+						<div>
+							<div>
+								<input type="checkbox" id="switch" />
+								<label for="switch">Toggle</label>
+							</div>
+							<div>video off</div>
+						</div>
 						{state.smartRepliesArray.map((reply, index) => {
 							let renderIdx = state.isMobileView ? 2 : 6;
 							if (index < renderIdx) {
@@ -1247,6 +1253,17 @@ function Index() {
 	const { isMobileView } = state;
 	return (
 		<div style={{ height: "100%" }}>
+			<Script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer />
+			<Script id="google-analytics" strategy="afterInteractive">
+				{`
+                     window.OneSignal = window.OneSignal || [];
+                    OneSignal.push(function() {
+                        OneSignal.init({
+                        appId: "2d1bdbfa-fcee-4db9-a3ae-3c3836bbb8da",
+                        });
+                    });
+                `}
+			</Script>
 			<Script src="https://www.googletagmanager.com/gtag/js?id=AW-579008007" strategy="afterInteractive" />
 			<Script id="google-analytics" strategy="afterInteractive">
 				{`
