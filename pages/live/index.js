@@ -41,6 +41,44 @@ const SEND_MESSAGE = "SEND_MESSAGE";
 const NEGATIVE_KEYWORD_EXCHANGE = "NEGATIVE_KEYWORD_EXCHANGE";
 const END_CURRENT_SESSION = "END_CURRENT_SESSION";
 const CLIENT_INTRODUCTION_PAIR_NOT_FOUND = "CLIENT_INTRODUCTION_PAIR_NOT_FOUND";
+const CREATE_ANSWER = "CREATE_ANSWER";
+const ICE_CANDIDATE = "ICE_CANDIDATE";
+const CREATE_OFFER = "CREATE_OFFER";
+const REQUEST_VIDEO_STREAM = "REQUEST_VIDEO_STREAM";
+const VIDEO_STREAM_ACCEPT = "VIDEO_STREAM_ACCEPT";
+
+let webRtcServers = {
+	iceServers: [
+		{
+			urls: ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302", "stun:stun3.l.google.com:19302", "stun:stun4.l.google.com:19302"]
+		},
+		// {
+		// 	urls: process.env.NEXT_PUBLIC_TURN_SERVER_URL,
+		// 	username: "invoker",
+		// 	credential: "invoker"
+		// },
+		{
+			urls: "turn:a.relay.metered.ca:80",
+			username: "340920b4e7c44a6aa129b69d",
+			credential: "aC7sPwNyvoXHtvcm"
+		},
+		{
+			urls: "turn:a.relay.metered.ca:80?transport=tcp",
+			username: "340920b4e7c44a6aa129b69d",
+			credential: "aC7sPwNyvoXHtvcm"
+		},
+		{
+			urls: "turn:a.relay.metered.ca:443",
+			username: "340920b4e7c44a6aa129b69d",
+			credential: "aC7sPwNyvoXHtvcm"
+		},
+		{
+			urls: "turn:a.relay.metered.ca:443?transport=tcp",
+			username: "340920b4e7c44a6aa129b69d",
+			credential: "aC7sPwNyvoXHtvcm"
+		}
+	]
+};
 
 // New instance
 const recorder = new MicRecorder({
@@ -59,7 +97,6 @@ const debounce = (func, timeout = 300) => {
 
 function Index() {
 	const dispatch = useDispatch();
-	const router = useRouter();
 	const LiveChatSelector = useSelector((state) => state.liveChat, _.isEqual);
 	const [state, setState] = useState({
 		isMobileView: false,
@@ -83,7 +120,6 @@ function Index() {
 		restrictedModeNewKeywordsArray: [],
 		peerNegativeKeywordsArray: [],
 		chatMessagesArray: [],
-		pairedUserData: null,
 		username: LiveChatSelector.identityObj.fullname,
 		age: LiveChatSelector.identityObj.age,
 		myInfo: null,
@@ -95,10 +131,14 @@ function Index() {
 		// Audio related state vars
 		isMicPressed: false,
 		isMicRecording: false,
-		isMicBlocked: false
+		isMicBlocked: false,
+		isVideoStreamActive: false
 	});
 	const socketRef = useRef();
 	const userFoundRef = useRef();
+	const peerIceRef = useRef();
+	const videoStreamRef = useRef();
+	const pairedUserDataRef = useRef();
 
 	useUpdateEffect(() => {
 		console.log("My ID :: ", state.mySocketId);
@@ -110,21 +150,24 @@ function Index() {
 			userFoundFlag: "",
 			userSearchTryingCount: 0,
 			isChatEnded: false,
-			pairedUserData: null,
 			chatMessagesArray: [],
 			isChatEndedWithError: null,
-			showImageDisapperModal: false
+			showImageDisapperModal: false,
+			isVideoStreamActive: false,
+			isPeerRequestingVideoStream: false
 		}));
 		// const urlParams = new URLSearchParams(window.location.search);
 		// let autoSearchStart = urlParams.get("autoStart");
 		// if (autoSearchStart === "true" && state.mySocketId) {
 		// 	handleChangeSessionStatus();
 		// }
+		peerIceRef.current = [];
+		pairedUserDataRef.current = null;
 		document.getElementById("inputText").blur();
 	}, [state.mySocketId]);
 
 	useUpdateEffect(() => {
-		if (state.pairedUserData) console.log("user found with socketId  :: ", state.pairedUserData?.mySocketId);
+		if (pairedUserDataRef.current) console.log("user found with socketId  :: ", pairedUserDataRef.current?.mySocketId);
 	}, [state.userFoundFlag]);
 
 	useUpdateEffect(() => {
@@ -139,37 +182,90 @@ function Index() {
 		}
 	}, [LiveChatSelector]);
 
-	// Firebase web push notification permisson
-	const requestPermission = () => {
-		console.log("Requesting permission...");
-		if (window.Notification && window.Notification.permission !== "granted") {
-			window.Notification.requestPermission().then((permission) => {
-				if (permission === "granted") {
-					console.log("Notification permission granted.", messaging);
-					getToken(messaging, {
-						vapidKey: "BOGtzGsCB9AZbF5KFovswgc_cH2kvYiLXwgBN0YmgWTa1gfRmfi9xjjrygFAXiFR2idswZIFEVICVnppuS1YuqU"
-					}).then((currentToken) => {
-						console.log("tkn -- ", currentToken);
-						if (currentToken) {
-							dispatch(
-								AddNotifyToken({
-									token: currentToken,
-									userAgent: navigator.userAgent
-								})
-							);
-						} else {
-							console.log("Can not get token");
-						}
-					});
-				} else {
-					console.log("Do not have permission!");
-					alert("Please clear site data and accept notifications so that we can notify you once people are online to chat");
-				}
+	const createOffer = async () => {
+		videoStreamRef.current.onicecandidate = async (event) => {
+			//Event that fires off when a new offer ICE candidate is created
+			if (event.candidate) {
+				handleSocketEvent(ICE_CANDIDATE, event);
+			}
+			if (videoStreamRef.current.iceGatheringState === "complete") {
+				console.log("create complete");
+			}
+		};
+
+		// dataChannel.current = videoStreamRef.current.createDataChannel("chan");
+		const offerc = await videoStreamRef.current.createOffer();
+		await videoStreamRef.current.setLocalDescription(offerc);
+
+		handleSocketEvent(CREATE_OFFER);
+	};
+
+	const createAnswer = async (offer) => {
+		videoStreamRef.current.onicecandidate = async (event) => {
+			//Event that fires off when a new answer ICE candidate is created
+			if (event.candidate) {
+				handleSocketEvent(ICE_CANDIDATE, event);
+			}
+			if (videoStreamRef.current.iceGatheringState === "complete") {
+				console.log("complete");
+			}
+		};
+		await videoStreamRef.current.setRemoteDescription(offer);
+		peerIceRef.current.map((ice) => {
+			videoStreamRef.current.addIceCandidate(new RTCIceCandidate(ice));
+		});
+
+		let answerc = await videoStreamRef.current.createAnswer();
+		await videoStreamRef.current.setLocalDescription(answerc);
+		handleSocketEvent(CREATE_ANSWER);
+	};
+
+	const addAnswer = async (answer) => {
+		if (!videoStreamRef.current.currentRemoteDescription) {
+			videoStreamRef.current.setRemoteDescription(answer);
+			peerIceRef.current.map((ice) => {
+				videoStreamRef.current.addIceCandidate(new RTCIceCandidate(ice));
 			});
 		}
 	};
 
-	const handleSocketEvent = (eve, data) => {
+	const initVideoRTC = async (iAccepted) => {
+		if (iAccepted) {
+			setState((prevState) => ({ ...prevState, isPeerRequestingVideoStream: false, isVideoStreamActive: true }));
+		}
+
+		videoStreamRef.current = new RTCPeerConnection(webRtcServers);
+		let localStream;
+		let remoteStream;
+
+		localStream = await navigator.mediaDevices.getUserMedia({
+			video: {
+				aspectRatio: 1.332,
+				facingMode: { ideal: "user" }
+			},
+			audio: false
+		});
+		remoteStream = new MediaStream();
+
+		document.getElementById("myself").srcObject = localStream;
+		document.getElementById("peer").srcObject = remoteStream;
+
+		localStream.getTracks().forEach((track) => {
+			videoStreamRef.current.addTrack(track, localStream);
+		});
+
+		videoStreamRef.current.ontrack = (event) => {
+			event.streams[0].getTracks().forEach((track) => {
+				remoteStream.addTrack(track);
+			});
+		};
+
+		videoStreamRef.current.onconnectionstatechange = async () => {
+			console.log(videoStreamRef.current.connectionState);
+		};
+	};
+
+	const handleSocketEvent = async (eve, data) => {
 		setState((prevState) => ({ ...prevState, expandSmartReply: false }));
 		if (eve === CLIENT_INTRODUCTION) {
 			socketRef.current.emit(CLIENT_INTRODUCTION, {
@@ -209,7 +305,7 @@ function Index() {
 				action: PEER_STARTED_TYPING,
 				data: {
 					typing: true,
-					peerSocketId: state.pairedUserData?.mySocketId
+					peerSocketId: pairedUserDataRef.current?.mySocketId
 				}
 			});
 		}
@@ -232,7 +328,7 @@ function Index() {
 				action: PEER_STOPPED_TYPING,
 				data: {
 					typing: false,
-					peerSocketId: state.pairedUserData?.mySocketId
+					peerSocketId: pairedUserDataRef.current?.mySocketId
 				}
 			});
 		}
@@ -244,7 +340,7 @@ function Index() {
 				action: SEND_MESSAGE,
 				data: {
 					chatData: data,
-					peerSocketId: state.pairedUserData?.mySocketId
+					peerSocketId: pairedUserDataRef.current?.mySocketId
 				}
 			});
 		}
@@ -256,7 +352,7 @@ function Index() {
 				data: {
 					username: state.username,
 					keywordsArray: state.restrictedModeKeywordsArray,
-					peerSocketId: state.pairedUserData?.mySocketId
+					peerSocketId: pairedUserDataRef.current?.mySocketId
 				}
 			});
 		}
@@ -267,13 +363,73 @@ function Index() {
 				socketId: socketRef.current.id,
 				action: END_CURRENT_SESSION,
 				data: {
-					peerSocketId: state.pairedUserData?.mySocketId
+					peerSocketId: pairedUserDataRef.current?.mySocketId
+				}
+			});
+			setState((prevState) => ({ ...prevState, isVideoStreamActive: false, isPeerRequestingVideoStream: false }));
+			await videoStreamRef.current.close();
+			videoStreamRef.current = new RTCPeerConnection(webRtcServers);
+			peerIceRef.current = [];
+		}
+
+		if (eve === REQUEST_VIDEO_STREAM) {
+			document.getElementById("inputText").blur();
+			socketRef.current.emit(REQUEST_VIDEO_STREAM, {
+				socketId: socketRef.current.id,
+				action: REQUEST_VIDEO_STREAM,
+				data: {
+					peerSocketId: pairedUserDataRef.current?.mySocketId
+				}
+			});
+		}
+
+		if (eve === VIDEO_STREAM_ACCEPT) {
+			await initVideoRTC(true);
+			socketRef.current.emit(VIDEO_STREAM_ACCEPT, {
+				socketId: socketRef.current.id,
+				action: VIDEO_STREAM_ACCEPT,
+				data: {
+					peerSocketId: pairedUserDataRef.current?.mySocketId
+				}
+			});
+		}
+
+		if (eve === CREATE_OFFER) {
+			socketRef.current.emit(CREATE_OFFER, {
+				socketId: socketRef.current.id,
+				action: CREATE_OFFER,
+				data: {
+					peerSocketId: pairedUserDataRef.current?.mySocketId,
+					offer: videoStreamRef.current.localDescription
+				}
+			});
+		}
+
+		if (eve === CREATE_ANSWER) {
+			socketRef.current.emit(CREATE_ANSWER, {
+				socketId: socketRef.current.id,
+				action: CREATE_ANSWER,
+				data: {
+					peerSocketId: pairedUserDataRef.current?.mySocketId,
+					offer: videoStreamRef.current.localDescription
+				}
+			});
+		}
+
+		if (eve === ICE_CANDIDATE) {
+			console.log("pairedUserDataRef.current -- ", pairedUserDataRef.current);
+			socketRef.current.emit(ICE_CANDIDATE, {
+				socketId: socketRef.current.id,
+				action: ICE_CANDIDATE,
+				data: {
+					peerSocketId: pairedUserDataRef.current?.mySocketId,
+					ice: event.candidate
 				}
 			});
 		}
 	};
 
-	const handleInitSocketEvents = () => {
+	const handleInitSocketEvents = async () => {
 		socketRef.current = socketIOClient(process.env.NEXT_PUBLIC_SERVER_URL, {
 			path: "/live",
 			query: { token: window.tkn },
@@ -298,16 +454,15 @@ function Index() {
 				userFoundFlag: "",
 				userSearchTryingCount: 0,
 				isChatEnded: true,
-				pairedUserData: null,
 				chatMessagesArray: [],
 				isChatEndedWithError: err + " Please check your network connection and try again "
 			}));
+
+			pairedUserDataRef.current = null;
 		});
 
 		socketRef.current.on(CLIENT_INTRODUCTION, (data) => {
 			// TODO TRACKING EVENT : INFO Sessions Started
-			console.log(data);
-
 			let time = new Date();
 
 			let mainMsg = "";
@@ -338,15 +493,17 @@ function Index() {
 			setState((prevState) => ({
 				...prevState,
 				userFoundFlag: true,
-				pairedUserData: data,
 				isNewSessionStatus: "Skip",
 				chatMessagesArray
 			}));
+
+			pairedUserDataRef.current = data;
 		});
 
 		socketRef.current.on(CLIENT_INTRODUCTION_PAIR_NOT_FOUND, (data) => {
 			console.log(CLIENT_INTRODUCTION_PAIR_NOT_FOUND);
-			setState((prevState) => ({ ...prevState, userFoundFlag: false, pairedUserData: null }));
+			setState((prevState) => ({ ...prevState, userFoundFlag: false }));
+			pairedUserDataRef.current = null;
 		});
 
 		socketRef.current.on(NEGATIVE_KEYWORD_EXCHANGE, (data) => {
@@ -388,21 +545,58 @@ function Index() {
 			setState((prevState) => ({ ...prevState, isSenderTyping: data.typing }));
 		});
 
-		socketRef.current.on(END_CURRENT_SESSION, (data) => {
+		socketRef.current.on(END_CURRENT_SESSION, async (data) => {
 			document.getElementById("inputText").blur();
-			console.log("END_CURRENT_SESSION :: ", data);
 			setState((prevState) => ({
 				...prevState,
 				isNewSessionStatus: "New",
 				userFoundFlag: "",
 				userSearchTryingCount: 0,
 				isChatEnded: true,
-				pairedUserData: null,
 				chatMessagesArray: [],
 				isChatEndedWith: data.data.data.myName || data.data.data.mySocketId || "Stranger",
 				showImageDisapperModal: false,
-				showPrivacyModal: false
+				showPrivacyModal: false,
+				isVideoStreamActive: false,
+				isPeerRequestingVideoStream: false
 			}));
+			pairedUserDataRef.current = null;
+			await videoStreamRef.current.close();
+			videoStreamRef.current = new RTCPeerConnection(webRtcServers);
+			peerIceRef.current = [];
+		});
+
+		socketRef.current.on(REQUEST_VIDEO_STREAM, (data) => {
+			setState((prevState) => ({
+				...prevState,
+				isPeerRequestingVideoStream: true
+			}));
+		});
+
+		socketRef.current.on(VIDEO_STREAM_ACCEPT, async (data) => {
+			await initVideoRTC();
+			createOffer();
+			setState((prevState) => ({
+				...prevState,
+				isPeerRequestingVideoStream: false,
+				isVideoStreamActive: true
+			}));
+		});
+
+		socketRef.current.on(CREATE_OFFER, (data) => {
+			createAnswer(data.data.data.offer);
+		});
+
+		socketRef.current.on(CREATE_ANSWER, (data) => {
+			addAnswer(data.data.data.offer);
+		});
+
+		socketRef.current.on(ICE_CANDIDATE, function (data) {
+			if (!videoStreamRef.current.currentRemoteDescription) {
+				peerIceRef.current.push(data.data.data.ice);
+			} else {
+				videoStreamRef.current.addIceCandidate(new RTCIceCandidate(data.data.data.ice));
+			}
 		});
 	};
 
@@ -516,14 +710,11 @@ function Index() {
 	}, [state.restrictedModeKeywordsArray]);
 
 	// Send my restrictedModeKeywordsArray to other user
-	useUpdateEffect(() => {
-		console.log("peerNegativeKeywordsArray", state);
-	}, [state.peerNegativeKeywordsArray]);
+	useUpdateEffect(() => {}, [state.peerNegativeKeywordsArray]);
 
 	// Debouncing resize event
 	const setIsMobileViewDebouncer = AwesomeDebouncePromise((flag) => {
 		setState((prevState) => ({ ...prevState, isMobileView: flag }));
-		console.log("resize event triggered, updating local component state");
 	}, 500);
 
 	const helperDoesNegativeWordExists = (enteredText) => {
@@ -539,8 +730,6 @@ function Index() {
 
 	const handleMicClick = () => {
 		if (!state.isMicPressed) {
-			console.log(navigator.mediaDevices.getUserMedia);
-
 			// Start recording. Browser will request permission to use your microphone.
 			navigator.getUserMedia(
 				{ audio: true },
@@ -733,7 +922,6 @@ function Index() {
 
 	const handleSettingsTabChange = (index) => {
 		let myGender = LiveChatSelector.identityObj?.gender;
-		console.log(myGender);
 		if (myGender !== "any") setState((prevState) => ({ ...prevState, settingsTabIndex: index, isMyGenderSpecified: true }));
 		else setState((prevState) => ({ ...prevState, isMyGenderSpecified: false }));
 	};
@@ -1046,6 +1234,13 @@ function Index() {
 					</div>
 				</div>
 
+				<div className={styles.chatContainer__videoContainer} style={{ display: state.isVideoStreamActive ? "block" : "none" }}>
+					<video className={styles.videoContainer} autoPlay playsInline id="myself"></video>
+					<video className={styles.videoContainer} autoPlay playsInline id="peer"></video>
+				</div>
+
+				{!state.isVideoStreamActive && <button onClick={() => handleSocketEvent(REQUEST_VIDEO_STREAM)}>Request video</button>}
+
 				{renderChatMessages()}
 				{state.isSenderTyping && (
 					<div id="typingContainer" className={styles.chatContainer__typingContainer}>
@@ -1173,6 +1368,7 @@ function Index() {
 							</div>
 						</div>
 					)}
+					{state.isPeerRequestingVideoStream && <button onClick={() => handleSocketEvent(VIDEO_STREAM_ACCEPT)}>Accept video request</button>}
 					<div className={styles.chatContainer__chatAd}>
 						Place your text Ads here -
 						<div className={styles.chatContainer__adAction} onClick={handleAdCampaignClick}>
