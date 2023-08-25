@@ -355,7 +355,6 @@ function Index() {
 
 		socketRef.current.on(SEND_MESSAGE, (data) => {
 			// TODO TRACKING EVENT : INFO Message Received
-			if (window.navigator) window.navigator.vibrate(400);
 			setState((prevState) => ({ ...prevState, chatMessagesArray: [...prevState.chatMessagesArray, data.chatData] }));
 		});
 
