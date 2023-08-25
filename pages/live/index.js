@@ -1260,41 +1260,6 @@ function Index() {
                     y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
                 })(window, document, "clarity", "script", "ikp0t7an2x");`}
 			</Script>
-			<Script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer />
-			<Script id="google-analytics" strategy="afterInteractive">
-				{`
-                     window.OneSignal = window.OneSignal || [];
-                    OneSignal.push(function() {
-                        OneSignal.init({
-                        appId: "2d1bdbfa-fcee-4db9-a3ae-3c3836bbb8da",
-                        });
-                    });
-                `}
-			</Script>
-			<Script src="https://www.googletagmanager.com/gtag/js?id=AW-579008007" strategy="afterInteractive" />
-			<Script id="google-analytics" strategy="afterInteractive">
-				{`
-                    window.dataLayer = window.dataLayer || [];
-                    function gtag(){window.dataLayer.push(arguments);}
-                    gtag('js', new Date());
-
-                    gtag('config', 'AW-579008007');
-                `}
-			</Script>
-			<Script>
-				{`function gtag_report_conversion(url) {
-                    var callback = function () {
-                        if (typeof(url) != 'undefined') {
-                        window.location = url;
-                        }
-                    };
-                    gtag('event', 'conversion', {
-                        'send_to': 'AW-579008007/JxVuCN_Ouq8DEIfsi5QC',
-                        'event_callback': callback
-                    });
-                    return false;
-                }`}
-			</Script>
 
 			<Head>
 				<meta name="theme-color" content="#474663" />
