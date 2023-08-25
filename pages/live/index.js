@@ -243,7 +243,7 @@ function Index() {
 				aspectRatio: 1.332,
 				facingMode: { ideal: "user" }
 			},
-			audio: false
+			audio: true
 		});
 		remoteStream = new MediaStream();
 
