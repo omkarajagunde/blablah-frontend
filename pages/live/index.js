@@ -368,6 +368,7 @@ function Index() {
 			});
 			setState((prevState) => ({ ...prevState, isVideoStreamActive: false, isPeerRequestingVideoStream: false }));
 			await videoStreamRef.current.close();
+			videoStreamRef.current = null;
 			videoStreamRef.current = new RTCPeerConnection(webRtcServers);
 			peerIceRef.current = [];
 		}
@@ -562,6 +563,7 @@ function Index() {
 			}));
 			pairedUserDataRef.current = null;
 			await videoStreamRef.current.close();
+			videoStreamRef.current = null;
 			videoStreamRef.current = new RTCPeerConnection(webRtcServers);
 			peerIceRef.current = [];
 		});
