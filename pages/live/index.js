@@ -1359,8 +1359,8 @@ function Index() {
 				</div>
 
 				<div className={styles.chatContainer__videoContainer} style={{ display: state.isVideoStreamActive ? "block" : "none" }}>
-					<video className={styles.videoContainer} autoPlay playsInline muted id="myself"></video>
 					<video className={styles.videoContainer} autoPlay playsInline id="peer"></video>
+					<video className={styles.videoContainer} autoPlay playsInline muted id="myself"></video>
 				</div>
 
 				{renderChatMessages()}
@@ -1499,8 +1499,8 @@ function Index() {
 					<div className={styles.chatContainer__smartReply}>
 						<div className={styles.videoToggle}>
 							<input checked={state.isVideoStreamActive} type="checkbox" id="switch" onChange={handleVideoToggle} />
-							<label for="switch">video off</label>
-							<div className={styles.videoOnOffLabel}>Video off</div>
+							<label for="switch">video</label>
+							<div className={styles.videoOnOffLabel}>Video {state.isVideoStreamActive ? "on" : "off"}</div>
 						</div>
 						{state.smartRepliesArray.map((reply, index) => {
 							let renderIdx = state.isMobileView ? 2 : 6;
