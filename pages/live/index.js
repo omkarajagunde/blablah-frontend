@@ -1359,7 +1359,7 @@ function Index() {
 				</div>
 
 				<div className={styles.chatContainer__videoContainer} style={{ display: state.isVideoStreamActive ? "block" : "none" }}>
-					<video className={styles.videoContainer} autoPlay playsInline id="myself"></video>
+					<video className={styles.videoContainer} autoPlay playsInline muted id="myself"></video>
 					<video className={styles.videoContainer} autoPlay playsInline id="peer"></video>
 				</div>
 
