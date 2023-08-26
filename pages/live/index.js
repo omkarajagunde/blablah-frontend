@@ -46,6 +46,7 @@ const ICE_CANDIDATE = "ICE_CANDIDATE";
 const CREATE_OFFER = "CREATE_OFFER";
 const REQUEST_VIDEO_STREAM = "REQUEST_VIDEO_STREAM";
 const VIDEO_STREAM_ACCEPT = "VIDEO_STREAM_ACCEPT";
+const END_CURRENT_VIDEO_STREAM = "END_CURRENT_VIDEO_STREAM";
 
 let webRtcServers = {
 	iceServers: [
@@ -139,6 +140,8 @@ function Index() {
 	const peerIceRef = useRef();
 	const videoStreamRef = useRef();
 	const pairedUserDataRef = useRef();
+	const localStreamRef = useRef();
+	const remoteStreamRef = useRef();
 
 	useUpdateEffect(() => {
 		console.log("My ID :: ", state.mySocketId);
@@ -153,8 +156,7 @@ function Index() {
 			chatMessagesArray: [],
 			isChatEndedWithError: null,
 			showImageDisapperModal: false,
-			isVideoStreamActive: false,
-			isPeerRequestingVideoStream: false
+			isVideoStreamActive: false
 		}));
 		// const urlParams = new URLSearchParams(window.location.search);
 		// let autoSearchStart = urlParams.get("autoStart");
@@ -231,38 +233,56 @@ function Index() {
 
 	const initVideoRTC = async (iAccepted) => {
 		if (iAccepted) {
-			setState((prevState) => ({ ...prevState, isPeerRequestingVideoStream: false, isVideoStreamActive: true }));
+			setState((prevState) => ({ ...prevState, isVideoStreamActive: true }));
 		}
 
 		videoStreamRef.current = new RTCPeerConnection(webRtcServers);
-		let localStream;
-		let remoteStream;
 
-		localStream = await navigator.mediaDevices.getUserMedia({
+		localStreamRef.current = await navigator.mediaDevices.getUserMedia({
 			video: {
 				aspectRatio: 1.332,
 				facingMode: { ideal: "user" }
 			},
 			audio: true
 		});
-		remoteStream = new MediaStream();
+		remoteStreamRef.current = new MediaStream();
 
-		document.getElementById("myself").srcObject = localStream;
-		document.getElementById("peer").srcObject = remoteStream;
+		document.getElementById("myself").srcObject = localStreamRef.current;
+		document.getElementById("peer").srcObject = remoteStreamRef.current;
 
-		localStream.getTracks().forEach((track) => {
-			videoStreamRef.current.addTrack(track, localStream);
+		localStreamRef.current.getTracks().forEach((track) => {
+			videoStreamRef.current.addTrack(track, localStreamRef.current);
 		});
 
 		videoStreamRef.current.ontrack = (event) => {
 			event.streams[0].getTracks().forEach((track) => {
-				remoteStream.addTrack(track);
+				remoteStreamRef.current.addTrack(track);
 			});
 		};
 
 		videoStreamRef.current.onconnectionstatechange = async () => {
 			console.log(videoStreamRef.current.connectionState);
 		};
+	};
+
+	const stopStreamedVideo = (videoElem) => {
+		const stream = videoElem.srcObject;
+		if (stream) {
+			const tracks = stream.getTracks();
+			tracks.forEach(function (track) {
+				track.stop();
+			});
+			videoElem.srcObject = null;
+		}
+	};
+
+	const closeVideoStreams = () => {
+		if (videoStreamRef.current) videoStreamRef.current.close();
+		videoStreamRef.current = null;
+		videoStreamRef.current = new RTCPeerConnection(webRtcServers);
+		peerIceRef.current = [];
+		if (localStreamRef.current) stopStreamedVideo(document.getElementById("myself"));
+		if (remoteStreamRef.current) stopStreamedVideo(document.getElementById("peer"));
 	};
 
 	const handleSocketEvent = async (eve, data) => {
@@ -366,11 +386,8 @@ function Index() {
 					peerSocketId: pairedUserDataRef.current?.mySocketId
 				}
 			});
-			setState((prevState) => ({ ...prevState, isVideoStreamActive: false, isPeerRequestingVideoStream: false }));
-			await videoStreamRef.current.close();
-			videoStreamRef.current = null;
-			videoStreamRef.current = new RTCPeerConnection(webRtcServers);
-			peerIceRef.current = [];
+			setState((prevState) => ({ ...prevState, isVideoStreamActive: false }));
+			closeVideoStreams();
 		}
 
 		if (eve === REQUEST_VIDEO_STREAM) {
@@ -393,6 +410,10 @@ function Index() {
 					peerSocketId: pairedUserDataRef.current?.mySocketId
 				}
 			});
+
+			let chatArray = [...state.chatMessagesArray];
+			chatArray = chatArray.filter((msg) => msg.msg !== "Video call request accepted, starting video stream");
+			setState((prevState) => ({ ...prevState, chatMessagesArray: chatArray, isVideoStreamActive: true }));
 		}
 
 		if (eve === CREATE_OFFER) {
@@ -418,13 +439,22 @@ function Index() {
 		}
 
 		if (eve === ICE_CANDIDATE) {
-			console.log("pairedUserDataRef.current -- ", pairedUserDataRef.current);
 			socketRef.current.emit(ICE_CANDIDATE, {
 				socketId: socketRef.current.id,
 				action: ICE_CANDIDATE,
 				data: {
 					peerSocketId: pairedUserDataRef.current?.mySocketId,
 					ice: event.candidate
+				}
+			});
+		}
+
+		if (eve === END_CURRENT_VIDEO_STREAM) {
+			socketRef.current.emit(END_CURRENT_VIDEO_STREAM, {
+				socketId: socketRef.current.id,
+				action: END_CURRENT_VIDEO_STREAM,
+				data: {
+					peerSocketId: pairedUserDataRef.current?.mySocketId
 				}
 			});
 		}
@@ -558,30 +588,58 @@ function Index() {
 				isChatEndedWith: data.data.data.myName || data.data.data.mySocketId || "Stranger",
 				showImageDisapperModal: false,
 				showPrivacyModal: false,
-				isVideoStreamActive: false,
-				isPeerRequestingVideoStream: false
+				isVideoStreamActive: false
 			}));
 			pairedUserDataRef.current = null;
-			await videoStreamRef.current.close();
-			videoStreamRef.current = null;
-			videoStreamRef.current = new RTCPeerConnection(webRtcServers);
-			peerIceRef.current = [];
+			closeVideoStreams();
 		});
 
 		socketRef.current.on(REQUEST_VIDEO_STREAM, (data) => {
+			let chatArray = [...state.chatMessagesArray];
+			let time = new Date();
+			let sendMsgObject = {
+				type: "received",
+				isImage: false,
+				isAudio: false,
+				isAd: false,
+				isMetadata: true,
+				buttonMsg: "Accept",
+				buttonHandler: () => handleSocketEvent(VIDEO_STREAM_ACCEPT),
+				msg: "Video call request accepted, starting video stream",
+				senderName: "",
+				timeStamp: `${time.getHours()}:${time.getMinutes()}, ${time.toDateString()}`,
+				newlyAdded: true,
+				retracted: false
+			};
+
 			setState((prevState) => ({
 				...prevState,
-				isPeerRequestingVideoStream: true
+				chatMessagesArray: [...chatArray, sendMsgObject]
 			}));
 		});
 
 		socketRef.current.on(VIDEO_STREAM_ACCEPT, async (data) => {
 			await initVideoRTC();
 			createOffer();
+			let chatArray = [...state.chatMessagesArray];
+			let time = new Date();
+			let sendMsgObject = {
+				type: "received",
+				isImage: false,
+				isAudio: false,
+				isAd: false,
+				isMetadata: true,
+				msg: "Video call request accepted, starting video stream",
+				senderName: "",
+				timeStamp: `${time.getHours()}:${time.getMinutes()}, ${time.toDateString()}`,
+				newlyAdded: true,
+				retracted: false
+			};
+
 			setState((prevState) => ({
 				...prevState,
-				isPeerRequestingVideoStream: false,
-				isVideoStreamActive: true
+				isVideoStreamActive: true,
+				chatMessagesArray: [...chatArray, sendMsgObject]
 			}));
 		});
 
@@ -599,6 +657,30 @@ function Index() {
 			} else {
 				videoStreamRef.current.addIceCandidate(new RTCIceCandidate(data.data.data.ice));
 			}
+		});
+
+		socketRef.current.on(END_CURRENT_VIDEO_STREAM, function (data) {
+			let chatArray = [...state.chatMessagesArray];
+			let time = new Date();
+			let sendMsgObject = {
+				type: "received",
+				isImage: false,
+				isAudio: false,
+				isAd: false,
+				isMetadata: true,
+				msg: "Video call was terminated from other end",
+				senderName: "",
+				timeStamp: `${time.getHours()}:${time.getMinutes()}, ${time.toDateString()}`,
+				newlyAdded: true,
+				retracted: false
+			};
+
+			setState((prevState) => ({
+				...prevState,
+				isVideoStreamActive: false,
+				chatMessagesArray: [...chatArray, sendMsgObject]
+			}));
+			closeVideoStreams();
 		});
 	};
 
@@ -1051,11 +1133,24 @@ function Index() {
 				);
 			}
 
-			if (msg.isMetadata) {
+			if (msg.isMetadata && !msg.buttonMsg && !msg.buttonHandler) {
 				return (
 					<div className={styles.chatContainer__msgContainer} id="chatMessage" key={`${msg.msg}-${index}`}>
 						<div style={{ animation: msg.newlyAdded ? "newMessage 500ms ease-in-out" : null }} className={styles.chatContainer__metadata}>
 							{msg.msg}
+						</div>
+					</div>
+				);
+			}
+
+			if (msg.isMetadata && msg.buttonMsg && msg.buttonHandler) {
+				return (
+					<div className={styles.chatContainer__msgContainer} id="chatMessage" key={`${msg.msg}-${index}`}>
+						<div style={{ animation: msg.newlyAdded ? "newMessage 500ms ease-in-out" : null }} className={styles.chatContainer__metadata}>
+							{msg.msg}
+							<button className={styles.msgWithButton} onClick={msg.buttonHandler}>
+								{msg.buttonMsg}
+							</button>
 						</div>
 					</div>
 				);
@@ -1097,6 +1192,34 @@ function Index() {
 
 	const handleToggleConnectToStrangers = () => {
 		setState((prevState) => ({ ...prevState, connectWithAnyone: !prevState.connectWithAnyone }));
+	};
+
+	const handleVideoToggle = (evt) => {
+		if (evt.target.checked) {
+			let chatArray = [...state.chatMessagesArray];
+			let time = new Date();
+			let sendMsgObject = {
+				type: "sent",
+				isImage: false,
+				isAudio: false,
+				isAd: false,
+				isMetadata: true,
+				msg: "Video call request sent... waiting for user to accept it, then video will be started",
+				senderName: "",
+				timeStamp: `${time.getHours()}:${time.getMinutes()}, ${time.toDateString()}`,
+				newlyAdded: true,
+				retracted: false
+			};
+
+			handleSocketEvent(REQUEST_VIDEO_STREAM);
+			setState((prevState) => ({ ...prevState, chatMessagesArray: [...chatArray, sendMsgObject] }));
+		}
+
+		if (!evt.target.checked) {
+			setState((prevState) => ({ ...prevState, isVideoStreamActive: false }));
+			handleSocketEvent(END_CURRENT_VIDEO_STREAM);
+			closeVideoStreams();
+		}
 	};
 
 	const renderCorrectTab = () => {
@@ -1240,8 +1363,6 @@ function Index() {
 					<video className={styles.videoContainer} autoPlay playsInline id="peer"></video>
 				</div>
 
-				{!state.isVideoStreamActive && <button onClick={() => handleSocketEvent(REQUEST_VIDEO_STREAM)}>Request video</button>}
-
 				{renderChatMessages()}
 				{state.isSenderTyping && (
 					<div id="typingContainer" className={styles.chatContainer__typingContainer}>
@@ -1361,7 +1482,7 @@ function Index() {
 									))}
 								</div>
 								{socketRef.current && state.mySocketId && renderCorrectTab()}
-								{!socketRef.curent && !state.mySocketId && (
+								{!socketRef.current && !state.mySocketId && (
 									<div className={styles.chatContainer__initLoader}>
 										<Loader width={40} height={20} style={{ marginRight: "40px" }} color={"#474663"} />
 									</div>
@@ -1369,7 +1490,6 @@ function Index() {
 							</div>
 						</div>
 					)}
-					{state.isPeerRequestingVideoStream && <button onClick={() => handleSocketEvent(VIDEO_STREAM_ACCEPT)}>Accept video request</button>}
 					<div className={styles.chatContainer__chatAd}>
 						Place your text Ads here -
 						<div className={styles.chatContainer__adAction} onClick={handleAdCampaignClick}>
@@ -1377,13 +1497,11 @@ function Index() {
 						</div>
 					</div>
 					<div className={styles.chatContainer__smartReply}>
-						{/* <div>
-							<div>
-								<input type="checkbox" id="switch" />
-								<label for="switch">Toggle</label>
-							</div>
-							<div>video off</div>
-						</div> */}
+						<div className={styles.videoToggle}>
+							<input checked={state.isVideoStreamActive} type="checkbox" id="switch" onChange={handleVideoToggle} />
+							<label for="switch">video off</label>
+							<div className={styles.videoOnOffLabel}>Video off</div>
+						</div>
 						{state.smartRepliesArray.map((reply, index) => {
 							let renderIdx = state.isMobileView ? 2 : 6;
 							if (index < renderIdx) {

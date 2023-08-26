@@ -690,9 +690,45 @@
 	}
 }
 
+.videoContainer {
+    width: 100%;
+}
+
+.videoOnOffLabel {
+    margin-left: 12px;
+    margin-right: 24px;
+    font-size: .8rem;
+    color: aliceblue;
+}
+
+.videoToggle {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.msgWithButton {
+    user-select: none;
+    all: unset;
+    font-family: "Montserrat", sans-serif;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    width: 70px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color0);
+    margin: 12px;
+}
+
 
 
 @media only screen and (min-width: 768px) {
+
+    .videoContainer{
+        width: 50%;
+    }
 
 	.chatContainer {
 
@@ -740,8 +776,4 @@
 			}
 		}
 	}
-}
-
-.videoContainer {
-    width: 50%;
 }

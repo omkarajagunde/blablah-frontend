@@ -257,15 +257,15 @@ label:after {
     position: absolute;
     top: 4px;
     left: 4px;
-    width: 28px;
-    height: 28px;
+    width: 16px;
+    height: 16px;
     background: #fff;
     border-radius: 90px;
     transition: 0.3s;
 }
 
 input:checked+label {
-    background: #bada55;
+    background: var(--color1);
 }
 
 input:checked+label:after {
@@ -274,5 +274,5 @@ input:checked+label:after {
 }
 
 label:active:after {
-    width: 60px;
+    width: 40px;
 }
