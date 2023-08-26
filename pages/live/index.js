@@ -33,6 +33,10 @@ import Loader from "../../components/_helpers/Loader";
 import { SEO } from "../../Resources/json-res";
 import { messaging } from "../../apiHelpers/firebase";
 import Script from "next/script";
+
+// src/app/layout.tsx
+import { HighlightInit } from "@highlight-run/next/client";
+
 // Socket event strings
 const CLIENT_INTRODUCTION = "CLIENT_INTRODUCTION";
 const PEER_STARTED_TYPING = "PEER_STARTED_TYPING";
@@ -1576,6 +1580,15 @@ function Index() {
                 })(window, document, "clarity", "script", "ikp0t7an2x");`}
 			</Script> */}
 
+			<HighlightInit
+				projectId={"kev2k3g3"}
+				tracingOrigins
+				networkRecording={{
+					enabled: true,
+					recordHeadersAndBody: true,
+					urlBlocklist: []
+				}}
+			/>
 			<Head>
 				<meta name="theme-color" content="#474663" />
 				<title> {SEO.live.pageTitle} </title>

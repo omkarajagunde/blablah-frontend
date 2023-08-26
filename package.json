@@ -7,6 +7,7 @@
 		"start": "next start -p 8080"
 	},
 	"dependencies": {
+		"@highlight-run/next": "^4.1.0",
 		"@types/jasmine": "^3.5.9",
 		"@types/node": "^13.9.2",
 		"@vercel/analytics": "^0.1.6",
