@@ -2,7 +2,7 @@ const admins = [{ email: "ajagundeomkar@gmail.com", password: "viratkoli" }];
 const headerTexts = [
 	{
 		title: "Don't just pass time, Make unforgetable memories",
-		ticks: ["We don’t save your chat", "Safe random chats", "Gender detection & filters", "Free to use", "Full Privacy Controls", "Image/Audio sharing"],
+		ticks: ["We don’t save your chat", "Safe random chats", "Reliable video calling", "Free to use", "Full Privacy Controls", "Image/Audio sharing"],
 		buttons: [
 			{
 				text: "Meet people",
