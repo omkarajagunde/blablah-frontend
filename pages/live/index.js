@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import Head from "next/head";
-import { useRouter } from "next/router";
-import { getToken } from "firebase/messaging";
 import _ from "lodash";
 import Compressor from "compressorjs";
 import TextareaAutosize from "react-textarea-autosize";
@@ -25,17 +23,12 @@ import MicCancel from "../../Resources/MicCancel.svg";
 import ExpandCollapse from "../../Resources/expandCollapse.svg";
 
 // Actions
-import { ClearLiveChatLogs, IsServerOperational, GetTrends, AddNotifyToken } from "../../actions/liveChatActions";
+import { ClearLiveChatLogs, IsServerOperational, GetTrends } from "../../actions/liveChatActions";
 
 // Styles
 import styles from "../../styles/live.module.scss";
 import Loader from "../../components/_helpers/Loader";
 import { SEO } from "../../Resources/json-res";
-import { messaging } from "../../apiHelpers/firebase";
-import Script from "next/script";
-
-// src/app/layout.tsx
-import { HighlightInit } from "@highlight-run/next/client";
 
 // Socket event strings
 const CLIENT_INTRODUCTION = "CLIENT_INTRODUCTION";
@@ -1579,16 +1572,6 @@ function Index() {
                     y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
                 })(window, document, "clarity", "script", "ikp0t7an2x");`}
 			</Script> */}
-
-			<HighlightInit
-				projectId={"kev2k3g3"}
-				tracingOrigins
-				networkRecording={{
-					enabled: true,
-					recordHeadersAndBody: true,
-					urlBlocklist: []
-				}}
-			/>
 			<Head>
 				<meta name="theme-color" content="#474663" />
 				<title> {SEO.live.pageTitle} </title>
