@@ -21,6 +21,16 @@ function MyApp({ Component, pageProps }) {
                     y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
                 })(window, document, "clarity", "script", "ikp0t7an2x");`}
 			</Script> */}
+
+			<Script src="https://www.googletagmanager.com/gtag/js?id=UA-222049771-1" />
+			<Script>
+				{` window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+
+                    gtag('config', 'UA-222049771-1');`}
+			</Script>
+
 			<Script src="https://www.googletagmanager.com/gtag/js?id=G-97F16HF9GJ" />
 			<Script type="text/javascript">
 				{` window.dataLayer = window.dataLayer || [];
