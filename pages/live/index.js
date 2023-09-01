@@ -162,7 +162,8 @@ function Index() {
 		// }
 		peerIceRef.current = [];
 		pairedUserDataRef.current = null;
-		document.getElementById("inputText").blur();
+		let inputTextElem = document.getElementById("inputText");
+		if (inputTextElem) inputTextElem.blur();
 	}, [state.mySocketId]);
 
 	useUpdateEffect(() => {
@@ -375,7 +376,8 @@ function Index() {
 		}
 
 		if (eve === END_CURRENT_SESSION) {
-			document.getElementById("inputText").blur();
+			let inputTextElem = document.getElementById("inputText");
+			if (inputTextElem) inputTextElem.blur();
 			socketRef.current.emit(END_CURRENT_SESSION, {
 				socketId: socketRef.current.id,
 				action: END_CURRENT_SESSION,
@@ -388,7 +390,8 @@ function Index() {
 		}
 
 		if (eve === REQUEST_VIDEO_STREAM) {
-			document.getElementById("inputText").blur();
+			let inputTextElem = document.getElementById("inputText");
+			if (inputTextElem) inputTextElem.blur();
 			socketRef.current.emit(REQUEST_VIDEO_STREAM, {
 				socketId: socketRef.current.id,
 				action: REQUEST_VIDEO_STREAM,
@@ -588,7 +591,8 @@ function Index() {
 		});
 
 		socketRef.current.on(END_CURRENT_SESSION, async (data) => {
-			document.getElementById("inputText").blur();
+			let inputTextElem = document.getElementById("inputText");
+			if (inputTextElem) inputTextElem.blur();
 			setState((prevState) => ({
 				...prevState,
 				isNewSessionStatus: "New",
