@@ -399,18 +399,32 @@ function Index() {
 		}
 
 		if (eve === VIDEO_STREAM_ACCEPT) {
-			await initVideoRTC(true);
-			socketRef.current.emit(VIDEO_STREAM_ACCEPT, {
-				socketId: socketRef.current.id,
-				action: VIDEO_STREAM_ACCEPT,
-				data: {
-					peerSocketId: pairedUserDataRef.current?.mySocketId
-				}
-			});
+			navigator.mediaDevices
+				.getUserMedia({
+					video: {
+						aspectRatio: 1.332,
+						facingMode: { ideal: "user" }
+					},
+					audio: true
+				})
+				.then(async () => {
+					await initVideoRTC(true);
+					socketRef.current.emit(VIDEO_STREAM_ACCEPT, {
+						socketId: socketRef.current.id,
+						action: VIDEO_STREAM_ACCEPT,
+						data: {
+							peerSocketId: pairedUserDataRef.current?.mySocketId
+						}
+					});
 
-			let chatArray = [...state.chatMessagesArray];
-			chatArray = chatArray.filter((msg) => msg.msg !== "Video call request accepted, starting video stream");
-			setState((prevState) => ({ ...prevState, chatMessagesArray: chatArray, isVideoStreamActive: true }));
+					let chatArray = [...state.chatMessagesArray];
+					chatArray = chatArray.filter((msg) => msg.msg !== "Video call request accepted, starting video stream");
+					setState((prevState) => ({ ...prevState, chatMessagesArray: chatArray, isVideoStreamActive: true }));
+				})
+				.catch((err) => {
+					window.alert("Oops you blocked the camera access, clear site data to allow camera access again");
+					closeVideoStreams();
+				});
 		}
 
 		if (eve === CREATE_OFFER) {
@@ -1191,28 +1205,49 @@ function Index() {
 		setState((prevState) => ({ ...prevState, connectWithAnyone: !prevState.connectWithAnyone }));
 	};
 
-	const handleVideoToggle = (evt) => {
-		if (evt.target.checked) {
-			let chatArray = [...state.chatMessagesArray];
-			let time = new Date();
-			let sendMsgObject = {
-				type: "sent",
-				isImage: false,
-				isAudio: false,
-				isAd: false,
-				isMetadata: true,
-				msg: "Video call request sent... waiting for user to accept it, then video will be started",
-				senderName: "",
-				timeStamp: `${time.getHours()}:${time.getMinutes()}, ${time.toDateString()}`,
-				newlyAdded: true,
-				retracted: false
-			};
+	const handleVideoToggle = async (evt) => {
+		let videoStream = null;
+		if (evt.target.checked && !state.isVideoStreamActive) {
+			try {
+				videoStream = await navigator.mediaDevices.getUserMedia({
+					video: {
+						aspectRatio: 1.332,
+						facingMode: { ideal: "user" }
+					},
+					audio: true
+				});
 
-			handleSocketEvent(REQUEST_VIDEO_STREAM);
-			setState((prevState) => ({ ...prevState, chatMessagesArray: [...chatArray, sendMsgObject] }));
+				let chatArray = [...state.chatMessagesArray];
+				let time = new Date();
+				let sendMsgObject = {
+					type: "sent",
+					isImage: false,
+					isAudio: false,
+					isAd: false,
+					isMetadata: true,
+					msg: "Video call request sent... waiting for user to accept it, then video will be started",
+					senderName: "",
+					timeStamp: `${time.getHours()}:${time.getMinutes()}, ${time.toDateString()}`,
+					newlyAdded: true,
+					retracted: false
+				};
+
+				const tracks = videoStream.getTracks();
+				tracks.forEach(function (track) {
+					track.stop();
+				});
+				handleSocketEvent(REQUEST_VIDEO_STREAM);
+				setState((prevState) => ({ ...prevState, chatMessagesArray: [...chatArray, sendMsgObject] }));
+			} catch (err) {
+				window.alert("Oops you blocked the camera access, clear site data to allow camera access again");
+				const tracks = videoStream.getTracks();
+				tracks.forEach(function (track) {
+					track.stop();
+				});
+			}
 		}
 
-		if (!evt.target.checked) {
+		if (!evt.target.checked && state.isVideoStreamActive) {
 			setState((prevState) => ({ ...prevState, isVideoStreamActive: false }));
 			handleSocketEvent(END_CURRENT_VIDEO_STREAM);
 			closeVideoStreams();
