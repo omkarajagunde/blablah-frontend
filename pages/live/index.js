@@ -1479,7 +1479,7 @@ function Index() {
 									))}
 								</div>
 								{socketRef.current && state.mySocketId && renderCorrectTab()}
-								{!socketRef.current && !state.mySocketId && (
+								{!state.mySocketId && (
 									<div className={styles.chatContainer__initLoader}>
 										<Loader width={40} height={20} style={{ marginRight: "40px" }} color={"#474663"} />
 									</div>

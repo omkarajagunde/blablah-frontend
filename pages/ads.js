@@ -1,10 +1,22 @@
+import Script from "next/script";
 import React from "react";
 
-// Styles
-import styles from "../styles/ads.module.scss";
-
-function ads() {
-	return <div>Buy Ads option coming soon...</div>;
+function Ads() {
+	return (
+		<div>
+			<Script src="https://tally.so/widgets/embed.js" strategy="beforeInteractive" />
+			<iframe
+				style={{ width: "100vw", height: "100vh" }}
+				data-tally-src="https://tally.so/r/nraqVL?transparentBackground=1"
+				width="100%"
+				height="100%"
+				frameborder="0"
+				marginheight="0"
+				marginwidth="0"
+				title="Blablah Ads"
+			></iframe>
+		</div>
+	);
 }
 
-export default ads;
+export default Ads;
