@@ -1603,7 +1603,7 @@ function Index() {
 
 	const { isMobileView } = state;
 	return (
-		<div style={{ height: "100%" }}>
+		<div style={{ height: "100%" }} className="livePage">
 			<Head>
 				<meta name="theme-color" content="#474663" />
 				<title> {SEO.live.pageTitle} </title>
