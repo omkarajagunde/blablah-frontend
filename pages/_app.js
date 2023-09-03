@@ -9,10 +9,14 @@ import Script from "next/script";
 // import the two exports from the last code snippet.
 import { persistor, store } from "../store";
 import { HighlightInit } from "@highlight-run/next/client";
+import Head from "next/head";
 
 function MyApp({ Component, pageProps }) {
 	return (
 		<Provider store={store}>
+			<Head>
+				<meta name="monetag" content="434dd3c20537d6306e961765a655ca48" />
+			</Head>
 			<Analytics />
 			{/* <Script type="text/javascript">
 				{`(function(c,l,a,r,i,t,y){
@@ -30,7 +34,6 @@ function MyApp({ Component, pageProps }) {
 
                     gtag('config', 'UA-222049771-1');`}
 			</Script>
-
 			<Script src="https://www.googletagmanager.com/gtag/js?id=G-97F16HF9GJ" />
 			<Script type="text/javascript">
 				{` window.dataLayer = window.dataLayer || [];
