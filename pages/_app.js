@@ -25,7 +25,7 @@ function MyApp({ Component, pageProps }) {
                     y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
                 })(window, document, "clarity", "script", "ikp0t7an2x");`}
 			</Script> */}
-
+			<Script src="https://alwingulla.com/88/tag.min.js" data-zone="8865" data-cfasync="false" />
 			<Script src="https://www.googletagmanager.com/gtag/js?id=UA-222049771-1" />
 			<Script>
 				{` window.dataLayer = window.dataLayer || [];
