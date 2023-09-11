@@ -27,14 +27,6 @@ function MyApp({ Component, pageProps }) {
 			</Script> */}
 			{/* <Script src="https://alwingulla.com/88/tag.min.js" data-zone="8865" data-cfasync="false" /> */}
 			<Script src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3695301922075973" crossorigin="anonymous"></Script>
-			<Script src="https://www.googletagmanager.com/gtag/js?id=UA-222049771-1" />
-			<Script>
-				{` window.dataLayer = window.dataLayer || [];
-                    function gtag(){dataLayer.push(arguments);}
-                    gtag('js', new Date());
-
-                    gtag('config', 'UA-222049771-1');`}
-			</Script>
 			<Script src="https://www.googletagmanager.com/gtag/js?id=G-97F16HF9GJ" />
 			<Script type="text/javascript">
 				{` window.dataLayer = window.dataLayer || [];
