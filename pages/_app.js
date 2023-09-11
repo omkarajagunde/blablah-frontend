@@ -43,7 +43,7 @@ function MyApp({ Component, pageProps }) {
 
                     gtag('config', 'G-97F16HF9GJ');`}
 			</Script>
-			<HighlightInit
+			{/* <HighlightInit
 				projectId={"kev2k3g3"}
 				tracingOrigins
 				networkRecording={{
@@ -51,7 +51,7 @@ function MyApp({ Component, pageProps }) {
 					recordHeadersAndBody: true,
 					urlBlocklist: []
 				}}
-			/>
+			/> */}
 			{process.browser ? (
 				<PersistGate loading={null} persistor={persistor}>
 					<Component {...pageProps} />
