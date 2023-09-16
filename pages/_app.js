@@ -18,15 +18,8 @@ function MyApp({ Component, pageProps }) {
 				<meta name="monetag" content="434dd3c20537d6306e961765a655ca48" />
 			</Head>
 			<Analytics />
-			{/* <Script type="text/javascript">
-				{`(function(c,l,a,r,i,t,y){
-                    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-                })(window, document, "clarity", "script", "ikp0t7an2x");`}
-			</Script> */}
 			{/* <Script src="https://alwingulla.com/88/tag.min.js" data-zone="8865" data-cfasync="false" /> */}
-			<Script src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3695301922075973" crossorigin="anonymous"></Script>
+			<Script src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1117843900019355" crossorigin="anonymous"></Script>
 			<Script src="https://www.googletagmanager.com/gtag/js?id=G-97F16HF9GJ" />
 			<Script type="text/javascript">
 				{` window.dataLayer = window.dataLayer || [];
