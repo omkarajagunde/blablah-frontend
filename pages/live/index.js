@@ -1107,7 +1107,7 @@ function Index() {
 	const handleAdCampaignClick = () => {
 		// Click event
 		// TODO TRACKING EVENT : Contextual Ad Click
-		window.open("/ads", "_blank");
+		window.open("/blog/why-blablahapp-is-the-future-of-anonymous-online-chatting", "_blank");
 	};
 
 	const renderChatMessages = () => {
@@ -1312,9 +1312,9 @@ function Index() {
 
 					<div className={styles.chatContainer__startSession}>
 						<div>
-							Want to advertise on blabla? -{" "}
+							Read out new blog here ? -{" "}
 							<span style={{ fontWeight: "500", textDecoration: "underline" }} onClick={handleAdCampaignClick}>
-								Read here
+								click here 🙋🏻‍♀️
 							</span>{" "}
 						</div>
 						<button onClick={handleChangeSessionStatus} disabled={state.userSearchTryingCount !== 0}>
@@ -1501,7 +1501,7 @@ function Index() {
 							<div className={styles.chatContainer__rulesUpArrow} style={{ marginLeft: isMobileView ? "85%" : "94%", marginTop: isMobileView ? "62px" : "90px" }}></div>
 							<div className={styles.chatContainer__newSessionOptions} style={{ marginTop: "unset" }} onClick={(e) => e.stopPropagation()}>
 								<div className={styles.chatContainer__newAd} onClick={handleAdCampaignClick}>
-									Your banner ad can be here - check out
+									Read our new blog on trends in anonymous chatting - check out
 								</div>
 								<div className={styles.chatContainer__newTabs}>
 									{state.newTabs.map((tab, index) => (
@@ -1527,9 +1527,9 @@ function Index() {
 						</div>
 					)}
 					<div className={styles.chatContainer__chatAd}>
-						Place your text Ads here -
+						Read our new blog -
 						<div className={styles.chatContainer__adAction} onClick={handleAdCampaignClick}>
-							Know more
+							click here 🙋🏻‍♀️
 						</div>
 					</div>
 					<div className={styles.chatContainer__smartReply}>
