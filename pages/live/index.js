@@ -13,6 +13,7 @@ import AudioRecording from "../../components/AudioRecording";
 import DisapperingImage from "../../components/DisapperingImage";
 import PrivacyText from "../../components/PrivacyText";
 import MicRecorder from "mic-recorder-to-mp3";
+import { detectIncognito } from "detectincognitojs";
 
 // Images
 import SiteLogoWhite from "../../Resources/SiteLogoWhite.svg";
@@ -285,6 +286,7 @@ function Index() {
 
 	const handleSocketEvent = async (eve, data) => {
 		setState((prevState) => ({ ...prevState, expandSmartReply: false }));
+		let incognito = await detectIncognito();
 		if (eve === CLIENT_INTRODUCTION) {
 			socketRef.current.emit(CLIENT_INTRODUCTION, {
 				mySocketId: socketRef.current.id,
@@ -300,6 +302,8 @@ function Index() {
 					myGender: LiveChatSelector.identityObj?.gender,
 					myAge: LiveChatSelector.identityObj?.age,
 					myName: LiveChatSelector.identityObj?.fullname,
+					myBrowser: incognito.browserName,
+					myBrowseringMode: incognito.isPrivate ? "incognito" : "normal",
 					connectWithAnyone: state.commonInterestsArray.length !== 0 ? state.connectWithAnyone : true
 				}
 			});
