@@ -18,7 +18,8 @@ function MyApp({ Component, pageProps }) {
 				<meta name="monetag" content="434dd3c20537d6306e961765a655ca48" />
 			</Head>
 			<Analytics />
-			<Script src="//linkonclick.com/a/display.php?r=7725022" type="text/javascript" data-cfasync="false"></Script>
+			{/* Below script is AdsCash interrstial */}
+			{/* <Script src="//linkonclick.com/a/display.php?r=7725022" type="text/javascript" data-cfasync="false"></Script> */}
 			{/* <Script src="https://alwingulla.com/88/tag.min.js" data-zone="8865" data-cfasync="false" /> */}
 			<Script src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1117843900019355" crossorigin="anonymous"></Script>
 			<Script src="https://www.googletagmanager.com/gtag/js?id=G-97F16HF9GJ" />
@@ -27,7 +28,14 @@ function MyApp({ Component, pageProps }) {
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
 
-                    gtag('config', 'G-97F16HF9GJ');`}
+                    gtag('config', 'G-97F16HF9GJ');
+                    
+                    // AdsCash Autotag
+                    aclib.runAutoTag({
+                        zoneId: 'i0geuqggou',
+                    });
+                    
+                    `}
 			</Script>
 			{/* <HighlightInit
 				projectId={"kev2k3g3"}
