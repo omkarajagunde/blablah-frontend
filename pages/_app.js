@@ -28,15 +28,6 @@ function MyApp({ Component, pageProps }) {
                         zoneId: 'i0geuqggou',
                     });`}
 			</Script>
-			{/* OneSignal push notifications */}
-			<Script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" type="text/javascript" defer={true}>
-				{` window.OneSignalDeferred = window.OneSignalDeferred || [];
-                    OneSignalDeferred.push(function(OneSignal) {
-                        OneSignal.init({
-                        appId: "2d1bdbfa-fcee-4db9-a3ae-3c3836bbb8da",
-                        });
-                    });`}
-			</Script>
 			<Script type="text/javascript">
 				{` window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}

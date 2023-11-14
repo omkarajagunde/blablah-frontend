@@ -1636,6 +1636,16 @@ function Index() {
 				<meta name="language" content="English" />
 				<meta name="revisit-after" content="7 days" />
 			</Head>
+			<Script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer />
+			<Script strategy="afterInteractive">
+				{`
+                    OneSignal.push(function() {
+                        OneSignal.init({
+                        appId: "2d1bdbfa-fcee-4db9-a3ae-3c3836bbb8da",
+                        });
+                    });
+                `}
+			</Script>
 			{isMobileView ? renderMobileView() : renderDesktopView()}
 		</div>
 	);
