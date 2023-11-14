@@ -1637,7 +1637,7 @@ function Index() {
 				<meta name="revisit-after" content="7 days" />
 			</Head>
 			<Script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer />
-			<Script strategy="afterInteractive">
+			<Script>
 				{`
                     OneSignal.push(function() {
                         OneSignal.init({
