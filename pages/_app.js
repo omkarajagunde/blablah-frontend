@@ -22,28 +22,28 @@ function MyApp({ Component, pageProps }) {
 			<Script src="https://www.googletagmanager.com/gtag/js?id=G-97F16HF9GJ" />
 
 			{/* AdsCash */}
-			<Script id="aclib" src="//acscdn.com/script/aclib.js" type="text/javascript" data-cfasync="false"></Script>
+			<Script id="aclib" src="https://acscdn.com/script/aclib.js" type="text/javascript" data-cfasync="false" strategy="beforeInteractive">
+				{`// AdsCash Autotag
+                    aclib.runAutoTag({
+                        zoneId: 'i0geuqggou',
+                    });`}
+			</Script>
 			{/* OneSignal push notifications */}
-			<Script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" type="text/javascript" defer={true}></Script>
+			<Script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" type="text/javascript" defer={true}>
+				{` window.OneSignalDeferred = window.OneSignalDeferred || [];
+                    OneSignalDeferred.push(function(OneSignal) {
+                        OneSignal.init({
+                        appId: "2d1bdbfa-fcee-4db9-a3ae-3c3836bbb8da",
+                        });
+                    });`}
+			</Script>
 			<Script type="text/javascript">
 				{` window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
 
-                    gtag('config', 'G-97F16HF9GJ');
-                    
-                    // AdsCash Autotag
-                    aclib.runAutoTag({
-                        zoneId: 'i0geuqggou',
-                    });
-
-                    window.OneSignalDeferred = window.OneSignalDeferred || [];
-                    OneSignalDeferred.push(function(OneSignal) {
-                        OneSignal.init({
-                        appId: "2d1bdbfa-fcee-4db9-a3ae-3c3836bbb8da",
-                        });
-                    });
-                    
+                    gtag('config', 'G-97F16HF9GJ')
+                
                     `}
 			</Script>
 
