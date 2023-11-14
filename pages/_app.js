@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps }) {
 			<Script src="https://www.googletagmanager.com/gtag/js?id=G-97F16HF9GJ" />
 
 			{/* AdsCash */}
-			<Script src="//acscdn.com/script/aclib.js" type="text/javascript" data-cfasync="false"></Script>
+			<Script id="aclib" src="//acscdn.com/script/aclib.js" type="text/javascript" data-cfasync="false"></Script>
 			{/* OneSignal push notifications */}
 			<Script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" type="text/javascript" defer={true}></Script>
 			<Script type="text/javascript">
