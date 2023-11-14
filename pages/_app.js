@@ -22,20 +22,20 @@ function MyApp({ Component, pageProps }) {
 			<Script src="https://www.googletagmanager.com/gtag/js?id=G-97F16HF9GJ" />
 
 			{/* AdsCash */}
-			<Script id="aclib" src="https://acscdn.com/script/aclib.js" type="text/javascript" data-cfasync="false" strategy="beforeInteractive">
-				{`// AdsCash Autotag
+			<Script id="aclib" src="https://acscdn.com/script/aclib.js" data-cfasync="false" />
+			<Script>
+				{`
                     aclib.runAutoTag({
                         zoneId: 'i0geuqggou',
-                    });`}
+                    });
+                `}
 			</Script>
 			<Script type="text/javascript">
 				{` window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
-
                     gtag('config', 'G-97F16HF9GJ')
-                
-                    `}
+                `}
 			</Script>
 
 			{/* <HighlightInit
