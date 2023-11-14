@@ -14,17 +14,17 @@ import Head from "next/head";
 function MyApp({ Component, pageProps }) {
 	return (
 		<Provider store={store}>
-			<Head>
-				<meta name="monetag" content="434dd3c20537d6306e961765a655ca48" />
-			</Head>
+			<Head></Head>
 			<Analytics />
 			{/* Below script is AdsCash interrstial */}
 			{/* <Script src="//linkonclick.com/a/display.php?r=7725022" type="text/javascript" data-cfasync="false"></Script> */}
-			{/* <Script src="https://alwingulla.com/88/tag.min.js" data-zone="8865" data-cfasync="false" /> */}
 			<Script src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1117843900019355" crossorigin="anonymous"></Script>
 			<Script src="https://www.googletagmanager.com/gtag/js?id=G-97F16HF9GJ" />
 
+			{/* AdsCash */}
 			<Script src="//acscdn.com/script/aclib.js" type="text/javascript" data-cfasync="false"></Script>
+			{/* OneSignal push notifications */}
+			<Script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" type="text/javascript" defer={true}></Script>
 			<Script type="text/javascript">
 				{` window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
@@ -36,9 +36,17 @@ function MyApp({ Component, pageProps }) {
                     aclib.runAutoTag({
                         zoneId: 'i0geuqggou',
                     });
+
+                    window.OneSignalDeferred = window.OneSignalDeferred || [];
+                    OneSignalDeferred.push(function(OneSignal) {
+                        OneSignal.init({
+                        appId: "2d1bdbfa-fcee-4db9-a3ae-3c3836bbb8da",
+                        });
+                    });
                     
                     `}
 			</Script>
+
 			{/* <HighlightInit
 				projectId={"kev2k3g3"}
 				tracingOrigins

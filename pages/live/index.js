@@ -1129,6 +1129,23 @@ function Index() {
 				);
 			}
 
+			if (msg.isAd) {
+				return (
+					<div
+						className={styles.chatContainer__msgContainer}
+						id="chatMessage"
+						key={`${msg.msg}-${index}`}
+						style={{ justifyContent: msg.type === "received" ? "flex-start" : "flex-end" }}
+					>
+						<script type="text/javascript">
+							{`aclib.runBanner({
+                                zoneId: '7725026',
+                            })`}
+						</script>
+					</div>
+				);
+			}
+
 			if (msg.isAudio) {
 				return (
 					<div
