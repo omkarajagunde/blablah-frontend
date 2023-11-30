@@ -1559,7 +1559,7 @@ function Index() {
 					<div className={styles.chatContainer__chatAd}>
 						Rock your world, your own way -
 						<div className={styles.chatContainer__adAction} onClick={handleAdCampaignClick}>
-							Shop now (15% off) 🙋🏻‍♀️
+							Shop now
 						</div>
 					</div>
 					<div className={styles.chatContainer__smartReply}>
