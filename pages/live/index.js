@@ -22,6 +22,8 @@ import ImageIcon from "../../Resources/ImageIcon.svg";
 import MicIcon from "../../Resources/MicIcon.svg";
 import MicCancel from "../../Resources/MicCancel.svg";
 import ExpandCollapse from "../../Resources/expandCollapse.svg";
+import BannerAd from "../../Resources/ad1-banner.jpeg";
+import BannerAd2 from "../../Resources/ad2-banner.jpeg";
 
 // Actions
 import { ClearLiveChatLogs, IsServerOperational, GetTrends } from "../../actions/liveChatActions";
@@ -1108,10 +1110,13 @@ function Index() {
 		}));
 	};
 
-	const handleAdCampaignClick = () => {
+	const handleAdCampaignClick = (route) => {
+		if (route === "blog") {
+			return window.open("/blog/why-blablahapp-is-the-future-of-anonymous-online-chatting", "_blank");
+		}
 		// Click event
 		// TODO TRACKING EVENT : Contextual Ad Click
-		window.open("/blog/why-blablahapp-is-the-future-of-anonymous-online-chatting", "_blank");
+		window.open("https://www.gizmoswala.com/?utm_source=BLABLA&utm_medium=webapp&utm_campaign=ConAds", "_blank");
 	};
 
 	const renderChatMessages = () => {
@@ -1334,13 +1339,16 @@ function Index() {
 					<div className={styles.chatContainer__startSession}>
 						<div>
 							Read out new blog here ? -{" "}
-							<span style={{ fontWeight: "500", textDecoration: "underline" }} onClick={handleAdCampaignClick}>
+							<span style={{ fontWeight: "500", textDecoration: "underline" }} onClick={() => handleAdCampaignClick("blog")}>
 								click here 🙋🏻‍♀️
 							</span>{" "}
 						</div>
 						<button onClick={handleChangeSessionStatus} disabled={state.userSearchTryingCount !== 0}>
 							Start session
 						</button>
+						<div onClick={handleAdCampaignClick}>
+							<img src={BannerAd2.src} alt="go-to-blog" className="bannerAd" />
+						</div>
 						{state.userFoundFlag !== "" && !state.userFoundFlag ? (
 							<div style={{ marginTop: "10px", fontSize: "12px" }} className={styles.chatContainer__settingsSubTitle}>
 								Searching... new user to chat!
@@ -1522,7 +1530,7 @@ function Index() {
 							<div className={styles.chatContainer__rulesUpArrow} style={{ marginLeft: isMobileView ? "85%" : "94%", marginTop: isMobileView ? "62px" : "90px" }}></div>
 							<div className={styles.chatContainer__newSessionOptions} style={{ marginTop: "unset" }} onClick={(e) => e.stopPropagation()}>
 								<div className={styles.chatContainer__newAd} onClick={handleAdCampaignClick}>
-									Read our new blog on trends in anonymous chatting - check out
+									<img src={BannerAd.src} alt="go-to-blog" className="bannerAd" layout="fill" />
 								</div>
 								<div className={styles.chatContainer__newTabs}>
 									{state.newTabs.map((tab, index) => (
@@ -1538,19 +1546,20 @@ function Index() {
 										</div>
 									))}
 								</div>
-								{socketRef.current && state.mySocketId && renderCorrectTab()}
+								{renderCorrectTab()}
+								{/* {socketRef.current && state.mySocketId && renderCorrectTab()}
 								{!state.mySocketId && (
 									<div className={styles.chatContainer__initLoader}>
 										<Loader width={40} height={20} style={{ marginRight: "40px" }} color={"#474663"} />
 									</div>
-								)}
+								)} */}
 							</div>
 						</div>
 					)}
 					<div className={styles.chatContainer__chatAd}>
-						Read our new blog -
+						Rock your world, your own way -
 						<div className={styles.chatContainer__adAction} onClick={handleAdCampaignClick}>
-							click here 🙋🏻‍♀️
+							Shop now (15% off) 🙋🏻‍♀️
 						</div>
 					</div>
 					<div className={styles.chatContainer__smartReply}>
@@ -1636,7 +1645,7 @@ function Index() {
 				<meta name="language" content="English" />
 				<meta name="revisit-after" content="7 days" />
 			</Head>
-			<Script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer />
+			{/* <Script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer />
 			<Script>
 				{`
                     OneSignal.push(function() {
@@ -1645,7 +1654,7 @@ function Index() {
                         });
                     });
                 `}
-			</Script>
+			</Script> */}
 			{isMobileView ? renderMobileView() : renderDesktopView()}
 		</div>
 	);
