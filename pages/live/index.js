@@ -22,8 +22,8 @@ import ImageIcon from "../../Resources/ImageIcon.svg";
 import MicIcon from "../../Resources/MicIcon.svg";
 import MicCancel from "../../Resources/MicCancel.svg";
 import ExpandCollapse from "../../Resources/expandCollapse.svg";
-import BannerAd from "../../Resources/ad1-banner.jpeg";
-import BannerAd2 from "../../Resources/ad2-banner.jpeg";
+import BannerAd from "../../Resources/ad1-banner.png";
+import BannerAd2 from "../../Resources/ad2-banner.png";
 
 // Actions
 import { ClearLiveChatLogs, IsServerOperational, GetTrends } from "../../actions/liveChatActions";
@@ -1346,9 +1346,6 @@ function Index() {
 						<button onClick={handleChangeSessionStatus} disabled={state.userSearchTryingCount !== 0}>
 							Start session
 						</button>
-						<div onClick={handleAdCampaignClick}>
-							<img src={BannerAd2.src} alt="go-to-blog" className="bannerAd" />
-						</div>
 						{state.userFoundFlag !== "" && !state.userFoundFlag ? (
 							<div style={{ marginTop: "10px", fontSize: "12px" }} className={styles.chatContainer__settingsSubTitle}>
 								Searching... new user to chat!
@@ -1356,6 +1353,9 @@ function Index() {
 						) : (
 							""
 						)}
+						<div onClick={handleAdCampaignClick}>
+							<img src={BannerAd2.src} alt="go-to-blog" className="bannerAd" />
+						</div>
 					</div>
 
 					{state.isChatEnded && (
