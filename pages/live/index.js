@@ -1676,7 +1676,7 @@ function Index() {
 				<meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
 				<meta name="language" content="English" />
 				<meta name="revisit-after" content="7 days" />
-				<meta name="viewport" content="width=device-width, initial-scale=0.80" />
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
 			</Head>
 			{/* <Script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer />
 			<Script>
