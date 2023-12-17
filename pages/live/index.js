@@ -133,7 +133,8 @@ function Index() {
 		isMicPressed: false,
 		isMicRecording: false,
 		isMicBlocked: false,
-		isVideoStreamActive: false
+		isVideoStreamActive: false,
+		videoId: null
 	});
 	const socketRef = useRef();
 	const userFoundRef = useRef();
@@ -144,7 +145,7 @@ function Index() {
 	const remoteStreamRef = useRef();
 
 	useUpdateEffect(() => {
-		console.log("My ID :: ", state.mySocketId);
+		console.log("My ID :: ", state.mySocketId, socketRef);
 		setState((prevState) => ({
 			...prevState,
 			isNewSessionStatus: "New",
@@ -185,106 +186,114 @@ function Index() {
 		}
 	}, [LiveChatSelector]);
 
-	const createOffer = async () => {
-		videoStreamRef.current.onicecandidate = async (event) => {
-			//Event that fires off when a new offer ICE candidate is created
-			if (event.candidate) {
-				handleSocketEvent(ICE_CANDIDATE, event);
-			}
-			if (videoStreamRef.current.iceGatheringState === "complete") {
-				console.log("create complete");
-			}
-		};
-
-		// dataChannel.current = videoStreamRef.current.createDataChannel("chan");
-		const offerc = await videoStreamRef.current.createOffer();
-		await videoStreamRef.current.setLocalDescription(offerc);
-
-		handleSocketEvent(CREATE_OFFER);
-	};
-
-	const createAnswer = async (offer) => {
-		videoStreamRef.current.onicecandidate = async (event) => {
-			//Event that fires off when a new answer ICE candidate is created
-			if (event.candidate) {
-				handleSocketEvent(ICE_CANDIDATE, event);
-			}
-			if (videoStreamRef.current.iceGatheringState === "complete") {
-				console.log("complete");
-			}
-		};
-		await videoStreamRef.current.setRemoteDescription(offer);
-		peerIceRef.current.map((ice) => {
-			videoStreamRef.current.addIceCandidate(new RTCIceCandidate(ice));
-		});
-
-		let answerc = await videoStreamRef.current.createAnswer();
-		await videoStreamRef.current.setLocalDescription(answerc);
-		handleSocketEvent(CREATE_ANSWER);
-	};
-
-	const addAnswer = async (answer) => {
-		if (!videoStreamRef.current.currentRemoteDescription) {
-			videoStreamRef.current.setRemoteDescription(answer);
-			peerIceRef.current.map((ice) => {
-				videoStreamRef.current.addIceCandidate(new RTCIceCandidate(ice));
-			});
+	useEffect(() => {
+		let videoDoc = document.querySelector("iframe")?.contentWindow.parent.document;
+		if (state.isVideoStreamActive && videoDoc) {
+			videoDoc.body.style.display = "flex";
+			videoDoc.getElementById("myVideoWrap").style.position = "unset !important";
 		}
-	};
+	}, [state.isVideoStreamActive]);
 
-	const initVideoRTC = async (iAccepted) => {
-		if (iAccepted) {
-			setState((prevState) => ({ ...prevState, isVideoStreamActive: true }));
-		}
+	// const createOffer = async () => {
+	// 	videoStreamRef.current.onicecandidate = async (event) => {
+	// 		//Event that fires off when a new offer ICE candidate is created
+	// 		if (event.candidate) {
+	// 			handleSocketEvent(ICE_CANDIDATE, event);
+	// 		}
+	// 		if (videoStreamRef.current.iceGatheringState === "complete") {
+	// 			console.log("create complete");
+	// 		}
+	// 	};
 
-		videoStreamRef.current = new RTCPeerConnection(webRtcServers);
+	// 	// dataChannel.current = videoStreamRef.current.createDataChannel("chan");
+	// 	const offerc = await videoStreamRef.current.createOffer();
+	// 	await videoStreamRef.current.setLocalDescription(offerc);
 
-		localStreamRef.current = await navigator.mediaDevices.getUserMedia({
-			video: {
-				aspectRatio: 1.332,
-				facingMode: { ideal: "user" }
-			},
-			audio: true
-		});
-		remoteStreamRef.current = new MediaStream();
+	// 	handleSocketEvent(CREATE_OFFER);
+	// };
 
-		document.getElementById("myself").srcObject = localStreamRef.current;
-		document.getElementById("peer").srcObject = remoteStreamRef.current;
+	// const createAnswer = async (offer) => {
+	// 	videoStreamRef.current.onicecandidate = async (event) => {
+	// 		//Event that fires off when a new answer ICE candidate is created
+	// 		if (event.candidate) {
+	// 			handleSocketEvent(ICE_CANDIDATE, event);
+	// 		}
+	// 		if (videoStreamRef.current.iceGatheringState === "complete") {
+	// 			console.log("complete");
+	// 		}
+	// 	};
+	// 	await videoStreamRef.current.setRemoteDescription(offer);
+	// 	peerIceRef.current.map((ice) => {
+	// 		videoStreamRef.current.addIceCandidate(new RTCIceCandidate(ice));
+	// 	});
 
-		localStreamRef.current.getTracks().forEach((track) => {
-			videoStreamRef.current.addTrack(track, localStreamRef.current);
-		});
+	// 	let answerc = await videoStreamRef.current.createAnswer();
+	// 	await videoStreamRef.current.setLocalDescription(answerc);
+	// 	handleSocketEvent(CREATE_ANSWER);
+	// };
 
-		videoStreamRef.current.ontrack = (event) => {
-			event.streams[0].getTracks().forEach((track) => {
-				remoteStreamRef.current.addTrack(track);
-			});
-		};
+	// const addAnswer = async (answer) => {
+	// 	if (!videoStreamRef.current.currentRemoteDescription) {
+	// 		videoStreamRef.current.setRemoteDescription(answer);
+	// 		peerIceRef.current.map((ice) => {
+	// 			videoStreamRef.current.addIceCandidate(new RTCIceCandidate(ice));
+	// 		});
+	// 	}
+	// };
 
-		videoStreamRef.current.onconnectionstatechange = async () => {
-			console.log(videoStreamRef.current.connectionState);
-		};
-	};
+	// const initVideoRTC = async (iAccepted) => {
+	// 	if (iAccepted) {
+	// 		setState((prevState) => ({ ...prevState, isVideoStreamActive: true }));
+	// 	}
 
-	const stopStreamedVideo = (videoElem) => {
-		const stream = videoElem.srcObject;
-		if (stream) {
-			const tracks = stream.getTracks();
-			tracks.forEach(function (track) {
-				track.stop();
-			});
-			videoElem.srcObject = null;
-		}
-	};
+	// 	// videoStreamRef.current = new RTCPeerConnection(webRtcServers);
 
-	const closeVideoStreams = () => {
-		if (videoStreamRef.current) videoStreamRef.current.close();
-		videoStreamRef.current = null;
-		videoStreamRef.current = new RTCPeerConnection(webRtcServers);
-		peerIceRef.current = [];
-		if (localStreamRef.current) stopStreamedVideo(document.getElementById("myself"));
-		if (remoteStreamRef.current) stopStreamedVideo(document.getElementById("peer"));
-	};
+	// 	// localStreamRef.current = await navigator.mediaDevices.getUserMedia({
+	// 	// 	video: {
+	// 	// 		aspectRatio: 1.332,
+	// 	// 		facingMode: { ideal: "user" }
+	// 	// 	},
+	// 	// 	audio: true
+	// 	// });
+	// 	// remoteStreamRef.current = new MediaStream();
+
+	// 	// document.getElementById("myself").srcObject = localStreamRef.current;
+	// 	// document.getElementById("peer").srcObject = remoteStreamRef.current;
+
+	// 	// localStreamRef.current.getTracks().forEach((track) => {
+	// 	// 	videoStreamRef.current.addTrack(track, localStreamRef.current);
+	// 	// });
+
+	// 	// videoStreamRef.current.ontrack = (event) => {
+	// 	// 	event.streams[0].getTracks().forEach((track) => {
+	// 	// 		remoteStreamRef.current.addTrack(track);
+	// 	// 	});
+	// 	// };
+
+	// 	// videoStreamRef.current.onconnectionstatechange = async () => {
+	// 	// 	console.log(videoStreamRef.current.connectionState);
+	// 	// };
+	// };
+
+	// const stopStreamedVideo = (videoElem) => {
+	// 	const stream = videoElem.srcObject;
+	// 	if (stream) {
+	// 		const tracks = stream.getTracks();
+	// 		tracks.forEach(function (track) {
+	// 			track.stop();
+	// 		});
+	// 		videoElem.srcObject = null;
+	// 	}
+	// };
+
+	// const closeVideoStreams = () => {
+	// 	if (videoStreamRef.current) videoStreamRef.current.close();
+	// 	videoStreamRef.current = null;
+	// 	videoStreamRef.current = new RTCPeerConnection(webRtcServers);
+	// 	peerIceRef.current = [];
+	// 	if (localStreamRef.current) stopStreamedVideo(document.getElementById("myself"));
+	// 	if (remoteStreamRef.current) stopStreamedVideo(document.getElementById("peer"));
+	// };
 
 	const handleSocketEvent = async (eve, data) => {
 		setState((prevState) => ({ ...prevState, expandSmartReply: false }));
@@ -391,8 +400,8 @@ function Index() {
 					peerSocketId: pairedUserDataRef.current?.mySocketId
 				}
 			});
-			setState((prevState) => ({ ...prevState, isVideoStreamActive: false }));
-			closeVideoStreams();
+			setState((prevState) => ({ ...prevState, isVideoStreamActive: false, videoId: null }));
+			//closeVideoStreams();
 		}
 
 		if (eve === REQUEST_VIDEO_STREAM) {
@@ -408,66 +417,78 @@ function Index() {
 		}
 
 		if (eve === VIDEO_STREAM_ACCEPT) {
-			navigator.mediaDevices
-				.getUserMedia({
-					video: {
-						aspectRatio: 1.332,
-						facingMode: { ideal: "user" }
-					},
-					audio: true
-				})
-				.then(async () => {
-					await initVideoRTC(true);
-					socketRef.current.emit(VIDEO_STREAM_ACCEPT, {
-						socketId: socketRef.current.id,
-						action: VIDEO_STREAM_ACCEPT,
-						data: {
-							peerSocketId: pairedUserDataRef.current?.mySocketId
-						}
-					});
-
-					let chatArray = [...state.chatMessagesArray];
-					chatArray = chatArray.filter((msg) => msg.msg !== "Video call request accepted, starting video stream");
-					setState((prevState) => ({ ...prevState, chatMessagesArray: chatArray, isVideoStreamActive: true }));
-				})
-				.catch((err) => {
-					window.alert("Oops you blocked the camera access, clear site data to allow camera access again");
-					closeVideoStreams();
-				});
-		}
-
-		if (eve === CREATE_OFFER) {
-			socketRef.current.emit(CREATE_OFFER, {
+			let videoId = `${socketRef.current.id}-and-${pairedUserDataRef.current?.mySocketId}`;
+			socketRef.current.emit(VIDEO_STREAM_ACCEPT, {
 				socketId: socketRef.current.id,
-				action: CREATE_OFFER,
+				videoId: videoId,
+				action: VIDEO_STREAM_ACCEPT,
 				data: {
-					peerSocketId: pairedUserDataRef.current?.mySocketId,
-					offer: videoStreamRef.current.localDescription
+					peerSocketId: pairedUserDataRef.current?.mySocketId
 				}
 			});
+			let chatArray = [...state.chatMessagesArray];
+			chatArray = chatArray.filter((msg) => msg.msg !== "Video call request accepted, starting video stream");
+			setState((prevState) => ({ ...prevState, chatMessagesArray: chatArray, isVideoStreamActive: true, videoId: videoId }));
+			// navigator.mediaDevices
+			// 	.getUserMedia({
+			// 		video: {
+			// 			aspectRatio: 1.332,
+			// 			facingMode: { ideal: "user" }
+			// 		},
+			// 		audio: true
+			// 	})
+			// 	.then(async () => {
+			// 		await initVideoRTC(true);
+			// 		socketRef.current.emit(VIDEO_STREAM_ACCEPT, {
+			// 			socketId: socketRef.current.id,
+			// 			action: VIDEO_STREAM_ACCEPT,
+			// 			data: {
+			// 				peerSocketId: pairedUserDataRef.current?.mySocketId
+			// 			}
+			// 		});
+
+			// 		let chatArray = [...state.chatMessagesArray];
+			// 		chatArray = chatArray.filter((msg) => msg.msg !== "Video call request accepted, starting video stream");
+			// 		setState((prevState) => ({ ...prevState, chatMessagesArray: chatArray, isVideoStreamActive: true }));
+			// 	})
+			// 	.catch((err) => {
+			// 		window.alert("Oops you blocked the camera access, clear site data to allow camera access again");
+			// 		closeVideoStreams();
+			// 	});
 		}
 
-		if (eve === CREATE_ANSWER) {
-			socketRef.current.emit(CREATE_ANSWER, {
-				socketId: socketRef.current.id,
-				action: CREATE_ANSWER,
-				data: {
-					peerSocketId: pairedUserDataRef.current?.mySocketId,
-					offer: videoStreamRef.current.localDescription
-				}
-			});
-		}
+		// if (eve === CREATE_OFFER) {
+		// 	socketRef.current.emit(CREATE_OFFER, {
+		// 		socketId: socketRef.current.id,
+		// 		action: CREATE_OFFER,
+		// 		data: {
+		// 			peerSocketId: pairedUserDataRef.current?.mySocketId,
+		// 			offer: videoStreamRef.current.localDescription
+		// 		}
+		// 	});
+		// }
 
-		if (eve === ICE_CANDIDATE) {
-			socketRef.current.emit(ICE_CANDIDATE, {
-				socketId: socketRef.current.id,
-				action: ICE_CANDIDATE,
-				data: {
-					peerSocketId: pairedUserDataRef.current?.mySocketId,
-					ice: event.candidate
-				}
-			});
-		}
+		// if (eve === CREATE_ANSWER) {
+		// 	socketRef.current.emit(CREATE_ANSWER, {
+		// 		socketId: socketRef.current.id,
+		// 		action: CREATE_ANSWER,
+		// 		data: {
+		// 			peerSocketId: pairedUserDataRef.current?.mySocketId,
+		// 			offer: videoStreamRef.current.localDescription
+		// 		}
+		// 	});
+		// }
+
+		// if (eve === ICE_CANDIDATE) {
+		// 	socketRef.current.emit(ICE_CANDIDATE, {
+		// 		socketId: socketRef.current.id,
+		// 		action: ICE_CANDIDATE,
+		// 		data: {
+		// 			peerSocketId: pairedUserDataRef.current?.mySocketId,
+		// 			ice: event.candidate
+		// 		}
+		// 	});
+		// }
 
 		if (eve === END_CURRENT_VIDEO_STREAM) {
 			socketRef.current.emit(END_CURRENT_VIDEO_STREAM, {
@@ -477,6 +498,7 @@ function Index() {
 					peerSocketId: pairedUserDataRef.current?.mySocketId
 				}
 			});
+			setState((prevState) => ({ ...prevState, videoId: null }));
 		}
 	};
 
@@ -640,8 +662,8 @@ function Index() {
 		});
 
 		socketRef.current.on(VIDEO_STREAM_ACCEPT, async (data) => {
-			await initVideoRTC();
-			createOffer();
+			//await initVideoRTC();
+			//createOffer();
 			let chatArray = [...state.chatMessagesArray];
 			let time = new Date();
 			let sendMsgObject = {
@@ -660,25 +682,26 @@ function Index() {
 			setState((prevState) => ({
 				...prevState,
 				isVideoStreamActive: true,
+				videoId: data.data.videoId,
 				chatMessagesArray: [...chatArray, sendMsgObject]
 			}));
 		});
 
-		socketRef.current.on(CREATE_OFFER, (data) => {
-			createAnswer(data.data.data.offer);
-		});
+		// socketRef.current.on(CREATE_OFFER, (data) => {
+		// 	createAnswer(data.data.data.offer);
+		// });
 
-		socketRef.current.on(CREATE_ANSWER, (data) => {
-			addAnswer(data.data.data.offer);
-		});
+		// socketRef.current.on(CREATE_ANSWER, (data) => {
+		// 	addAnswer(data.data.data.offer);
+		// });
 
-		socketRef.current.on(ICE_CANDIDATE, function (data) {
-			if (!videoStreamRef.current.currentRemoteDescription) {
-				peerIceRef.current.push(data.data.data.ice);
-			} else {
-				videoStreamRef.current.addIceCandidate(new RTCIceCandidate(data.data.data.ice));
-			}
-		});
+		// socketRef.current.on(ICE_CANDIDATE, function (data) {
+		// 	if (!videoStreamRef.current.currentRemoteDescription) {
+		// 		peerIceRef.current.push(data.data.data.ice);
+		// 	} else {
+		// 		videoStreamRef.current.addIceCandidate(new RTCIceCandidate(data.data.data.ice));
+		// 	}
+		// });
 
 		socketRef.current.on(END_CURRENT_VIDEO_STREAM, function (data) {
 			let chatArray = [...state.chatMessagesArray];
@@ -699,9 +722,10 @@ function Index() {
 			setState((prevState) => ({
 				...prevState,
 				isVideoStreamActive: false,
+				videoId: null,
 				chatMessagesArray: [...chatArray, sendMsgObject]
 			}));
-			closeVideoStreams();
+			//closeVideoStreams();
 		});
 	};
 
@@ -1423,10 +1447,18 @@ function Index() {
 					</div>
 				</div>
 
-				<div className={styles.chatContainer__videoContainer} style={{ display: state.isVideoStreamActive ? "block" : "none" }}>
-					<video className={styles.videoContainer} autoPlay playsInline id="peer"></video>
-					<video className={styles.videoContainer} autoPlay playsInline muted id="myself"></video>
-				</div>
+				{state.isVideoStreamActive && state.videoId && (
+					<div className={styles.chatContainer__videoContainer}>
+						{/**<video className={styles.videoContainer} autoPlay playsInline id="peer"></video>
+					<video className={styles.videoContainer} autoPlay playsInline muted id="myself"></video>*/}
+						<iframe
+							className="liveVideo"
+							allow="camera; microphone; display-capture; fullscreen; clipboard-read; clipboard-write; autoplay"
+							src={`https://mirotalkc2c-production.up.railway.app/join?room=${state.videoId}&name=😃`}
+							style={{ height: "65vh", width: "100%" }}
+						></iframe>
+					</div>
+				)}
 
 				{renderChatMessages()}
 				{state.isSenderTyping && (

@@ -728,6 +728,21 @@
     margin: 12px;
 }
 
+.myVideoWrap {
+    width: 100px;
+    height: 140px;
+}
+
+.liveVideo {
+    video {
+        border-radius: unset !important;
+    }
+
+    #buttonsBar {
+        display: block !important;
+    }
+}
+
 @media only screen and (min-width: 768px) {
 
     .videoContainer{
