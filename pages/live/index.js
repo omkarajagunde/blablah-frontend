@@ -190,7 +190,7 @@ function Index() {
 		let videoDoc = document.querySelector("iframe")?.contentWindow.parent.document;
 		if (state.isVideoStreamActive && videoDoc) {
 			videoDoc.body.style.display = "flex";
-			videoDoc.getElementById("myVideoWrap").style.position = "unset !important";
+			if (videoDoc.getElementById("myVideoWrap")) videoDoc.getElementById("myVideoWrap").style.position = "unset !important";
 		}
 	}, [state.isVideoStreamActive]);
 
@@ -634,7 +634,7 @@ function Index() {
 				isVideoStreamActive: false
 			}));
 			pairedUserDataRef.current = null;
-			closeVideoStreams();
+			//closeVideoStreams();
 		});
 
 		socketRef.current.on(REQUEST_VIDEO_STREAM, (data) => {
@@ -1302,9 +1302,9 @@ function Index() {
 		}
 
 		if (!evt.target.checked && state.isVideoStreamActive) {
-			setState((prevState) => ({ ...prevState, isVideoStreamActive: false }));
+			setState((prevState) => ({ ...prevState, isVideoStreamActive: false, videoId: null }));
 			handleSocketEvent(END_CURRENT_VIDEO_STREAM);
-			closeVideoStreams();
+			//closeVideoStreams();
 		}
 	};
 
