@@ -1377,9 +1377,9 @@ function Index() {
 						) : (
 							""
 						)}
-						<div onClick={handleAdCampaignClick}>
+						{/* <div onClick={handleAdCampaignClick}>
 							<img src={BannerAd2.src} alt="go-to-blog" className="bannerAd" />
-						</div>
+						</div> */}
 					</div>
 
 					{state.isChatEnded && (
@@ -1561,9 +1561,9 @@ function Index() {
 						<div className={styles.chatContainer__newSessionScreen} onClick={handleChangeSessionStatus}>
 							<div className={styles.chatContainer__rulesUpArrow} style={{ marginLeft: isMobileView ? "85%" : "94%", marginTop: isMobileView ? "62px" : "90px" }}></div>
 							<div className={styles.chatContainer__newSessionOptions} style={{ marginTop: "unset" }} onClick={(e) => e.stopPropagation()}>
-								<div className={styles.chatContainer__newAd} onClick={handleAdCampaignClick}>
+								{/* <div className={styles.chatContainer__newAd} onClick={handleAdCampaignClick}>
 									<img src={BannerAd.src} alt="go-to-blog" className="bannerAd" layout="fill" />
-								</div>
+								</div> */}
 								<div className={styles.chatContainer__newTabs}>
 									{state.newTabs.map((tab, index) => (
 										<div
@@ -1588,12 +1588,12 @@ function Index() {
 							</div>
 						</div>
 					)}
-					<div className={styles.chatContainer__chatAd}>
+					{/* <div className={styles.chatContainer__chatAd}>
 						Rock your world, your own way -
 						<div className={styles.chatContainer__adAction} onClick={handleAdCampaignClick}>
 							Shop now
 						</div>
-					</div>
+					</div> */}
 					<div className={styles.chatContainer__smartReply}>
 						<div className={styles.videoToggle}>
 							<input checked={state.isVideoStreamActive} type="checkbox" id="switch" onChange={handleVideoToggle} />
