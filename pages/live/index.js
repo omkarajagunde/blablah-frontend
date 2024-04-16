@@ -1678,16 +1678,12 @@ function Index() {
 				<meta name="revisit-after" content="7 days" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 			</Head>
-			{/* <Script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer />
+			<Script src="https://cdn.zipy.ai/sdk/v1.0/zipy.min.umd.js" defer crossorigin="anonymous" />
 			<Script>
 				{`
-                    OneSignal.push(function() {
-                        OneSignal.init({
-                        appId: "2d1bdbfa-fcee-4db9-a3ae-3c3836bbb8da",
-                        });
-                    });
+                     window.zipy && window.zipy.init('b7a40746');
                 `}
-			</Script> */}
+			</Script>
 			{isMobileView ? renderMobileView() : renderDesktopView()}
 		</div>
 	);
