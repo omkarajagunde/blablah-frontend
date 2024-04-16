@@ -32,6 +32,7 @@ import { ClearLiveChatLogs, IsServerOperational, GetTrends } from "../../actions
 import styles from "../../styles/live.module.scss";
 import Loader from "../../components/_helpers/Loader";
 import { SEO } from "../../Resources/json-res";
+import Script from "next/script";
 
 // Socket event strings
 const CLIENT_INTRODUCTION = "CLIENT_INTRODUCTION";
